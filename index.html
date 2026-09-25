@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LA Loo · Find the nearest bathroom in Los Angeles</title>
-<meta name="description" content="A simple map of public bathrooms in Los Angeles.">
+<meta name="description" content="A simple map of bathrooms in Los Angeles: public restrooms, cafés and restaurants.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚻</text></svg>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
@@ -21,13 +21,23 @@
     flex:none;background:#fff;color:#1c4fa0;border:0;border-radius:8px;
     font:inherit;font-weight:700;font-size:14px;padding:9px 12px;cursor:pointer;
   }
+  .bar{display:flex;gap:6px;padding:8px 10px;background:#eef3fa;border-bottom:1px solid #d3dae3}
+  .bar button{
+    flex:1;border:1px solid #c5d0de;background:#fff;color:#10223d;border-radius:18px;
+    font:inherit;font-size:13px;padding:6px 8px;cursor:pointer;
+  }
+  .bar button.on{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
   #map{flex:1;min-height:0}
   #msg{
     position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);
     background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:1000;white-space:nowrap;display:none;
   }
-  .loo{font-size:24px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  .loo{font-size:22px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  .me{
+    width:16px;height:16px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;
+    box-shadow:0 0 0 6px rgba(28,124,240,.25),0 1px 4px rgba(0,0,0,.4);
+  }
 </style>
 </head>
 <body>
@@ -35,20 +45,26 @@
   <h1>LA Loo<span>Find the nearest bathroom in Los Angeles</span></h1>
   <button id="locate">📍 Near me</button>
 </header>
+<div class="bar">
+  <button data-f="all" class="on">All</button>
+  <button data-f="public">🚻 Public</button>
+  <button data-f="place">☕ Cafés & food</button>
+</div>
 <div id="map"></div>
 <div id="msg"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-// Tüm LA bölgesi (Malibu'dan Pasadena/Long Beach'e kadar)
 const LA_BBOX = "33.70,-118.70,34.35,-117.90";
-const CACHE_KEY = "laloo-toilets-v1";
+const CACHE_KEY = "laloo-toilets-v2";
 const CACHE_HOURS = 24;
 const SERVERS = [
   "https://overpass-api.de/api/interpreter",
   "https://overpass.private.coffee/api/interpreter",
   "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
 ];
+// Tuvaleti olduğu bilinen zincirler
+const BRANDS = ["Starbucks","McDonald's","Target","Whole Foods Market","Barnes & Noble","Panera Bread","In-N-Out Burger"];
 
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
@@ -59,43 +75,43 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 const layer = L.layerGroup().addTo(map);
-let toilets = [];
-let me = null;
-let loading = false;
+let toilets = [], filter = "all", me = null, myLL = null, centered = false, loading = false;
 
-function dirLink(lat, lng){
-  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
-}
+const dirLink = (lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
 
 function parse(data){
-  return data.elements.map(e => {
+  const out = [], seen = new Set();
+  data.elements.forEach(e => {
     const t = e.tags || {};
-    if (t.access === "private" || t.access === "no") return null;
     const lat = e.lat ?? e.center?.lat, lng = e.lon ?? e.center?.lon;
-    if (lat == null) return null;
-    return {
-      lat, lng,
-      name: t.name || t.operator || "Public restroom",
-      info: [
-        t.fee === "no" ? "Free" : t.fee === "yes" ? "Paid" : "",
-        t.access === "customers" ? "Customers only" : "",
-        t.opening_hours || ""
-      ].filter(Boolean).join(", ")
-    };
-  }).filter(Boolean);
+    if (lat == null) return;
+    const key = lat.toFixed(5)+","+lng.toFixed(5);
+    if (seen.has(key)) return;
+    const isPublic = t.amenity === "toilets";
+    if (isPublic && (t.access === "private" || t.access === "no")) return;
+    if (!isPublic && (t.toilets === "no" || t["toilets:access"] === "private")) return;
+    seen.add(key);
+    const kind = isPublic ? "public" : "place";
+    const name = t.name || t.brand || (isPublic ? "Public restroom" : "Restroom");
+    const info = isPublic
+      ? [t.fee === "no" ? "Free" : t.fee === "yes" ? "Paid" : "", t.access === "customers" ? "Customers only" : "", t.opening_hours || ""]
+      : ["Ask inside, usually for customers", t.opening_hours || ""];
+    out.push({ lat, lng, kind, name, info: info.filter(Boolean).join(", ") });
+  });
+  return out;
 }
 
-// Sadece ekranda görünenleri çiz, telefon kasmasın
 function draw(){
   layer.clearLayers();
   if (!toilets.length) return;
-  if (map.getZoom() < 12){ say("Zoom in to see bathrooms"); return; }
+  if (map.getZoom() < 13){ say("Zoom in to see bathrooms"); return; }
   const b = map.getBounds().pad(0.2);
   let n = 0;
   toilets.forEach(p => {
+    if (filter !== "all" && p.kind !== filter) return;
     if (!b.contains([p.lat, p.lng])) return;
     n++;
-    L.marker([p.lat, p.lng], { icon: L.divIcon({ html:"🚻", className:"loo", iconSize:[26,26] }) })
+    L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className:"loo", iconSize:[26,26] }) })
       .addTo(layer)
       .bindPopup(`<b>${p.name}</b>${p.info ? "<br>"+p.info : ""}<br><a href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">Walk me there</a>`);
   });
@@ -103,58 +119,72 @@ function draw(){
 }
 
 async function fetchAll(){
-  const q = `[out:json][timeout:60];(node["amenity"="toilets"](${LA_BBOX});way["amenity"="toilets"](${LA_BBOX}););out center tags;`;
+  const brandRe = BRANDS.map(b => b.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|");
+  const q = `[out:json][timeout:90];
+(
+  nwr["amenity"="toilets"](${LA_BBOX});
+  nwr["toilets"="yes"](${LA_BBOX});
+  nwr["brand"~"^(${brandRe})$"](${LA_BBOX});
+);
+out center tags;`;
   for (const s of SERVERS){
     try{
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 45000);
+      const timer = setTimeout(() => ctrl.abort(), 60000);
       const res = await fetch(s, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "data=" + encodeURIComponent(q),
+        method:"POST",
+        headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+        body:"data=" + encodeURIComponent(q),
         signal: ctrl.signal
       });
       clearTimeout(timer);
       if (res.ok) return await res.json();
-    }catch(e){ /* sıradaki sunucu */ }
+    }catch(e){}
   }
   throw new Error("no server");
 }
 
 async function load(){
   if (loading) return;
-  // Önce telefondaki kayda bak
   try{
     const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    if (c && Date.now() - c.t < CACHE_HOURS * 3600e3 && c.d.length){
-      toilets = c.d; draw(); return;
-    }
+    if (c && Date.now() - c.t < CACHE_HOURS*3600e3 && c.d.length){ toilets = c.d; draw(); return; }
   }catch(e){}
   loading = true;
   say("Loading bathrooms…");
   try{
     toilets = parse(await fetchAll());
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), d: toilets })); }catch(e){}
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ t:Date.now(), d:toilets })); }catch(e){}
     draw();
-  }catch(e){
-    say("Couldn't load bathrooms, tap to retry");
-  }
+  }catch(e){ say("Couldn't load bathrooms, tap to retry"); }
   loading = false;
 }
 
+// Konum: açılışta otomatik iste, sonra canlı takip et
+function showMe(p){
+  myLL = [p.coords.latitude, p.coords.longitude];
+  if (!me) me = L.marker(myLL, { icon: L.divIcon({ className:"", html:'<div class="me"></div>', iconSize:[22,22], iconAnchor:[11,11] }), zIndexOffset:1000 }).addTo(map);
+  else me.setLatLng(myLL);
+  if (!centered){ centered = true; map.setView(myLL, 16); }
+}
+function locate(){
+  if (!navigator.geolocation){ say("Location isn't available"); return; }
+  if (myLL){ map.setView(myLL, 16); return; }
+  navigator.geolocation.watchPosition(showMe,
+    () => say("Allow location to see bathrooms near you"),
+    { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
+}
+
+document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll(".bar button").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on"); filter = btn.dataset.f; draw();
+});
+document.getElementById("locate").onclick = locate;
 map.on("moveend", draw);
 msg.onclick = () => { if (!toilets.length) load(); };
-load();
 
-document.getElementById("locate").onclick = () => {
-  if (!navigator.geolocation){ say("Location isn't available"); return; }
-  navigator.geolocation.getCurrentPosition(p => {
-    const ll = [p.coords.latitude, p.coords.longitude];
-    if (me) me.setLatLng(ll);
-    else me = L.circleMarker(ll, { radius:8, color:"#fff", weight:3, fillColor:"#1c4fa0", fillOpacity:1 }).addTo(map);
-    map.setView(ll, 16);
-  }, () => say("Allow location to see bathrooms near you"), { enableHighAccuracy:true, timeout:12000 });
-};
+locate();
+load();
 </script>
 </body>
 </html>
