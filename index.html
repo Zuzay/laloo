@@ -24,9 +24,10 @@
   #map{flex:1;min-height:0}
   #msg{
     position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);
-    background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;
+    background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:1000;white-space:nowrap;display:none;
   }
+  .loo{font-size:24px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 </style>
 </head>
 <body>
@@ -39,76 +40,114 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
+// Tüm LA bölgesi (Malibu'dan Pasadena/Long Beach'e kadar)
+const LA_BBOX = "33.70,-118.70,34.35,-117.90";
+const CACHE_KEY = "laloo-toilets-v1";
+const CACHE_HOURS = 24;
+const SERVERS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
+];
+
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
 
-// Açılışta Venice / LA
 const map = L.map("map").setView([33.9850, -118.4695], 15);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, attribution: "© OpenStreetMap contributors"
 }).addTo(map);
 
 const layer = L.layerGroup().addTo(map);
-const seen = new Set();
+let toilets = [];
 let me = null;
+let loading = false;
 
 function dirLink(lat, lng){
   return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
 }
 
-async function loadToilets(){
-  if (map.getZoom() < 13){ say("Zoom in to see bathrooms"); return; }
-  const b = map.getBounds();
-  const bbox = `${b.getSouth()},${b.getWest()},${b.getNorth()},${b.getEast()}`;
-  const q = `[out:json][timeout:20];(node["amenity"="toilets"](${bbox});way["amenity"="toilets"](${bbox}););out center tags;`;
-  say("Loading bathrooms…");
-  const servers = [
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
-    "https://overpass.private.coffee/api/interpreter"
-  ];
-  let data = null;
-  for (const s of servers){
-    try{
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 12000);
-      const res = await fetch(s + "?data=" + encodeURIComponent(q), { signal: ctrl.signal });
-      clearTimeout(timer);
-      if (res.ok){ data = await res.json(); break; }
-    }catch(e){ /* sonraki sunucuyu dene */ }
-  }
-  try{
-    if (!data) throw new Error("all servers failed");
-    data.elements.forEach(e => {
-      if (seen.has(e.id)) return;
-      const t = e.tags || {};
-      if (t.access === "private") return;
-      const lat = e.lat ?? e.center?.lat, lng = e.lon ?? e.center?.lon;
-      if (lat == null) return;
-      seen.add(e.id);
-      const extra = [
+function parse(data){
+  return data.elements.map(e => {
+    const t = e.tags || {};
+    if (t.access === "private" || t.access === "no") return null;
+    const lat = e.lat ?? e.center?.lat, lng = e.lon ?? e.center?.lon;
+    if (lat == null) return null;
+    return {
+      lat, lng,
+      name: t.name || t.operator || "Public restroom",
+      info: [
         t.fee === "no" ? "Free" : t.fee === "yes" ? "Paid" : "",
         t.access === "customers" ? "Customers only" : "",
         t.opening_hours || ""
-      ].filter(Boolean).join(", ");
-      L.marker([lat, lng], { icon: L.divIcon({ html:"🚻", className:"", iconSize:[26,26] }) })
-        .addTo(layer)
-        .bindPopup(`<b>${t.name || "Public restroom"}</b>${extra ? "<br>"+extra : ""}<br><a href="${dirLink(lat,lng)}" target="_blank" rel="noopener">Walk me there</a>`);
-    });
-    say(seen.size ? "" : "No bathrooms in this area");
-  }catch(err){
-    say("Couldn't load bathrooms, tap to retry");
-  }
+      ].filter(Boolean).join(", ")
+    };
+  }).filter(Boolean);
 }
 
-map.on("moveend", loadToilets);
-msg.style.cursor="pointer";
-msg.onclick = loadToilets;
-loadToilets();
+// Sadece ekranda görünenleri çiz, telefon kasmasın
+function draw(){
+  layer.clearLayers();
+  if (!toilets.length) return;
+  if (map.getZoom() < 12){ say("Zoom in to see bathrooms"); return; }
+  const b = map.getBounds().pad(0.2);
+  let n = 0;
+  toilets.forEach(p => {
+    if (!b.contains([p.lat, p.lng])) return;
+    n++;
+    L.marker([p.lat, p.lng], { icon: L.divIcon({ html:"🚻", className:"loo", iconSize:[26,26] }) })
+      .addTo(layer)
+      .bindPopup(`<b>${p.name}</b>${p.info ? "<br>"+p.info : ""}<br><a href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">Walk me there</a>`);
+  });
+  say(n ? "" : "No bathrooms in this area");
+}
+
+async function fetchAll(){
+  const q = `[out:json][timeout:60];(node["amenity"="toilets"](${LA_BBOX});way["amenity"="toilets"](${LA_BBOX}););out center tags;`;
+  for (const s of SERVERS){
+    try{
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 45000);
+      const res = await fetch(s, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "data=" + encodeURIComponent(q),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      if (res.ok) return await res.json();
+    }catch(e){ /* sıradaki sunucu */ }
+  }
+  throw new Error("no server");
+}
+
+async function load(){
+  if (loading) return;
+  // Önce telefondaki kayda bak
+  try{
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+    if (c && Date.now() - c.t < CACHE_HOURS * 3600e3 && c.d.length){
+      toilets = c.d; draw(); return;
+    }
+  }catch(e){}
+  loading = true;
+  say("Loading bathrooms…");
+  try{
+    toilets = parse(await fetchAll());
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), d: toilets })); }catch(e){}
+    draw();
+  }catch(e){
+    say("Couldn't load bathrooms, tap to retry");
+  }
+  loading = false;
+}
+
+map.on("moveend", draw);
+msg.onclick = () => { if (!toilets.length) load(); };
+load();
 
 document.getElementById("locate").onclick = () => {
   if (!navigator.geolocation){ say("Location isn't available"); return; }
-  say("Finding you…");
   navigator.geolocation.getCurrentPosition(p => {
     const ll = [p.coords.latitude, p.coords.longitude];
     if (me) me.setLatLng(ll);
