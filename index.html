@@ -29,10 +29,20 @@
   .bar button.on{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
   #map{flex:1;min-height:0}
   #msg{
-    position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);
+    position:absolute;left:50%;top:150px;transform:translateX(-50%);
     background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:1000;white-space:nowrap;display:none;
   }
+  #contact{
+    position:absolute;left:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 26px);z-index:1000;
+    background:#1c4fa0;color:#fff;text-decoration:none;font-size:13px;font-weight:700;
+    padding:9px 12px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+  .tip b{display:block;margin-bottom:2px}
+  .tip .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;margin:2px 4px 4px 0;background:#e8f0fb;color:#1c4fa0}
+  .tip .tag.free{background:#e3f6e8;color:#1b7a3a}
+  .tip .tag.cust{background:#fff4df;color:#8a5a00}
+  .tip p{margin:4px 0 6px}
   .loo{font-size:22px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
   .me{
     width:16px;height:16px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;
@@ -48,13 +58,44 @@
 <div class="bar">
   <button data-f="all" class="on">All</button>
   <button data-f="public">🚻 Public</button>
-  <button data-f="place">☕ Cafés & food</button>
+  <button data-f="place">☕ Cafés</button>
+  <button data-f="tip">⭐ Tips</button>
 </div>
 <div id="map"></div>
 <div id="msg"></div>
+<a id="contact" href="mailto:hello@laloo.org?subject=LA%20Loo">✉️ Add a bathroom · Advertise</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
+
+
+// ============ LA LOO LOCAL TIPS ============
+// Elle seçilmiş yerler. Yeni yer eklemek için bir satır kopyala.
+// fee: "Free" | "Paid" | "Customers"
+const GUIDE = [
+  // Santa Monica
+  { name:"Tongva Park restroom", lat:34.01112, lng:-118.49324, area:"Santa Monica", fee:"Free", hours:"6am to 11pm",
+    note:"Right across from the pier. Visitors regularly call it one of the cleanest restrooms in the city." },
+  { name:"Santa Monica Pier restrooms", lat:34.00828, lng:-118.49876, area:"Santa Monica", fee:"Free", hours:"Pier hours",
+    note:"Rebuilt pier restroom, once shortlisted among the best in the country. Three accessible restrooms on the pier." },
+  { name:"Big Dean's Ocean Front Cafe", lat:34.01029, lng:-118.49560, area:"Santa Monica", fee:"Customers", hours:"Lunch to 9pm",
+    note:"An accessibility guide rates its restroom the cleanest near the pier. Grab a drink and you're in." },
+  { name:"Parking Structure 4", lat:34.01583, lng:-118.49797, area:"Santa Monica", fee:"Free", hours:"7am to 10pm",
+    note:"Public restroom off the 2nd Court alley, with a visitor info desk. Close to Third Street Promenade." },
+  { name:"Parking Structure 5", lat:34.01560, lng:-118.49444, area:"Santa Monica", fee:"Free", hours:"7am to 10pm",
+    note:"On 4th Street between Broadway and Santa Monica Blvd. Handy for the Promenade." },
+  { name:"Palisades Park, by Camera Obscura", lat:34.01268, lng:-118.49694, area:"Santa Monica", fee:"Free", hours:"6:30am to 6pm",
+    note:"On the south side of Camera Obscura, along the bluff. Closes early." },
+  { name:"Reed Park", lat:34.02233, lng:-118.49651, area:"Santa Monica", fee:"Free", hours:"7am to 9pm",
+    note:"Neighborhood park restroom on 7th Street. Reviews on cleanliness are mixed." },
+  // Venice
+  { name:"Windward Plaza restrooms", lat:33.98669, lng:-118.47390, area:"Venice", fee:"Free", hours:"Beach hours",
+    note:"Main boardwalk restroom by the skatepark. Honest take: reviews swing from surprisingly clean to rough. Best early in the day." },
+  { name:"Blue Bottle Coffee", lat:33.99190, lng:-118.47036, area:"Venice", fee:"Customers", hours:"6am to 6:30pm",
+    note:"Abbot Kinney. Small shop, buy something and ask." },
+  { name:"Intelligentsia Coffee", lat:33.99110, lng:-118.46693, area:"Venice", fee:"Customers", hours:"6am to 5pm (7pm Thu to Sat)",
+    note:"Abbot Kinney. Big, busy café, easy to buy a coffee and use the restroom." },
+];
 
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
@@ -69,21 +110,39 @@ let toilets = [], filter = "all", me = null, myLL = null, centered = false, load
 
 const dirLink = (lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
 
+function tipPopup(t){
+  const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
+  return `<div class="tip"><b>⭐ ${t.name}</b>
+    <span class="tag ${cls}">${t.fee}</span><span class="tag">${t.hours}</span><span class="tag">${t.area}</span>
+    <p>${t.note}</p>
+    <a href="${dirLink(t.lat,t.lng)}" target="_blank" rel="noopener">Walk me there</a></div>`;
+}
+
 function draw(){
   layer.clearLayers();
-  if (!toilets.length) return;
-  if (map.getZoom() < 13){ say("Zoom in to see bathrooms"); return; }
   const b = map.getBounds().pad(0.2);
   let n = 0;
-  toilets.forEach(p => {
-    if (filter !== "all" && p.kind !== filter) return;
-    if (!b.contains([p.lat, p.lng])) return;
-    n++;
-    L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className:"loo", iconSize:[26,26] }) })
-      .addTo(layer)
-      .bindPopup(`<b>${p.name}</b>${p.info ? "<br>"+p.info : ""}<br><a href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">Walk me there</a>`);
-  });
-  say(n ? "" : "No bathrooms in this area");
+  if (filter === "all" || filter === "tip"){
+    GUIDE.forEach(t => {
+      if (!b.contains([t.lat, t.lng])) return;
+      n++;
+      L.marker([t.lat, t.lng], { icon: L.divIcon({ html:"⭐", className:"loo", iconSize:[28,28] }), zIndexOffset:500 })
+        .addTo(layer).bindPopup(tipPopup(t));
+    });
+  }
+  if (filter !== "tip" && toilets.length){
+    if (map.getZoom() < 13){ say("Zoom in to see bathrooms"); return; }
+    toilets.forEach(p => {
+      if (filter !== "all" && p.kind !== filter) return;
+      if (!b.contains([p.lat, p.lng])) return;
+      n++;
+      L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className:"loo", iconSize:[26,26] }) })
+        .addTo(layer)
+        .bindPopup(`<b>${p.name}</b>${p.info ? "<br>"+p.info : ""}<br><a href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">Walk me there</a>`);
+    });
+  }
+  if (filter === "tip" && !n) say("Tips cover Venice and Santa Monica so far");
+  else say(n ? "" : "No bathrooms in this area");
 }
 
 async function load(){
