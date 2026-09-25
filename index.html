@@ -55,16 +55,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-const LA_BBOX = "33.70,-118.70,34.35,-117.90";
-const CACHE_KEY = "laloo-toilets-v2";
-const CACHE_HOURS = 24;
-const SERVERS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.private.coffee/api/interpreter",
-  "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
-];
-// Tuvaleti olduğu bilinen zincirler
-const BRANDS = ["Starbucks","McDonald's","Target","Whole Foods Market","Barnes & Noble","Panera Bread","In-N-Out Burger"];
 
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
@@ -78,28 +68,6 @@ const layer = L.layerGroup().addTo(map);
 let toilets = [], filter = "all", me = null, myLL = null, centered = false, loading = false;
 
 const dirLink = (lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
-
-function parse(data){
-  const out = [], seen = new Set();
-  data.elements.forEach(e => {
-    const t = e.tags || {};
-    const lat = e.lat ?? e.center?.lat, lng = e.lon ?? e.center?.lon;
-    if (lat == null) return;
-    const key = lat.toFixed(5)+","+lng.toFixed(5);
-    if (seen.has(key)) return;
-    const isPublic = t.amenity === "toilets";
-    if (isPublic && (t.access === "private" || t.access === "no")) return;
-    if (!isPublic && (t.toilets === "no" || t["toilets:access"] === "private")) return;
-    seen.add(key);
-    const kind = isPublic ? "public" : "place";
-    const name = t.name || t.brand || (isPublic ? "Public restroom" : "Restroom");
-    const info = isPublic
-      ? [t.fee === "no" ? "Free" : t.fee === "yes" ? "Paid" : "", t.access === "customers" ? "Customers only" : "", t.opening_hours || ""]
-      : ["Ask inside, usually for customers", t.opening_hours || ""];
-    out.push({ lat, lng, kind, name, info: info.filter(Boolean).join(", ") });
-  });
-  return out;
-}
 
 function draw(){
   layer.clearLayers();
@@ -118,43 +86,15 @@ function draw(){
   say(n ? "" : "No bathrooms in this area");
 }
 
-async function fetchAll(){
-  const brandRe = BRANDS.map(b => b.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|");
-  const q = `[out:json][timeout:90];
-(
-  nwr["amenity"="toilets"](${LA_BBOX});
-  nwr["toilets"="yes"](${LA_BBOX});
-  nwr["brand"~"^(${brandRe})$"](${LA_BBOX});
-);
-out center tags;`;
-  for (const s of SERVERS){
-    try{
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 60000);
-      const res = await fetch(s, {
-        method:"POST",
-        headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-        body:"data=" + encodeURIComponent(q),
-        signal: ctrl.signal
-      });
-      clearTimeout(timer);
-      if (res.ok) return await res.json();
-    }catch(e){}
-  }
-  throw new Error("no server");
-}
-
 async function load(){
   if (loading) return;
-  try{
-    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    if (c && Date.now() - c.t < CACHE_HOURS*3600e3 && c.d.length){ toilets = c.d; draw(); return; }
-  }catch(e){}
   loading = true;
   say("Loading bathrooms…");
   try{
-    toilets = parse(await fetchAll());
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ t:Date.now(), d:toilets })); }catch(e){}
+    // GitHub her hafta güncelliyor, tarayıcı eski dosyayı tutmasın diye günlük parametre
+    const res = await fetch("toilets.json?d=" + new Date().toISOString().slice(0,10));
+    if (!res.ok) throw new Error(res.status);
+    toilets = (await res.json()).map(p => ({ lat:p.a, lng:p.o, kind:p.k, name:p.n, info:p.i }));
     draw();
   }catch(e){ say("Couldn't load bathrooms, tap to retry"); }
   loading = false;
