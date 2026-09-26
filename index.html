@@ -136,6 +136,7 @@ function cityAt(lat, lng){
   return c ? c.id : null;
 }
 function track(type, o = {}){
+  try{ if (localStorage.getItem("laloo_notrack")) return; }catch(e){}   // yönetici cihazları sayılmaz
   const ll = myLL || [map.getCenter().lat, map.getCenter().lng];
   const body = { device:DEVICE, type, ref:REF, city:cityAt(ll[0], ll[1]),
                  target: o.target != null ? String(o.target).slice(0, 100) : null, business_id: o.biz || null };

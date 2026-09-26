@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Laloo Yönetim</title>
+<link rel="icon" type="image/png" href="favicon-32.png">
+<style>
+  :root{--navy:#10223d;--blue:#1c4fa0;--line:#e3e0d6;--bg:#fefef8;--muted:#6b7688;--red:#c62828;--green:#1b7a3a}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--navy)}
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+  header img{height:34px}
+  header small{color:var(--muted)}
+  nav{display:flex;gap:4px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--line);background:#fff}
+  nav button{border:0;background:none;font:inherit;font-weight:600;padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  nav button.on{background:#e8f0fb;color:var(--blue)}
+  main{max-width:980px;margin:0 auto;padding:16px}
+  h2{font-size:18px;margin:18px 0 10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+  .card b{display:block;font-size:26px}
+  .card span{color:var(--muted);font-size:13px}
+  .tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{font-size:12px;color:var(--muted);font-weight:600;background:#faf9f4}
+  tr:last-child td{border-bottom:0}
+  .off{opacity:.5}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;background:#e8f0fb;color:var(--blue)}
+  .pill.ok{background:#e3f6e8;color:var(--green)}
+  .pill.bad{background:#fde8e8;color:var(--red)}
+  button.b,a.b{font:inherit;font-size:13px;font-weight:600;border:1px solid #c5d0de;background:#fff;color:var(--navy);border-radius:8px;padding:6px 10px;cursor:pointer;text-decoration:none;display:inline-block}
+  button.p{background:var(--blue);border-color:var(--blue);color:#fff}
+  button.r{color:var(--red);border-color:#f0c4c4}
+  .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  form.f{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  form.f .w{grid-column:1/-1}
+  label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+  input,select,textarea{font:inherit;font-size:14px;color:var(--navy);border:1px solid #c5d0de;border-radius:8px;padding:8px;background:#fff;width:100%}
+  textarea{min-height:70px;resize:vertical}
+  .hint{font-size:12px;color:var(--muted);font-weight:400}
+  #login{max-width:340px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px}
+  #login img{height:44px;align-self:center}
+  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;font-size:14px;display:none;z-index:20;max-width:90vw}
+  @media (max-width:640px){ form.f{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div id="login" hidden>
+  <img src="logo-header.png" alt="LALOO">
+  <b style="text-align:center">Yönetim paneli</b>
+  <label>E-posta<input id="em" type="email" autocomplete="username"></label>
+  <label>Şifre<input id="pw" type="password" autocomplete="current-password"></label>
+  <button class="b p" id="go">Giriş yap</button>
+  <small id="lerr" style="color:var(--red)"></small>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <img src="logo-header.png" alt="LALOO">
+    <div class="row"><small id="who"></small><button class="b" id="out">Çıkış</button></div>
+  </header>
+  <nav>
+    <button data-t="stats" class="on">📊 Rakamlar</button>
+    <button data-t="tips">⭐ Yıldızlı yerler</button>
+    <button data-t="biz">📍 İşletmeler</button>
+    <button data-t="sugg">📥 Öneriler</button>
+    <button data-t="set">⚙️ Ayarlar</button>
+  </nav>
+  <main id="main"></main>
+</div>
+<div id="toast"></div>
+
+<script>
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
+const CATS = { vintage:"👗 Vintage", clothing:"👕 Giyim", tailor:"🧵 Terzi", market:"🧺 Market", fruit:"🍎 Manav", cafe:"☕ Kafe", food:"🍽️ Restoran", beauty:"💈 Güzellik", art:"🎨 Sanat" };
+const FEES = ["Free", "Paid", "Customers", "Ticket"];
+
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+function toast(t){ const el = $("#toast"); el.textContent = t; el.style.display = "block"; clearTimeout(el._t); el._t = setTimeout(() => el.style.display = "none", 2600); }
+const today = () => new Date().toISOString().slice(0, 10);
+
+// ================= OTURUM =================
+let S = null;
+try{ S = JSON.parse(localStorage.getItem("laloo_admin") || "null"); }catch(e){}
+function saveSession(d){
+  S = { access_token:d.access_token, refresh_token:d.refresh_token,
+        expires_at: d.expires_at || Math.floor(Date.now()/1000) + (d.expires_in || 3600),
+        email: d.user ? d.user.email : (S && S.email) };
+  try{ localStorage.setItem("laloo_admin", JSON.stringify(S)); }catch(e){}
+}
+function logout(){ S = null; try{ localStorage.removeItem("laloo_admin"); }catch(e){} showLogin(); }
+async function auth(grant, body){
+  const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=${grant}`, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify(body) });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error_description || d.msg || "Giriş başarısız");
+  saveSession(d);
+}
+async function fresh(){
+  if (S && Date.now()/1000 > S.expires_at - 60){
+    try{ await auth("refresh_token", { refresh_token:S.refresh_token }); }
+    catch(e){ logout(); throw new Error("Oturum bitti, tekrar giriş yap"); }
+  }
+}
+async function db(path, method = "GET", body = null, prefer = ""){
+  await fresh();
+  const h = { apikey:SB_KEY, Authorization:"Bearer " + S.access_token, "Content-Type":"application/json" };
+  if (prefer) h.Prefer = prefer;
+  const r = await fetch(`${SB_URL}/rest/v1/${path}`, { method, headers:h, body: body ? JSON.stringify(body) : null });
+  if (r.status === 401){ logout(); throw new Error("Oturum bitti, tekrar giriş yap"); }
+  const t = await r.text();
+  if (!r.ok){ let m = t; try{ m = JSON.parse(t).message; }catch(e){} throw new Error(m); }
+  return t ? JSON.parse(t) : null;
+}
+async function geocode(q){
+  const r = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(q));
+  const d = await r.json();
+  if (!d.length) throw new Error("Adres bulunamadı, daha sade yaz (ör. mekan adı ve şehir)");
+  return { lat: +(+d[0].lat).toFixed(6), lng: +(+d[0].lon).toFixed(6) };
+}
+
+function showLogin(){ $("#app").hidden = true; $("#login").hidden = false; }
+async function showApp(){
+  const me = await db("admins?select=email");
+  if (!me.length){ $("#lerr").textContent = "Bu hesap yönetici değil."; logout(); return; }
+  $("#login").hidden = true; $("#app").hidden = false;
+  $("#who").textContent = S.email || "";
+  await loadCities();
+  tab("stats");
+}
+$("#go").onclick = async () => {
+  $("#lerr").textContent = "";
+  try{ await auth("password", { email:$("#em").value.trim(), password:$("#pw").value }); await showApp(); }
+  catch(e){ $("#lerr").textContent = e.message; }
+};
+$("#pw").onkeydown = e => { if (e.key === "Enter") $("#go").click(); };
+$("#out").onclick = logout;
+
+// ================= SEKMELER =================
+let cities = [];
+async function loadCities(){ cities = await db("cities?select=*&order=name"); }
+const cityOpts = (sel, all) => (all ? `<option value="">Tüm şehirler</option>` : "") +
+  cities.map(c => `<option value="${c.id}" ${c.id === sel ? "selected" : ""}>${esc(c.name)}${c.active ? "" : " (kapalı)"}</option>`).join("");
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => tab(b.dataset.t));
+async function tab(t){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  $("#main").innerHTML = "<p>Yükleniyor…</p>";
+  try{ await ({ stats, tips, biz, sugg, set })[t](); }
+  catch(e){ $("#main").innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; }
+}
+
+// ---------- RAKAMLAR ----------
+async function stats(){
+  const [ret, daily, bizs, refs, cs] = await Promise.all([
+    db("stats_returning?select=*"), db("stats_daily?select=*&limit=14"),
+    db("stats_business?select=*&order=clicks.desc"), db("stats_ref?select=*"), db("stats_city?select=*"),
+  ]);
+  const r = ret[0] || {};
+  const v = bizs.reduce((a, b) => a + b.views, 0), c = bizs.reduce((a, b) => a + b.clicks, 0);
+  $("#main").innerHTML = `
+    <h2>Son 30 gün</h2>
+    <div class="cards">
+      <div class="card"><b>${r.devices ?? 0}</b><span>ziyaretçi (cihaz)</span></div>
+      <div class="card"><b>%${r.returning_pct ?? 0}</b><span>geri dönen oranı</span></div>
+      <div class="card"><b>${v}</b><span>işletme pini görüldü</span></div>
+      <div class="card"><b>%${v ? (100 * c / v).toFixed(1) : 0}</b><span>işletme tıklama oranı</span></div>
+    </div>
+    <h2>İşletmeler</h2>
+    <div class="tbl"><table><tr><th>İşletme</th><th>Şehir</th><th>Gördü</th><th>Tıkladı</th><th>Oran</th><th>Rota</th><th>Kod</th></tr>
+      ${bizs.map(b => `<tr><td>${esc(b.name)}</td><td>${esc(b.city)}</td><td>${b.views}</td><td>${b.clicks}</td><td>${b.click_pct ?? 0}%</td><td>${b.routes}</td><td>${b.codes}</td></tr>`).join("") || `<tr><td colspan="7">Henüz veri yok</td></tr>`}
+    </table></div>
+    <h2>Nereden geliyorlar</h2>
+    <div class="tbl"><table><tr><th>Kaynak</th><th>Ziyaretçi</th><th>Ziyaret</th></tr>
+      ${refs.map(x => `<tr><td>${esc(x.ref)}</td><td>${x.visitors}</td><td>${x.visits}</td></tr>`).join("") || `<tr><td colspan="3">Henüz veri yok</td></tr>`}
+    </table></div>
+    <p class="hint">İpucu: afiş ve sticker'lardaki QR'ı laloo.org/?ref=qr, Instagram linkini laloo.org/?ref=instagram yaparsan burada ayrı görünür.</p>
+    <h2>Şehirler</h2>
+    <div class="tbl"><table><tr><th>Şehir</th><th>Ziyaretçi</th><th>İşletme tıklaması</th></tr>
+      ${cs.map(x => `<tr><td>${esc(x.city || "diğer")}</td><td>${x.visitors}</td><td>${x.business_clicks}</td></tr>`).join("") || `<tr><td colspan="3">Henüz veri yok</td></tr>`}
+    </table></div>
+    <h2>Günlük</h2>
+    <div class="tbl"><table><tr><th>Gün</th><th>Ziyaretçi</th><th>Ziyaret</th><th>İşletme tıklaması</th></tr>
+      ${daily.map(d => `<tr><td>${d.day}</td><td>${d.visitors}</td><td>${d.visits}</td><td>${d.business_clicks}</td></tr>`).join("") || `<tr><td colspan="4">Henüz veri yok</td></tr>`}
+    </table></div>`;
+}
+
+// ---------- YILDIZLI YERLER ----------
+let tipCity = "";
+async function tips(edit){
+  const list = await db(`places?select=id,name,area,fee,hours,info,address,lat,lng,active,city&kind=eq.tip${tipCity ? "&city=eq." + tipCity : ""}&order=city,name`);
+  const e = edit || {};
+  $("#main").innerHTML = `
+    <h2>${e.id ? "Yeri düzenle" : "Yeni yıldızlı yer"}</h2>
+    <form class="f" id="tf">
+      <label>Ad<input name="name" required value="${esc(e.name)}"></label>
+      <label>Şehir<select name="city">${cityOpts(e.city || tipCity || "la")}</select></label>
+      <label>Semt<input name="area" value="${esc(e.area)}" placeholder="ör. Sultanahmet"></label>
+      <label>Ücret<select name="fee">${FEES.map(f => `<option ${f === e.fee ? "selected" : ""}>${f}</option>`).join("")}</select></label>
+      <label class="w">Saatler<input name="hours" value="${esc(e.hours)}" placeholder="ör. 10am to 8pm, closed Mon"></label>
+      <label class="w">Not (İngilizce, turist okuyacak)<textarea name="info">${esc(e.info)}</textarea></label>
+      <label class="w">Adres<input name="address" value="${esc(e.address)}" placeholder="ör. Galataport, Beyoğlu, İstanbul">
+        <span class="hint">"Koordinat bul"a bas, ya da boş bırak, Action ertesi sabah bulur.</span></label>
+      <label>Enlem<input name="lat" value="${e.lat ?? ""}"></label>
+      <label>Boylam<input name="lng" value="${e.lng ?? ""}"></label>
+      <div class="row w">
+        <button type="button" class="b" id="geo">📍 Koordinat bul</button>
+        <button class="b p">${e.id ? "Kaydet" : "Ekle"}</button>
+        ${e.id ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
+      </div>
+    </form>
+    <div class="row"><select id="cf" style="max-width:240px">${cityOpts(tipCity, true)}</select><span class="hint">${list.length} yer</span></div>
+    <div class="tbl" style="margin-top:10px"><table><tr><th>Ad</th><th>Şehir</th><th>Ücret</th><th>Durum</th><th></th></tr>
+      ${list.map(t => `<tr class="${t.active ? "" : "off"}"><td><b>${esc(t.name)}</b><br><span class="hint">${esc(t.area)}</span></td><td>${esc(t.city)}</td><td>${esc(t.fee)}</td>
+        <td>${t.active ? `<span class="pill ok">Yayında</span>` : t.lat == null ? `<span class="pill">Koordinat bekliyor</span>` : `<span class="pill bad">Gizli</span>`}</td>
+        <td class="row"><button class="b" data-ed="${t.id}">Düzenle</button>
+          ${t.lat != null ? `<button class="b" data-tg="${t.id}">${t.active ? "Gizle" : "Yayına al"}</button>` : ""}
+          <button class="b r" data-del="${t.id}">Sil</button></td></tr>`).join("")}
+    </table></div>`;
+  const f = $("#tf");
+  $("#cf").onchange = ev => { tipCity = ev.target.value; tips(); };
+  $("#geo").onclick = async () => {
+    try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
+    catch(err){ toast(err.message); }
+  };
+  if (e.id) $("#cancel").onclick = () => tips();
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const lat = f.lat.value.trim() ? +f.lat.value : null, lng = f.lng.value.trim() ? +f.lng.value : null;
+    const row = { kind:"tip", source:"manual", name:f.name.value.trim(), city:f.city.value, area:f.area.value.trim(),
+      fee:f.fee.value, hours:f.hours.value.trim(), info:f.info.value.trim(), address:f.address.value.trim() || null,
+      lat, lng, active: lat != null && lng != null, updated_at: new Date().toISOString() };
+    try{
+      if (e.id) await db(`places?id=eq.${e.id}`, "PATCH", row); else await db("places", "POST", row);
+      toast(row.active ? "Kaydedildi, haritada" : "Kaydedildi, koordinat yarın sabah bulunacak");
+      tips();
+    }catch(err){ toast(err.message); }
+  };
+  document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { tips(list.find(t => t.id == b.dataset.ed)); scrollTo(0, 0); });
+  document.querySelectorAll("[data-tg]").forEach(b => b.onclick = async () => {
+    const t = list.find(x => x.id == b.dataset.tg);
+    await db(`places?id=eq.${t.id}`, "PATCH", { active: !t.active }); tips();
+  });
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    const t = list.find(x => x.id == b.dataset.del);
+    if (!confirm(`"${t.name}" silinsin mi?`)) return;
+    await db(`places?id=eq.${t.id}`, "DELETE"); toast("Silindi"); tips();
+  });
+}
+
+// ---------- İŞLETMELER ----------
+function stickerInfo(b){
+  const base = new Date(b.last_verified || b.created_at.slice(0, 10));
+  const limit = b.plan === "free" ? 60 : 180;
+  const left = limit - Math.floor((Date.now() - base) / 864e5);
+  return left > 14 ? `<span class="pill ok">${left} gün</span>` : left > 0 ? `<span class="pill">${left} gün kaldı</span>` : `<span class="pill bad">Haritadan düştü</span>`;
+}
+async function biz(edit){
+  const list = await db("businesses?select=*&order=created_at.desc");
+  const e = edit || { plan:"free", plan_price_usd:0 };
+  $("#main").innerHTML = `
+    <h2>${e.id ? "İşletmeyi düzenle" : "Yeni işletme"}</h2>
+    <form class="f" id="bf">
+      <label>Ad<input name="name" required value="${esc(e.name)}"></label>
+      <label>Kategori<select name="category">${Object.entries(CATS).map(([k, v]) => `<option value="${k}" ${k === e.category ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+      <label>Şehir<select name="city">${cityOpts(e.city || "la")}</select></label>
+      <label>Saatler<input name="hours" value="${esc(e.hours)}"></label>
+      <label class="w">Tanıtım (İngilizce, 1-2 cümle)<textarea name="blurb">${esc(e.blurb)}</textarea></label>
+      <label class="w">Adres<input name="address" value="${esc(e.address)}"></label>
+      <label>Enlem<input name="lat" required value="${e.lat ?? ""}"></label>
+      <label>Boylam<input name="lng" required value="${e.lng ?? ""}"></label>
+      <label>İndirim kodu<input name="promo_code" value="${esc(e.promo_code)}"></label>
+      <label>Web sitesi<input name="website" value="${esc(e.website)}" placeholder="https://"></label>
+      <label>Paket<input name="plan" value="${esc(e.plan)}" placeholder="free, basic, pro..."></label>
+      <label>Yıllık ücret ($)<input name="plan_price_usd" type="number" value="${e.plan_price_usd ?? 0}"></label>
+      <label>Ödeme bitişi<input name="paid_until" type="date" value="${e.paid_until ?? ""}"></label>
+      <label>İletişim e-postası (gizli)<input name="contact_email" type="email" value="${esc(e.contact_email)}"></label>
+      <div class="row w">
+        <button type="button" class="b" id="geo">📍 Adresten koordinat bul</button>
+        <button class="b p">${e.id ? "Kaydet" : "Ekle"}</button>
+        ${e.id ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
+      </div>
+      <p class="hint w">Kurallar: bedava paket 60 günde, ücretli paket 180 günde bir sticker fotoğrafıyla onaylanmazsa haritadan kendiliğinden düşer. Fotoğraf gelince "Sticker onaylandı"ya bas.</p>
+    </form>
+    <div class="tbl"><table><tr><th>İşletme</th><th>Paket</th><th>Sticker</th><th></th></tr>
+      ${list.map(b => `<tr class="${b.active ? "" : "off"}"><td><b>${CATS[b.category] ? CATS[b.category].split(" ")[0] : "🛍️"} ${esc(b.name)}</b><br><span class="hint">${esc(b.city)} · ${esc(b.address)}</span></td>
+        <td>${esc(b.plan)}${b.plan_price_usd ? ` · $${b.plan_price_usd}` : ""}${b.paid_until ? `<br><span class="hint">bitiş ${b.paid_until}</span>` : ""}</td>
+        <td>${stickerInfo(b)}${b.last_verified ? `<br><span class="hint">son ${b.last_verified}</span>` : ""}</td>
+        <td class="row"><button class="b" data-ok="${b.id}">✅ Sticker onaylandı</button><button class="b" data-ed="${b.id}">Düzenle</button>
+          <button class="b" data-tg="${b.id}">${b.active ? "Gizle" : "Yayına al"}</button><button class="b r" data-del="${b.id}">Sil</button></td></tr>`).join("") || `<tr><td colspan="4">Henüz işletme yok</td></tr>`}
+    </table></div>`;
+  const f = $("#bf");
+  $("#geo").onclick = async () => {
+    try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
+    catch(err){ toast(err.message); }
+  };
+  if (e.id) $("#cancel").onclick = () => biz();
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const web = f.website.value.trim();
+    const row = { name:f.name.value.trim(), category:f.category.value, city:f.city.value, hours:f.hours.value.trim(),
+      blurb:f.blurb.value.trim(), address:f.address.value.trim(), lat:+f.lat.value, lng:+f.lng.value,
+      promo_code:f.promo_code.value.trim() || null, website: web ? (/^https?:\/\//.test(web) ? web : "https://" + web) : null,
+      plan:f.plan.value.trim() || "free", plan_price_usd:+f.plan_price_usd.value || 0,
+      paid_until:f.paid_until.value || null, contact_email:f.contact_email.value.trim() || null };
+    if (!e.id) row.last_verified = today();
+    try{
+      if (e.id) await db(`businesses?id=eq.${e.id}`, "PATCH", row); else await db("businesses", "POST", row);
+      toast("Kaydedildi"); biz();
+    }catch(err){ toast(err.message); }
+  };
+  const find = id => list.find(x => x.id === id);
+  document.querySelectorAll("[data-ok]").forEach(b => b.onclick = async () => { await db(`businesses?id=eq.${b.dataset.ok}`, "PATCH", { last_verified: today() }); toast("Onaylandı"); biz(); });
+  document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { biz(find(b.dataset.ed)); scrollTo(0, 0); });
+  document.querySelectorAll("[data-tg]").forEach(b => b.onclick = async () => { const x = find(b.dataset.tg); await db(`businesses?id=eq.${x.id}`, "PATCH", { active: !x.active }); biz(); });
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    const x = find(b.dataset.del);
+    if (!confirm(`"${x.name}" silinsin mi? İstatistikleri de kaybolur, gerekirse "Gizle"yi kullan.`)) return;
+    await db(`businesses?id=eq.${x.id}`, "DELETE"); toast("Silindi"); biz();
+  });
+}
+
+// ---------- ÖNERİLER ----------
+async function sugg(){
+  const list = await db("suggestions?select=*&status=eq.pending&order=created_at.desc");
+  $("#main").innerHTML = `
+    <h2>Bekleyen öneriler</h2>
+    <p class="hint">Günlük tarayıcı ve sitedeki öneri formu buraya düşürecek. Onaylarsan yıldızlı yer formu dolu gelir, son kontrolü sen yaparsın.</p>
+    <div class="tbl"><table><tr><th>Öneri</th><th>Kaynak</th><th></th></tr>
+      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}</span><br>${esc(s.note)}</td>
+        <td>${esc(s.source)}${s.url ? `<br><a href="${esc(s.url)}" target="_blank" rel="noopener">bağlantı</a>` : ""}</td>
+        <td class="row"><button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="3">Bekleyen öneri yok</td></tr>`}
+    </table></div>`;
+  document.querySelectorAll("[data-ap]").forEach(b => b.onclick = async () => {
+    const s = list.find(x => x.id == b.dataset.ap);
+    await db(`suggestions?id=eq.${s.id}`, "PATCH", { status:"approved" });
+    document.querySelectorAll("nav button").forEach(n => n.classList.toggle("on", n.dataset.t === "tips"));
+    tips({ name:s.name, city:s.city, address:s.address, info:s.note });
+  });
+  document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); sugg(); });
+}
+
+// ---------- AYARLAR ----------
+async function set(){
+  let off = false; try{ off = !!localStorage.getItem("laloo_notrack"); }catch(e){}
+  $("#main").innerHTML = `
+    <h2>Bu cihaz</h2>
+    <div class="card"><div class="row"><span>${off ? "✅ Bu cihaz istatistiklere <b>sayılmıyor</b>." : "Bu cihaz şu an istatistiklere sayılıyor."}</span>
+      <button class="b ${off ? "" : "p"}" id="nt">${off ? "Tekrar say" : "Bu cihazı sayma"}</button></div>
+      <p class="hint">Senin ve çalışanların telefonlarında laloo.org/admin.html'i bir kez açıp bu düğmeye basın. Giriş yapmaya gerek yok, düğme giriş ekranının altında da var.</p></div>
+    <h2>Test verileri</h2>
+    <div class="card"><div class="row"><span>Tüm ölçüm kayıtlarını sil (gerçek sayıma başlamadan önce bir kez).</span><button class="b r" id="wipe">Hepsini sil</button></div></div>
+    <h2>Şehirler</h2>
+    <div class="tbl"><table><tr><th>Şehir</th><th>Kod</th><th>Durum</th><th></th></tr>
+      ${cities.map(c => `<tr class="${c.active ? "" : "off"}"><td>${esc(c.name)}</td><td>${c.id}</td><td>${c.active ? `<span class="pill ok">Açık</span>` : `<span class="pill bad">Kapalı</span>`}</td>
+        <td><button class="b" data-ct="${c.id}">${c.active ? "Kapat" : "Aç"}</button></td></tr>`).join("")}
+    </table></div>
+    <p class="hint">Yeni şehir eklemek için bana şehir adını söylemen yeterli, sınırlarını ben hazırlarım.</p>`;
+  $("#nt").onclick = () => { try{ off ? localStorage.removeItem("laloo_notrack") : localStorage.setItem("laloo_notrack", "1"); }catch(e){} toast(off ? "Bu cihaz tekrar sayılıyor" : "Bu cihaz artık sayılmıyor"); set(); };
+  $("#wipe").onclick = async () => {
+    if (!confirm("Tüm ölçüm kayıtları kalıcı olarak silinsin mi?")) return;
+    await db("events?id=gt.0", "DELETE"); toast("Silindi, sayım sıfırdan başladı");
+  };
+  document.querySelectorAll("[data-ct]").forEach(b => b.onclick = async () => {
+    const c = cities.find(x => x.id === b.dataset.ct);
+    await db(`cities?id=eq.${c.id}`, "PATCH", { active: !c.active }); await loadCities(); set();
+  });
+}
+
+// Giriş ekranında da "bu cihazı sayma"
+(() => {
+  const btn = document.createElement("button");
+  btn.className = "b"; btn.type = "button";
+  const lbl = () => { let off = false; try{ off = !!localStorage.getItem("laloo_notrack"); }catch(e){} btn.textContent = off ? "✅ Bu cihaz sayılmıyor" : "Bu cihazı istatistiğe sayma"; return off; };
+  lbl();
+  btn.onclick = () => { const off = lbl(); try{ off ? localStorage.removeItem("laloo_notrack") : localStorage.setItem("laloo_notrack", "1"); }catch(e){} lbl(); };
+  $("#login").appendChild(btn);
+})();
+
+// Başlat
+if (S) showApp().catch(() => showLogin()); else showLogin();
+</script>
+</body>
+</html>
