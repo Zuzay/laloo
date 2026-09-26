@@ -88,6 +88,33 @@ if not SB_SECRET:
   if len(pts) < 50: sys.exit(f"Too few results ({len(pts)}), not saving")
   save_json(pts); sys.exit(0)
 
+# ---------- 1) Adresle eklenen ipuçlarına koordinat bul (her gün) ----------
+def geocode():
+  todo = sb("GET", "places?select=id,name,address,city&lat=is.null&address=not.is.null&limit=200", prefer="")
+  print(f"Geocoding {len(todo)} places")
+  for p in todo:
+    q = urllib.parse.urlencode({"q": p["address"], "format": "json", "limit": 1})
+    req = urllib.request.Request("https://nominatim.openstreetmap.org/search?" + q,
+                                 headers={"User-Agent": "laloo.org updater (hello@laloo.org)"})
+    try:
+      with urllib.request.urlopen(req, timeout=30) as r:
+        res = json.load(r)
+    except Exception as e:
+      print("  error", p["name"], e); res = []
+    if res:
+      sb("PATCH", f"places?id=eq.{p['id']}", {"lat": float(res[0]["lat"]), "lng": float(res[0]["lon"]), "active": True})
+      print("  OK", p["name"])
+    else:
+      print("  NOT FOUND", p["name"], "|", p["address"])
+    time.sleep(1.2)   # Nominatim kuralı: saniyede en fazla 1 istek
+
+geocode()
+
+# ---------- 2) OSM tuvaletleri (pazartesi ya da elle çalıştırınca) ----------
+event = os.environ.get("GITHUB_EVENT_NAME", "manual")
+if event == "schedule" and datetime.now(timezone.utc).weekday() != 0:
+  print("Daily run: OSM refresh skipped (Mondays only)"); sys.exit(0)
+
 run = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 cities = sb("GET", "cities?select=*&active=eq.true", prefer="")
 print("Cities:", [c["id"] for c in cities])
