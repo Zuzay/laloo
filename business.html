@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>List your business on Laloo</title>
+<meta name="description" content="Tourists looking for a bathroom see your business on the map on their way. Free basic listing.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{--navy:#10223d;--blue:#1c4fa0;--red:#e02424;--bg:#fefef8;--line:#e3e0d6;--muted:#5b6b82}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--navy);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:env(safe-area-inset-bottom,0px)}
+  header{padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 10px;display:flex;align-items:center;justify-content:space-between;max-width:720px;margin:0 auto}
+  header img{height:34px}
+  header a{color:var(--blue);font-weight:600;font-size:14px;text-decoration:none}
+  main{max-width:720px;margin:0 auto;padding:6px 18px 40px}
+  h1{font-size:30px;line-height:1.15;margin:14px 0 10px;letter-spacing:-.01em}
+  .lead{font-size:17px;color:var(--muted);margin:0 0 22px}
+  .how{display:grid;gap:12px;margin:0 0 28px}
+  .how > div{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .how .pin{flex:none;width:34px;height:34px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);display:grid;place-items:center;font-size:16px}
+  .how b{display:block}
+  .how span{color:var(--muted);font-size:15px}
+  form{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  form h2{grid-column:1/-1;margin:0;font-size:20px}
+  .w{grid-column:1/-1}
+  label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600}
+  label small{font-weight:400;color:var(--muted)}
+  input,select,textarea{font:inherit;font-size:16px;color:var(--navy);border:1px solid #c5d0de;border-radius:10px;padding:10px;background:#fff;width:100%}
+  textarea{min-height:80px;resize:vertical}
+  .chk{flex-direction:row;align-items:flex-start;gap:10px;font-weight:400;font-size:14px}
+  .chk input{width:auto;margin-top:3px}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  button{font:inherit;font-weight:700;font-size:16px;background:var(--blue);color:#fff;border:0;border-radius:12px;padding:13px;cursor:pointer}
+  button:disabled{opacity:.6}
+  #msg{grid-column:1/-1;margin:0;font-weight:600}
+  .ok{color:#1b7a3a}.err{color:#b01c1c}
+  .fine{font-size:13px;color:var(--muted);margin-top:18px}
+  @media (max-width:600px){ form{grid-template-columns:1fr} h1{font-size:26px} }
+</style>
+</head>
+<body>
+<header><a href="./"><img src="logo-header.png" alt="LALOO"></a><a href="./">Open the map</a></header>
+<main>
+  <h1>Put your business on the map tourists use to find a bathroom.</h1>
+  <p class="lead">When a visitor near you looks for a restroom, Laloo shows your place as a red pin on their walk. Basic listing is free.</p>
+
+  <div class="how">
+    <div><span class="pin">📍</span><div><b>You show up on the way</b><span>A red pin with your name, hours, a short description and a walking route.</span></div></div>
+    <div><span class="pin">🎟️</span><div><b>Offer a code</b><span>Add a discount code. Visitors copy it with one tap and show it at your counter.</span></div></div>
+    <div><span class="pin">📊</span><div><b>See the numbers</b><span>How many people saw your pin, tapped it, asked for a route and copied your code.</span></div></div>
+    <div><span class="pin">🪟</span><div><b>One sticker in your window</b><span>We send you a window sticker. Every 2 months, send us a quick photo of it to keep your free listing active.</span></div></div>
+  </div>
+
+  <form id="f" novalidate>
+    <h2>List your business</h2>
+    <label>Business name<input name="business_name" maxlength="120" required></label>
+    <label>Type
+      <select name="category">
+        <option value="food">🍽️ Restaurant</option><option value="cafe">☕ Café</option><option value="clothing">👕 Clothing</option>
+        <option value="vintage">👗 Vintage</option><option value="market">🧺 Market</option><option value="fruit">🍎 Fresh produce</option>
+        <option value="beauty">💈 Beauty</option><option value="tailor">🧵 Tailor</option><option value="art">🎨 Art</option>
+      </select></label>
+    <label>City<select name="city" id="city"><option value="">Loading…</option></select></label>
+    <label>Website <small>(optional)</small><input name="website" maxlength="200" placeholder="yourbusiness.com"></label>
+    <label class="w">Full address<input name="address" maxlength="250" required placeholder="Street, number, city"></label>
+    <label class="w">Short description <small>(1 or 2 sentences, shown on the map)</small><textarea name="blurb" maxlength="400"></textarea></label>
+    <label>Opening hours <small>(optional)</small><input name="hours" maxlength="120" placeholder="10am to 6pm, closed Mon"></label>
+    <label>Discount code <small>(optional)</small><input name="promo_code" maxlength="40" placeholder="LALOO10"></label>
+    <label>Your name<input name="contact_name" maxlength="120"></label>
+    <label>Email<input name="email" type="email" maxlength="200" required></label>
+    <label>Phone <small>(optional)</small><input name="phone" maxlength="40"></label>
+    <label>Referral code <small>(if someone sent you)</small><input name="ref_code" maxlength="40"></label>
+    <input name="company_site" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="chk w"><input type="checkbox" name="agree" required> I own or manage this business and agree to show the Laloo sticker and send a photo of it every 2 months to keep the free listing.</label>
+    <p id="msg" hidden></p>
+    <button class="w" id="go">Send</button>
+  </form>
+  <p class="fine">We only use your contact details to manage your listing. Questions: <a href="mailto:hello@laloo.org">hello@laloo.org</a></p>
+</main>
+<script>
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
+const f = document.getElementById("f"), msg = document.getElementById("msg"), go = document.getElementById("go");
+const say = (t, cls) => { msg.textContent = t; msg.className = cls; msg.hidden = false; };
+
+// Temsilci kodu linkten: laloo.org/business.html?ref=KOD
+const ref = new URLSearchParams(location.search).get("ref");
+if (ref) f.ref_code.value = ref.slice(0, 40);
+
+fetch(SB_URL + "/rest/v1/cities?select=id,name&order=name", { headers:{ apikey:SB_KEY } })
+  .then(r => r.json()).then(cs => {
+    document.getElementById("city").innerHTML = cs.map(c => `<option value="${c.id}">${c.name.replace(/</g, "")}</option>`).join("") + `<option value="">Other city</option>`;
+  }).catch(() => { document.getElementById("city").innerHTML = `<option value="">Other city</option>`; });
+
+f.onsubmit = async e => {
+  e.preventDefault();
+  if (f.company_site.value){ say("Thanks! Check your inbox.", "ok"); return; }   // bot tuzağı
+  const v = n => f[n].value.trim();
+  if (v("business_name").length < 2) return say("Please enter the business name.", "err");
+  if (v("address").length < 5) return say("Please enter the full address.", "err");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("email"))) return say("Please enter a valid email.", "err");
+  if (!f.agree.checked) return say("Please tick the box to agree.", "err");
+  let web = v("website");
+  if (web && !/^https?:\/\//i.test(web)) web = "https://" + web;
+  const body = { business_name:v("business_name"), category:f.category.value, city:f.city.value || null, address:v("address"),
+    website:web || null, contact_name:v("contact_name") || null, email:v("email"), phone:v("phone") || null,
+    hours:v("hours") || null, blurb:v("blurb") || null, promo_code:v("promo_code") || null,
+    ref_code:v("ref_code") || null, lang:(navigator.language || "en").slice(0, 10) };
+  go.disabled = true;
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/business_signups", { method:"POST",
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" }, body:JSON.stringify(body) });
+    if (!r.ok) throw new Error(r.status);
+    f.querySelectorAll("input,select,textarea").forEach(el => el.disabled = true);
+    say("Thanks! You're in. Check your inbox for a welcome email. We'll review your listing and put you on the map within 2 days.", "ok");
+    go.hidden = true;
+  }catch(err){
+    say("Couldn't send, please try again or email hello@laloo.org.", "err");
+    go.disabled = false;
+  }
+};
+</script>
+</body>
+</html>

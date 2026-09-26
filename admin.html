@@ -262,10 +262,19 @@ function stickerInfo(b){
   return left > 14 ? `<span class="pill ok">${left} gün</span>` : left > 0 ? `<span class="pill">${left} gün kaldı</span>` : `<span class="pill bad">Haritadan düştü</span>`;
 }
 async function biz(edit){
-  const list = await db("businesses?select=*&order=created_at.desc");
+  const [list, apps] = await Promise.all([
+    db("businesses?select=*&order=created_at.desc"),
+    db("business_signups?select=*&status=eq.pending&order=created_at.desc"),
+  ]);
   const e = edit || { plan:"free", plan_price_usd:0 };
   $("#main").innerHTML = `
-    <h2>${e.id ? "İşletmeyi düzenle" : "Yeni işletme"}</h2>
+    ${apps.length && !e.id && !e._signup ? `<h2>📨 Yeni başvurular (${apps.length})</h2>
+    <div class="tbl" style="margin-bottom:14px"><table><tr><th>Başvuru</th><th>İletişim</th><th></th></tr>
+      ${apps.map(a => `<tr><td><b>${esc(a.business_name)}</b> <span class="hint">${esc(a.category)} · ${esc(a.city || "diğer şehir")}</span><br><span class="hint">${esc(a.address)}</span><br>${esc(a.blurb)}${a.ref_code ? `<br><span class="pill">ref: ${esc(a.ref_code)}</span>` : ""}</td>
+        <td>${esc(a.contact_name)}<br><a href="mailto:${esc(a.email)}">${esc(a.email)}</a>${a.phone ? `<br>${esc(a.phone)}` : ""}<br><span class="hint">${a.created_at.slice(0, 10)}</span></td>
+        <td class="row"><button class="b p" data-app="${a.id}">İncele ve onayla</button><button class="b r" data-rej="${a.id}">Reddet</button></td></tr>`).join("")}
+    </table></div>` : ""}
+    <h2>${e.id ? "İşletmeyi düzenle" : e._signup ? "Başvuruyu onayla: bilgileri kontrol et, Ekle'ye bas" : "Yeni işletme"}</h2>
     <form class="f" id="bf">
       <label>Ad<input name="name" required value="${esc(e.name)}"></label>
       <label>Kategori<select name="category">${Object.entries(CATS).map(([k, v]) => `<option value="${k}" ${k === e.category ? "selected" : ""}>${v}</option>`).join("")}</select></label>
@@ -284,7 +293,7 @@ async function biz(edit){
       <div class="row w">
         <button type="button" class="b" id="geo">📍 Adresten koordinat bul</button>
         <button class="b p">${e.id ? "Kaydet" : "Ekle"}</button>
-        ${e.id ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
+        ${e.id || e._signup ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
       </div>
       <p class="hint w">Kurallar: bedava paket 60 günde, ücretli paket 180 günde bir sticker fotoğrafıyla onaylanmazsa haritadan kendiliğinden düşer. Fotoğraf gelince "Sticker onaylandı"ya bas.</p>
     </form>
@@ -300,7 +309,7 @@ async function biz(edit){
     try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
     catch(err){ toast(err.message); }
   };
-  if (e.id) $("#cancel").onclick = () => biz();
+  if (e.id || e._signup) { const c = $("#cancel"); if (c) c.onclick = () => biz(); }
   f.onsubmit = async ev => {
     ev.preventDefault();
     const web = f.website.value.trim();
@@ -310,12 +319,29 @@ async function biz(edit){
       plan:f.plan.value.trim() || "free", plan_price_usd:+f.plan_price_usd.value || 0,
       paid_until:f.paid_until.value || null, contact_email:f.contact_email.value.trim() || null };
     if (!e.id) row.last_verified = today();
+    if (e._partner) row.partner_id = e._partner;
     try{
-      if (e.id) await db(`businesses?id=eq.${e.id}`, "PATCH", row); else await db("businesses", "POST", row);
-      toast("Kaydedildi"); biz();
+      if (e.id) await db(`businesses?id=eq.${e.id}`, "PATCH", row);
+      else {
+        const made = await db("businesses", "POST", row, "return=representation");
+        if (e._signup) await db(`business_signups?id=eq.${e._signup}`, "PATCH", { status:"approved", business_id: made[0].id });
+      }
+      toast(e._signup ? "Onaylandı, haritada" : "Kaydedildi"); biz();
     }catch(err){ toast(err.message); }
   };
   const find = id => list.find(x => x.id === id);
+  document.querySelectorAll("[data-app]").forEach(b => b.onclick = async () => {
+    const a = apps.find(x => x.id == b.dataset.app);
+    const pre = { _signup:a.id, name:a.business_name, category:a.category, city:a.city || "la", address:a.address, hours:a.hours,
+      blurb:a.blurb, promo_code:a.promo_code, website:a.website, contact_email:a.email, plan:"free", plan_price_usd:0 };
+    if (a.ref_code){ try{ const pr = await db(`partners?select=id&ref_code=eq.${encodeURIComponent(a.ref_code)}`); if (pr.length) pre._partner = pr[0].id; }catch(err){} }
+    try{ const g = await geocode(a.address); pre.lat = g.lat; pre.lng = g.lng; }catch(err){ toast("Adres bulunamadı, koordinatı elle gir"); }
+    await biz(pre); scrollTo(0, 0);
+  });
+  document.querySelectorAll("[data-rej]").forEach(b => b.onclick = async () => {
+    if (!confirm("Başvuru reddedilsin mi?")) return;
+    await db(`business_signups?id=eq.${b.dataset.rej}`, "PATCH", { status:"rejected" }); biz();
+  });
   document.querySelectorAll("[data-ok]").forEach(b => b.onclick = async () => { await db(`businesses?id=eq.${b.dataset.ok}`, "PATCH", { last_verified: today() }); toast("Onaylandı"); biz(); });
   document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { biz(find(b.dataset.ed)); scrollTo(0, 0); });
   document.querySelectorAll("[data-tg]").forEach(b => b.onclick = async () => { const x = find(b.dataset.tg); await db(`businesses?id=eq.${x.id}`, "PATCH", { active: !x.active }); biz(); });
