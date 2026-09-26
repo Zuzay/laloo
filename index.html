@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LALOO · Find a bathroom anywhere</title>
-<meta name="description" content="A simple map of bathrooms in Los Angeles: public restrooms, cafés and restaurants.">
+<meta name="description" content="Find the nearest bathroom anywhere: public restrooms, cafés and local tips on one map. No app to download.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#fefef8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Laloo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -17,16 +23,17 @@
     padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;
     display:flex;align-items:center;justify-content:space-between;gap:10px;
   }
-  header h1{margin:0;line-height:0}
-  header h1 img{height:40px;width:auto;display:block}
-  header h1 span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  header h1{margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1}
+  header h1 img{height:34px;width:auto;display:block}
+  header h1 span{font-size:11.5px;font-weight:600;letter-spacing:.02em;color:#10223d;opacity:.75;padding-left:2px;max-width:58vw;line-height:1.2}
   #locate{
     flex:none;background:#1c4fa0;color:#fff;border:0;border-radius:8px;
     font:inherit;font-weight:700;font-size:14px;padding:9px 12px;cursor:pointer;
   }
-  .bar{display:flex;gap:6px;padding:8px 10px;background:#eef3fa;border-bottom:1px solid #d3dae3}
+  .bar{display:flex;gap:6px;padding:8px 10px;background:#eef3fa;border-bottom:1px solid #d3dae3;overflow-x:auto;scrollbar-width:none}
+  .bar::-webkit-scrollbar{display:none}
   .bar button{
-    flex:1;border:1px solid #c5d0de;background:#fff;color:#10223d;border-radius:18px;
+    flex:1 0 auto;white-space:nowrap;border:1px solid #c5d0de;background:#fff;color:#10223d;border-radius:18px;
     font:inherit;font-size:13px;padding:6px 8px;cursor:pointer;
   }
   .bar button.on{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
@@ -41,6 +48,17 @@
     background:#1c4fa0;color:#fff;text-decoration:none;font-size:13px;font-weight:700;
     padding:9px 12px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.3);
   }
+  #install{
+    position:absolute;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);z-index:1100;
+    background:#fff;color:#10223d;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.28);
+    padding:12px 14px;display:none;align-items:center;gap:10px;max-width:460px;margin:0 auto;font-size:14px;
+  }
+  #install img{width:40px;height:40px;border-radius:9px;flex:none}
+  #install div{flex:1;line-height:1.35}
+  #install b{display:block}
+  #install button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
+  #install .add{background:#1c4fa0;color:#fff}
+  #install .x{background:none;color:#6b7688;padding:6px}
   .tip b{display:block;margin-bottom:2px}
   .tip .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;margin:2px 4px 4px 0;background:#e8f0fb;color:#1c4fa0}
   .tip .tag.free{background:#e3f6e8;color:#1b7a3a}
@@ -68,21 +86,109 @@
 </head>
 <body>
 <header>
-  <h1><img src="logo-header.png" alt="LALOO"><span>Find a bathroom anywhere</span></h1>
-  <button id="locate">📍 Near me</button>
+  <h1><img src="logo-header.png" alt="LALOO"><span data-i="tag">Find a bathroom anywhere</span></h1>
+  <button id="locate" data-i="near">📍 Near me</button>
 </header>
 <div class="bar">
-  <button data-f="all" class="on">All</button>
-  <button data-f="public">🚻 Public</button>
-  <button data-f="cafe">☕ Cafés</button>
-  <button data-f="tip">⭐ Tips</button>
+  <button data-f="all" class="on" data-i="all">All</button>
+  <button data-f="public" data-i="pub">🚻 Public</button>
+  <button data-f="cafe" data-i="cafe">☕ Cafés</button>
+  <button data-f="tip" data-i="tips">⭐ Tips</button>
 </div>
 <div id="map"></div>
 <div id="msg"></div>
-<a id="contact" href="mailto:hello@laloo.org?subject=Laloo">✉️ Add a bathroom · Advertise</a>
+<div id="install"><img src="icon-192.png" alt=""><div><b data-i="inst_t">Add Laloo to your home screen</b><span id="insttxt" data-i="inst_s">One tap to the nearest bathroom. No app store.</span></div><button class="add" id="instbtn" data-i="inst_add">Add</button><button class="x" id="instx" aria-label="Close">✕</button></div>
+<a id="contact" href="mailto:hello@laloo.org?subject=Laloo" data-i="contact">✉️ Add a bathroom · Advertise</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
+// ================= DİLLER =================
+// Telefonun diline göre otomatik. Yeni dil = yeni blok. Olmayan yazı İngilizceye düşer.
+const TXT = {
+en:{tag:"Find a bathroom anywhere",near:"📍 Near me",all:"All",pub:"🚻 Public",cafe:"☕ Cafés",tips:"⭐ Tips",contact:"✉️ Add a bathroom · Advertise",
+ inst_t:"Add Laloo to your home screen",inst_s:"One tap to the nearest bathroom. No app store.",inst_add:"Add",inst_ios:"Tap the Share button, then \"Add to Home Screen\".",
+ loading:"Loading…",loadingB:"Loading bathrooms…",loadFail:"Couldn't load bathrooms, tap to retry",zoom:"Zoom in to see bathrooms",noTips:"No tips in this area yet, zoom out",noBath:"No bathrooms in this area",
+ allowRoute:"Allow location to get a route",allowLoc:"Allow location to see bathrooms near you",noLoc:"Location isn't available",finding:"Finding the way…",copied:"Code copied. Show it at the counter",min:"min",
+ route:"🚶 Show route",gmaps:"Google Maps",web:"Website",local:"Local spot",code:"🎟️ Tap to copy code:",
+ Free:"Free",Paid:"Paid",Customers:"Customers",Ticket:"Ticket",askInside:"Ask inside, usually for customers",custOnly:"Customers only",pubRest:"Public restroom",rest:"Restroom"},
+tr:{tag:"Her yerde tuvalet bul",near:"📍 Yakınımda",all:"Tümü",pub:"🚻 Umumi",cafe:"☕ Kafeler",tips:"⭐ Öneriler",contact:"✉️ Tuvalet ekle · Reklam ver",
+ inst_t:"Laloo'yu ana ekranına ekle",inst_s:"En yakın tuvalete tek dokunuş. Uygulama mağazası yok.",inst_add:"Ekle",inst_ios:"Paylaş düğmesine, sonra \"Ana Ekrana Ekle\"ye dokun.",
+ loading:"Yükleniyor…",loadingB:"Tuvaletler yükleniyor…",loadFail:"Tuvaletler yüklenemedi, tekrar denemek için dokun",zoom:"Tuvaletleri görmek için yakınlaştır",noTips:"Bu bölgede henüz öneri yok, uzaklaştır",noBath:"Bu bölgede tuvalet yok",
+ allowRoute:"Rota için konum izni ver",allowLoc:"Yakındaki tuvaletleri görmek için konum izni ver",noLoc:"Konum kullanılamıyor",finding:"Yol bulunuyor…",copied:"Kod kopyalandı. Kasada göster",min:"dk",
+ route:"🚶 Rotayı göster",gmaps:"Google Haritalar",web:"Web sitesi",local:"Yerel mekan",code:"🎟️ Kodu kopyalamak için dokun:",
+ Free:"Ücretsiz",Paid:"Ücretli",Customers:"Müşterilere",Ticket:"Biletle",askInside:"İçeride sor, genelde müşterilere",custOnly:"Sadece müşterilere",pubRest:"Umumi tuvalet",rest:"Tuvalet"},
+es:{tag:"Encuentra un baño en cualquier lugar",near:"📍 Cerca de mí",all:"Todo",pub:"🚻 Públicos",cafe:"☕ Cafés",tips:"⭐ Consejos",contact:"✉️ Añadir un baño · Anunciarse",
+ inst_t:"Añade Laloo a tu pantalla de inicio",inst_s:"A un toque del baño más cercano. Sin tienda de apps.",inst_add:"Añadir",inst_ios:"Toca Compartir y luego \"Añadir a pantalla de inicio\".",
+ loading:"Cargando…",loadingB:"Cargando baños…",loadFail:"No se pudieron cargar los baños, toca para reintentar",zoom:"Acerca el mapa para ver baños",noTips:"Aún no hay consejos en esta zona, aleja el mapa",noBath:"No hay baños en esta zona",
+ allowRoute:"Permite la ubicación para ver la ruta",allowLoc:"Permite la ubicación para ver baños cerca de ti",noLoc:"Ubicación no disponible",finding:"Buscando el camino…",copied:"Código copiado. Muéstralo en caja",min:"min",
+ route:"🚶 Ver ruta",gmaps:"Google Maps",web:"Sitio web",local:"Negocio local",code:"🎟️ Toca para copiar el código:",
+ Free:"Gratis",Paid:"De pago",Customers:"Clientes",Ticket:"Con entrada",askInside:"Pregunta dentro, suele ser para clientes",custOnly:"Solo clientes",pubRest:"Baño público",rest:"Baño"},
+fr:{tag:"Trouvez des toilettes partout",near:"📍 Près de moi",all:"Tout",pub:"🚻 Publiques",cafe:"☕ Cafés",tips:"⭐ Bons plans",contact:"✉️ Ajouter des toilettes · Publicité",
+ inst_t:"Ajoutez Laloo à votre écran d'accueil",inst_s:"Les toilettes les plus proches en un geste. Sans app store.",inst_add:"Ajouter",inst_ios:"Touchez Partager, puis « Sur l'écran d'accueil ».",
+ loading:"Chargement…",loadingB:"Chargement des toilettes…",loadFail:"Impossible de charger les toilettes, touchez pour réessayer",zoom:"Zoomez pour voir les toilettes",noTips:"Pas encore de bons plans ici, dézoomez",noBath:"Pas de toilettes dans cette zone",
+ allowRoute:"Autorisez la localisation pour l'itinéraire",allowLoc:"Autorisez la localisation pour voir les toilettes proches",noLoc:"Localisation indisponible",finding:"Recherche du chemin…",copied:"Code copié. Montrez-le en caisse",min:"min",
+ route:"🚶 Itinéraire",gmaps:"Google Maps",web:"Site web",local:"Adresse locale",code:"🎟️ Touchez pour copier le code :",
+ Free:"Gratuit",Paid:"Payant",Customers:"Clients",Ticket:"Avec billet",askInside:"Demandez à l'intérieur, souvent pour les clients",custOnly:"Clients uniquement",pubRest:"Toilettes publiques",rest:"Toilettes"},
+de:{tag:"Finde überall eine Toilette",near:"📍 In der Nähe",all:"Alle",pub:"🚻 Öffentlich",cafe:"☕ Cafés",tips:"⭐ Tipps",contact:"✉️ Toilette melden · Werben",
+ inst_t:"Laloo zum Home-Bildschirm hinzufügen",inst_s:"Ein Tipp zur nächsten Toilette. Kein App Store.",inst_add:"Hinzufügen",inst_ios:"Tippe auf Teilen, dann auf „Zum Home-Bildschirm“.",
+ loading:"Lädt…",loadingB:"Toiletten werden geladen…",loadFail:"Toiletten konnten nicht geladen werden, zum Wiederholen tippen",zoom:"Hineinzoomen, um Toiletten zu sehen",noTips:"Hier noch keine Tipps, herauszoomen",noBath:"Keine Toiletten in diesem Bereich",
+ allowRoute:"Standort erlauben, um eine Route zu sehen",allowLoc:"Standort erlauben, um Toiletten in der Nähe zu sehen",noLoc:"Standort nicht verfügbar",finding:"Weg wird gesucht…",copied:"Code kopiert. An der Kasse zeigen",min:"Min.",
+ route:"🚶 Route zeigen",gmaps:"Google Maps",web:"Website",local:"Lokaler Tipp",code:"🎟️ Tippen, um den Code zu kopieren:",
+ Free:"Kostenlos",Paid:"Kostenpflichtig",Customers:"Für Kunden",Ticket:"Mit Ticket",askInside:"Drinnen fragen, meist für Kunden",custOnly:"Nur für Kunden",pubRest:"Öffentliche Toilette",rest:"Toilette"},
+it:{tag:"Trova un bagno ovunque",near:"📍 Vicino a me",all:"Tutti",pub:"🚻 Pubblici",cafe:"☕ Bar e caffè",tips:"⭐ Consigli",contact:"✉️ Aggiungi un bagno · Pubblicità",
+ inst_t:"Aggiungi Laloo alla schermata Home",inst_s:"Il bagno più vicino in un tocco. Senza app store.",inst_add:"Aggiungi",inst_ios:"Tocca Condividi, poi \"Aggiungi alla schermata Home\".",
+ loading:"Caricamento…",loadingB:"Caricamento bagni…",loadFail:"Impossibile caricare i bagni, tocca per riprovare",zoom:"Ingrandisci per vedere i bagni",noTips:"Ancora nessun consiglio qui, riduci lo zoom",noBath:"Nessun bagno in questa zona",
+ allowRoute:"Consenti la posizione per il percorso",allowLoc:"Consenti la posizione per vedere i bagni vicini",noLoc:"Posizione non disponibile",finding:"Cerco la strada…",copied:"Codice copiato. Mostralo alla cassa",min:"min",
+ route:"🚶 Mostra percorso",gmaps:"Google Maps",web:"Sito web",local:"Locale della zona",code:"🎟️ Tocca per copiare il codice:",
+ Free:"Gratis",Paid:"A pagamento",Customers:"Clienti",Ticket:"Con biglietto",askInside:"Chiedi dentro, di solito per i clienti",custOnly:"Solo clienti",pubRest:"Bagno pubblico",rest:"Bagno"},
+pt:{tag:"Encontre um banheiro em qualquer lugar",near:"📍 Perto de mim",all:"Todos",pub:"🚻 Públicos",cafe:"☕ Cafés",tips:"⭐ Dicas",contact:"✉️ Adicionar banheiro · Anunciar",
+ inst_t:"Adicione o Laloo à tela inicial",inst_s:"O banheiro mais próximo em um toque. Sem loja de apps.",inst_add:"Adicionar",inst_ios:"Toque em Compartilhar e depois em \"Adicionar à Tela de Início\".",
+ loading:"Carregando…",loadingB:"Carregando banheiros…",loadFail:"Não foi possível carregar, toque para tentar de novo",zoom:"Aproxime o mapa para ver banheiros",noTips:"Ainda não há dicas aqui, afaste o mapa",noBath:"Nenhum banheiro nesta área",
+ allowRoute:"Permita a localização para ver a rota",allowLoc:"Permita a localização para ver banheiros perto de você",noLoc:"Localização indisponível",finding:"Buscando o caminho…",copied:"Código copiado. Mostre no caixa",min:"min",
+ route:"🚶 Ver rota",gmaps:"Google Maps",web:"Site",local:"Negócio local",code:"🎟️ Toque para copiar o código:",
+ Free:"Grátis",Paid:"Pago",Customers:"Clientes",Ticket:"Com ingresso",askInside:"Pergunte lá dentro, geralmente para clientes",custOnly:"Só clientes",pubRest:"Banheiro público",rest:"Banheiro"},
+nl:{tag:"Vind overal een wc",near:"📍 In de buurt",all:"Alles",pub:"🚻 Openbaar",cafe:"☕ Cafés",tips:"⭐ Tips",contact:"✉️ Wc toevoegen · Adverteren",
+ inst_t:"Zet Laloo op je beginscherm",inst_s:"Met één tik naar de dichtstbijzijnde wc. Geen app store.",inst_add:"Toevoegen",inst_ios:"Tik op Deel en dan op \"Zet op beginscherm\".",
+ loading:"Laden…",loadingB:"Wc's laden…",loadFail:"Kon wc's niet laden, tik om opnieuw te proberen",zoom:"Zoom in om wc's te zien",noTips:"Hier nog geen tips, zoom uit",noBath:"Geen wc's in dit gebied",
+ allowRoute:"Sta locatie toe voor een route",allowLoc:"Sta locatie toe om wc's in de buurt te zien",noLoc:"Locatie niet beschikbaar",finding:"Route zoeken…",copied:"Code gekopieerd. Laat hem zien bij de kassa",min:"min",
+ route:"🚶 Toon route",gmaps:"Google Maps",web:"Website",local:"Lokale zaak",code:"🎟️ Tik om de code te kopiëren:",
+ Free:"Gratis",Paid:"Betaald",Customers:"Klanten",Ticket:"Met ticket",askInside:"Vraag binnen, meestal voor klanten",custOnly:"Alleen klanten",pubRest:"Openbare wc",rest:"Wc"},
+pl:{tag:"Znajdź toaletę wszędzie",near:"📍 W pobliżu",all:"Wszystko",pub:"🚻 Publiczne",cafe:"☕ Kawiarnie",tips:"⭐ Polecane",contact:"✉️ Dodaj toaletę · Reklama",
+ inst_t:"Dodaj Laloo do ekranu głównego",inst_s:"Najbliższa toaleta jednym dotknięciem. Bez sklepu z aplikacjami.",inst_add:"Dodaj",inst_ios:"Stuknij Udostępnij, a potem „Do ekranu początkowego”.",
+ loading:"Ładowanie…",loadingB:"Ładowanie toalet…",loadFail:"Nie udało się wczytać toalet, stuknij, aby ponowić",zoom:"Przybliż, aby zobaczyć toalety",noTips:"Brak poleceń w tym miejscu, oddal mapę",noBath:"Brak toalet w tym obszarze",
+ allowRoute:"Zezwól na lokalizację, aby wyznaczyć trasę",allowLoc:"Zezwól na lokalizację, aby zobaczyć pobliskie toalety",noLoc:"Lokalizacja niedostępna",finding:"Szukam drogi…",copied:"Kod skopiowany. Pokaż go przy kasie",min:"min",
+ route:"🚶 Pokaż trasę",gmaps:"Mapy Google",web:"Strona www",local:"Lokalne miejsce",code:"🎟️ Stuknij, aby skopiować kod:",
+ Free:"Bezpłatna",Paid:"Płatna",Customers:"Dla klientów",Ticket:"Z biletem",askInside:"Zapytaj w środku, zwykle dla klientów",custOnly:"Tylko dla klientów",pubRest:"Toaleta publiczna",rest:"Toaleta"},
+ru:{tag:"Найдите туалет где угодно",near:"📍 Рядом",all:"Все",pub:"🚻 Общественные",cafe:"☕ Кафе",tips:"⭐ Советы",contact:"✉️ Добавить туалет · Реклама",
+ inst_t:"Добавьте Laloo на главный экран",inst_s:"Ближайший туалет в одно касание. Без магазина приложений.",inst_add:"Добавить",inst_ios:"Нажмите «Поделиться», затем «На экран „Домой“».",
+ loading:"Загрузка…",loadingB:"Загрузка туалетов…",loadFail:"Не удалось загрузить, нажмите, чтобы повторить",zoom:"Приблизьте карту, чтобы увидеть туалеты",noTips:"Здесь пока нет советов, отдалите карту",noBath:"В этом районе туалетов нет",
+ allowRoute:"Разрешите геолокацию, чтобы построить маршрут",allowLoc:"Разрешите геолокацию, чтобы видеть туалеты рядом",noLoc:"Геолокация недоступна",finding:"Ищем путь…",copied:"Код скопирован. Покажите его на кассе",min:"мин",
+ route:"🚶 Маршрут",gmaps:"Google Карты",web:"Сайт",local:"Местный бизнес",code:"🎟️ Нажмите, чтобы скопировать код:",
+ Free:"Бесплатно",Paid:"Платно",Customers:"Для клиентов",Ticket:"По билету",askInside:"Спросите внутри, обычно для клиентов",custOnly:"Только для клиентов",pubRest:"Общественный туалет",rest:"Туалет"},
+zh:{tag:"随时随地找厕所",near:"📍 附近",all:"全部",pub:"🚻 公共",cafe:"☕ 咖啡馆",tips:"⭐ 推荐",contact:"✉️ 添加厕所 · 广告合作",
+ inst_t:"将 Laloo 添加到主屏幕",inst_s:"一键找到最近的厕所，无需下载应用。",inst_add:"添加",inst_ios:"点按“共享”，然后选择“添加到主屏幕”。",
+ loading:"加载中…",loadingB:"正在加载厕所…",loadFail:"加载失败，点按重试",zoom:"放大地图查看厕所",noTips:"此区域暂无推荐，请缩小地图",noBath:"此区域没有厕所",
+ allowRoute:"请允许定位以显示路线",allowLoc:"请允许定位以查看附近的厕所",noLoc:"无法获取位置",finding:"正在规划路线…",copied:"已复制优惠码，请在收银台出示",min:"分钟",
+ route:"🚶 显示路线",gmaps:"谷歌地图",web:"网站",local:"本地商家",code:"🎟️ 点按复制优惠码：",
+ Free:"免费",Paid:"收费",Customers:"限顾客",Ticket:"需门票",askInside:"请进店询问，通常限顾客",custOnly:"仅限顾客",pubRest:"公共厕所",rest:"厕所"},
+ja:{tag:"どこでもトイレが見つかる",near:"📍 現在地",all:"すべて",pub:"🚻 公衆",cafe:"☕ カフェ",tips:"⭐ おすすめ",contact:"✉️ トイレを追加 · 広告掲載",
+ inst_t:"Laloo をホーム画面に追加",inst_s:"最寄りのトイレへワンタップ。アプリストア不要。",inst_add:"追加",inst_ios:"共有ボタンをタップし、「ホーム画面に追加」を選んでください。",
+ loading:"読み込み中…",loadingB:"トイレを読み込み中…",loadFail:"読み込めませんでした。タップして再試行",zoom:"拡大するとトイレが表示されます",noTips:"このエリアにはまだおすすめがありません。縮小してください",noBath:"このエリアにトイレはありません",
+ allowRoute:"ルート表示には位置情報を許可してください",allowLoc:"近くのトイレを見るには位置情報を許可してください",noLoc:"位置情報を利用できません",finding:"ルートを検索中…",copied:"コードをコピーしました。レジで提示してください",min:"分",
+ route:"🚶 ルートを表示",gmaps:"Google マップ",web:"ウェブサイト",local:"地元のお店",code:"🎟️ タップしてコードをコピー：",
+ Free:"無料",Paid:"有料",Customers:"利用客のみ",Ticket:"要入場券",askInside:"店内で聞いてください。通常は利用客向け",custOnly:"利用客のみ",pubRest:"公衆トイレ",rest:"トイレ"},
+};
+const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
+  .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
+const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
+document.documentElement.lang = LANG;
+document.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
+// OSM'den gelen İngilizce bilgi parçalarını çevir (saatler olduğu gibi kalır)
+const trInfo = s => String(s || "").split(", ").map(p =>
+  p === "Free" ? tx("Free") : p === "Paid" ? tx("Paid") : p === "Customers only" ? tx("custOnly") : p).join(", ")
+  .replace("Ask inside, usually for customers", tx("askInside"));
+const trName = n => n === "Public restroom" ? tx("pubRest") : n === "Restroom" ? tx("rest") : n;
+
 // ================= AYARLAR =================
 const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
 const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";   // herkese açık anahtar, burada durması normal
@@ -152,9 +258,9 @@ window.track = track;
 let routeLine = null;
 function clearRoute(){ if (routeLine){ map.removeLayer(routeLine); routeLine = null; } say(""); }
 window.route = async (lat, lng, target, biz) => {
-  track("route", { target, biz });
-  if (!myLL){ say("Allow location to get a route"); locate(); return; }
-  map.closePopup(); say("Finding the way…");
+  track("route", { target, biz }); setTimeout(nudge, 8000);
+  if (!myLL){ say(tx("allowRoute")); locate(); return; }
+  map.closePopup(); say(tx("finding"));
   try{
     const u = `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${myLL[1]},${myLL[0]};${lng},${lat}?overview=full&geometries=geojson`;
     const d = await (await fetch(u)).json();
@@ -163,36 +269,36 @@ window.route = async (lat, lng, target, biz) => {
     routeLine = L.geoJSON(r.geometry, { style:{ color:"#1c4fa0", weight:6, opacity:.85, dashArray:"1 10", lineCap:"round" } }).addTo(map);
     map.fitBounds(routeLine.getBounds(), { padding:[40,40] });
     const min = Math.max(1, Math.round(r.duration/60)), m = Math.round(r.distance);
-    say(`🚶 ${min} min · ${m < 1000 ? m+" m" : (m/1000).toFixed(1)+" km"}  ✕`);
+    say(`🚶 ${min} ${tx("min")} · ${m < 1000 ? m+" m" : (m/1000).toFixed(1)+" km"}  ✕`);
   }catch(e){ say(""); window.open(dirLink(lat,lng), "_blank"); }
 };
 function actsHtml(lat, lng, target, biz){
   const t = target != null ? `'${esc(target)}'` : "null", b = biz ? `'${esc(biz)}'` : "null";
-  return `<div class="acts"><button class="go" onclick="route(${lat},${lng},${t},${b})">🚶 Show route</button>
-    <a href="${dirLink(lat,lng)}" target="_blank" rel="noopener" onclick="track('route',{target:${t},biz:${b}})">Google Maps</a></div>`;
+  return `<div class="acts"><button class="go" onclick="route(${lat},${lng},${t},${b})">${tx("route")}</button>
+    <a href="${dirLink(lat,lng)}" target="_blank" rel="noopener" onclick="track('route',{target:${t},biz:${b}})">${tx("gmaps")}</a></div>`;
 }
 window.copyCode = (i) => {
   const s = shops[i]; if (!s) return;
   try{ navigator.clipboard.writeText(s.promo_code); }catch(e){}
-  track("code_copy", { biz:s.id });
-  say("Code copied. Show it at the counter"); setTimeout(() => { if (!routeLine) say(""); }, 2500);
+  track("code_copy", { biz:s.id }); setTimeout(nudge, 4000);
+  say(tx("copied")); setTimeout(() => { if (!routeLine) say(""); }, 2500);
 };
 
 // ================= POPUP'LAR =================
 function tipPopup(t){
   const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
   return `<div class="tip"><b>⭐ ${esc(t.name)}</b>
-    ${t.fee ? `<span class="tag ${cls}">${esc(t.fee)}</span>` : ""}${t.hours ? `<span class="tag">${esc(t.hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
+    ${t.fee ? `<span class="tag ${cls}">${esc(tx(t.fee))}</span>` : ""}${t.hours ? `<span class="tag">${esc(t.hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
     <p>${esc(t.info)}</p>${actsHtml(t.lat, t.lng, t.id)}</div>`;
 }
 function shopPopup(s, i){
   const web = /^https?:\/\//.test(s.website || "") ? s.website : "";
   return `<div class="ad"><b>${SHOP_ICONS[s.category] || "🛍️"} ${esc(s.name)}</b>
-    <span class="tag">Local spot</span>${s.hours ? `<span class="tag">${esc(s.hours)}</span>` : ""}
+    <span class="tag">${tx("local")}</span>${s.hours ? `<span class="tag">${esc(s.hours)}</span>` : ""}
     <p>${esc(s.blurb)}${s.address ? "<br><small>" + esc(s.address) + "</small>" : ""}</p>
-    ${s.promo_code ? `<button class="code" onclick="copyCode(${i})">🎟️ Tap to copy code: ${esc(s.promo_code)}</button>` : ""}
+    ${s.promo_code ? `<button class="code" onclick="copyCode(${i})">${tx("code")} ${esc(s.promo_code)}</button>` : ""}
     ${actsHtml(s.lat, s.lng, null, s.id)}
-    ${web ? `<div class="acts"><a href="${esc(web)}" target="_blank" rel="noopener" onclick="track('website',{biz:'${esc(s.id)}'})">Website</a></div>` : ""}</div>`;
+    ${web ? `<div class="acts"><a href="${esc(web)}" target="_blank" rel="noopener" onclick="track('website',{biz:'${esc(s.id)}'})">${tx("web")}</a></div>` : ""}</div>`;
 }
 
 // ================= ÇİZİM =================
@@ -216,19 +322,19 @@ function draw(){
       .addTo(layer).bindPopup(() => { track("pin_click", { biz:sp.id }); return shopPopup(sp, i); });
   });
   if (filter !== "tip"){
-    if (map.getZoom() < 13){ if (!routeLine) say("Zoom in to see bathrooms"); return; }
+    if (map.getZoom() < 13){ if (!routeLine) say(tx("zoom")); return; }
     toilets.forEach(p => {
       if (filter !== "all" && p.kind !== filter) return;
       if (!b.contains([p.lat, p.lng])) return;
       n++;
       L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className:"loo", iconSize:[26,26] }) })
         .addTo(layer)
-        .bindPopup(() => `<b>${esc(p.name)}</b>${p.info ? "<br>" + esc(p.info) : ""}${actsHtml(p.lat, p.lng, p.id)}`);
+        .bindPopup(() => `<b>${esc(trName(p.name))}</b>${p.info ? "<br>" + esc(trInfo(p.info)) : ""}${actsHtml(p.lat, p.lng, p.id)}`);
     });
   }
   if (routeLine) return;
-  if (filter === "tip" && !n) say("No tips in this area yet, zoom out");
-  else say(n ? "" : "No bathrooms in this area");
+  if (filter === "tip" && !n) say(tx("noTips"));
+  else say(n ? "" : tx("noBath"));
 }
 
 // ================= VERİ =================
@@ -243,7 +349,7 @@ async function loadArea(){
       if (!tiles.has(k)){ tiles.add(k); need.push([y, x]); }
     }
   if (!need.length) return;
-  if (!toilets.length) say("Loading bathrooms…");
+  if (!toilets.length) say(tx("loadingB"));
   try{
     const res = await Promise.all(need.map(([y, x]) => sb(
       `places?select=id,kind,name,info,lat,lng&kind=neq.tip` +
@@ -253,7 +359,7 @@ async function loadArea(){
     draw();
   }catch(e){
     need.forEach(([y, x]) => tiles.delete(y + ":" + x));
-    say("Couldn't load bathrooms, tap to retry");
+    say(tx("loadFail"));
   }
 }
 
@@ -265,11 +371,11 @@ async function loadJson(){
     if (!res.ok) throw new Error(res.status);
     toilets = (await res.json()).map(p => ({ lat:p.a, lng:p.o, kind:p.k === "place" ? "cafe" : p.k, name:p.n, info:p.i }));
     draw();
-  }catch(e){ say("Couldn't load bathrooms, tap to retry"); }
+  }catch(e){ say(tx("loadFail")); }
 }
 
 async function init(){
-  say("Loading…");
+  say(tx("loading"));
   try{
     const [c, t, s, osm] = await Promise.all([
       sb("cities?select=id,min_lat,min_lng,max_lat,max_lng"),
@@ -298,10 +404,10 @@ function showMe(p){
   if (!centered){ centered = true; map.setView(myLL, 16); }
 }
 function locate(){
-  if (!navigator.geolocation){ say("Location isn't available"); return; }
+  if (!navigator.geolocation){ say(tx("noLoc")); return; }
   if (myLL){ map.setView(myLL, 16); return; }
   navigator.geolocation.watchPosition(showMe,
-    () => say("Allow location to see bathrooms near you"),
+    () => say(tx("allowLoc")),
     { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
 }
 
@@ -312,6 +418,41 @@ document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
 document.getElementById("locate").onclick = () => { track("near_me"); locate(); };
 map.on("moveend", () => { draw(); loadArea(); });
 msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) init(); };
+
+// ================= ANA EKRANA EKLE (PWA) =================
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+let deferred = null, nudged = false;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; });
+function dismissedRecently(){
+  try{ return Date.now() - (+localStorage.getItem("laloo_inst_x") || 0) < 14 * 864e5; }catch(e){ return false; }
+}
+function nudge(){
+  if (nudged || standalone || dismissedRecently()) return;
+  if (!deferred && !isIOS) return;           // tarayıcı desteklemiyorsa gösterme
+  nudged = true;
+  if (isIOS){
+    document.getElementById("insttxt").textContent = tx("inst_ios");
+    document.getElementById("instbtn").style.display = "none";
+  }
+  document.getElementById("install").style.display = "flex";
+}
+function closeInstall(){
+  document.getElementById("install").style.display = "none";
+  try{ localStorage.setItem("laloo_inst_x", Date.now()); }catch(e){}
+}
+document.getElementById("instx").onclick = closeInstall;
+document.getElementById("instbtn").onclick = async () => {
+  if (!deferred) return;
+  deferred.prompt();
+  const r = await deferred.userChoice.catch(() => ({}));
+  deferred = null;
+  document.getElementById("install").style.display = "none";
+  if (r && r.outcome === "dismissed"){ try{ localStorage.setItem("laloo_inst_x", Date.now()); }catch(e){} }
+};
+// Birkaç şeye baktıktan sonra da nazikçe sor
+setTimeout(nudge, 25000);
 
 locate();
 init();
