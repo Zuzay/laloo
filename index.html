@@ -3,22 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LA Loo · Find the nearest bathroom in Los Angeles</title>
+<title>LALOO · Find a bathroom anywhere</title>
 <meta name="description" content="A simple map of bathrooms in Los Angeles: public restrooms, cafés and restaurants.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚻</text></svg>">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   html,body{margin:0;height:100%}
   body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
   header{
-    background:#1c4fa0;color:#fff;
-    padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;
+    background:#fefef8;color:#10223d;border-bottom:1px solid #e6e1d4;
+    padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;
     display:flex;align-items:center;justify-content:space-between;gap:10px;
   }
-  header h1{margin:0;font-size:16px;font-weight:700;line-height:1.25}
-  header h1 span{display:block;font-weight:400;font-size:13px;opacity:.85}
+  header h1{margin:0;line-height:0}
+  header h1 img{height:40px;width:auto;display:block}
+  header h1 span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   #locate{
-    flex:none;background:#fff;color:#1c4fa0;border:0;border-radius:8px;
+    flex:none;background:#1c4fa0;color:#fff;border:0;border-radius:8px;
     font:inherit;font-weight:700;font-size:14px;padding:9px 12px;cursor:pointer;
   }
   .bar{display:flex;gap:6px;padding:8px 10px;background:#eef3fa;border-bottom:1px solid #d3dae3}
@@ -43,6 +46,19 @@
   .tip .tag.free{background:#e3f6e8;color:#1b7a3a}
   .tip .tag.cust{background:#fff4df;color:#8a5a00}
   .tip p{margin:4px 0 6px}
+  .shop{
+    width:34px;height:34px;border-radius:50%;background:#e02424;border:3px solid #fff;
+    display:flex;align-items:center;justify-content:center;font-size:18px;
+    box-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  .ad b{display:block;margin-bottom:2px}
+  .ad .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;margin:2px 4px 4px 0;background:#fde8e8;color:#b01c1c}
+  .ad p{margin:4px 0 6px}
+  .ad .code{display:block;width:100%;text-align:left;font:inherit;font-size:13px;cursor:pointer;background:#fff;margin:6px 0;padding:6px 8px;border:1px dashed #e02424;border-radius:6px;font-weight:700;color:#b01c1c}
+  .ad a{margin-right:10px}
+  .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .acts button,.acts a{font:inherit;font-size:12px;font-weight:700;border-radius:14px;padding:5px 9px;cursor:pointer;text-decoration:none;border:1px solid #c5d0de;background:#fff;color:#10223d}
+  .acts .go{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
   .loo{font-size:22px;line-height:26px;text-align:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
   .me{
     width:16px;height:16px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;
@@ -52,118 +68,232 @@
 </head>
 <body>
 <header>
-  <h1>LA Loo<span>Find the nearest bathroom in Los Angeles</span></h1>
+  <h1><img src="logo-header.png" alt="LALOO"><span>Find a bathroom anywhere</span></h1>
   <button id="locate">📍 Near me</button>
 </header>
 <div class="bar">
   <button data-f="all" class="on">All</button>
   <button data-f="public">🚻 Public</button>
-  <button data-f="place">☕ Cafés</button>
+  <button data-f="cafe">☕ Cafés</button>
   <button data-f="tip">⭐ Tips</button>
 </div>
 <div id="map"></div>
 <div id="msg"></div>
-<a id="contact" href="mailto:hello@laloo.org?subject=LA%20Loo">✉️ Add a bathroom · Advertise</a>
+<a id="contact" href="mailto:hello@laloo.org?subject=Laloo">✉️ Add a bathroom · Advertise</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-
-
-// ============ LA LOO LOCAL TIPS ============
-// Elle seçilmiş yerler. Yeni yer eklemek için bir satır kopyala.
-// fee: "Free" | "Paid" | "Customers"
-const GUIDE = [
-  // Santa Monica
-  { name:"Tongva Park restroom", lat:34.01112, lng:-118.49324, area:"Santa Monica", fee:"Free", hours:"6am to 11pm",
-    note:"Right across from the pier. Visitors regularly call it one of the cleanest restrooms in the city." },
-  { name:"Santa Monica Pier restrooms", lat:34.00828, lng:-118.49876, area:"Santa Monica", fee:"Free", hours:"Pier hours",
-    note:"Rebuilt pier restroom, once shortlisted among the best in the country. Three accessible restrooms on the pier." },
-  { name:"Big Dean's Ocean Front Cafe", lat:34.01029, lng:-118.49560, area:"Santa Monica", fee:"Customers", hours:"Lunch to 9pm",
-    note:"An accessibility guide rates its restroom the cleanest near the pier. Grab a drink and you're in." },
-  { name:"Parking Structure 4", lat:34.01583, lng:-118.49797, area:"Santa Monica", fee:"Free", hours:"7am to 10pm",
-    note:"Public restroom off the 2nd Court alley, with a visitor info desk. Close to Third Street Promenade." },
-  { name:"Parking Structure 5", lat:34.01560, lng:-118.49444, area:"Santa Monica", fee:"Free", hours:"7am to 10pm",
-    note:"On 4th Street between Broadway and Santa Monica Blvd. Handy for the Promenade." },
-  { name:"Palisades Park, by Camera Obscura", lat:34.01268, lng:-118.49694, area:"Santa Monica", fee:"Free", hours:"6:30am to 6pm",
-    note:"On the south side of Camera Obscura, along the bluff. Closes early." },
-  { name:"Reed Park", lat:34.02233, lng:-118.49651, area:"Santa Monica", fee:"Free", hours:"7am to 9pm",
-    note:"Neighborhood park restroom on 7th Street. Reviews on cleanliness are mixed." },
-  // Venice
-  { name:"Windward Plaza restrooms", lat:33.98669, lng:-118.47390, area:"Venice", fee:"Free", hours:"Beach hours",
-    note:"Main boardwalk restroom by the skatepark. Honest take: reviews swing from surprisingly clean to rough. Best early in the day." },
-  { name:"Blue Bottle Coffee", lat:33.99190, lng:-118.47036, area:"Venice", fee:"Customers", hours:"6am to 6:30pm",
-    note:"Abbot Kinney. Small shop, buy something and ask." },
-  { name:"Intelligentsia Coffee", lat:33.99110, lng:-118.46693, area:"Venice", fee:"Customers", hours:"6am to 5pm (7pm Thu to Sat)",
-    note:"Abbot Kinney. Big, busy café, easy to buy a coffee and use the restroom." },
-];
+// ================= AYARLAR =================
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";   // herkese açık anahtar, burada durması normal
+const SHOP_ICONS = { vintage:"👗", clothing:"👕", tailor:"🧵", market:"🧺", fruit:"🍎", cafe:"☕", food:"🍽️", beauty:"💈", art:"🎨" };
 
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
 const map = L.map("map").setView([33.9850, -118.4695], 15);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, attribution: "© OpenStreetMap contributors"
 }).addTo(map);
-
 const layer = L.layerGroup().addTo(map);
-let toilets = [], filter = "all", me = null, myLL = null, centered = false, loading = false;
+
+let cities = [], tips = [], shops = [], toilets = [];
+let filter = "all", me = null, myLL = null, centered = false;
+let mode = "sb";               // "sb" = Supabase, "json" = yedek toilets.json
+const tiles = new Set(), seenShops = new Set();
 
 const dirLink = (lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
 
-function tipPopup(t){
-  const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
-  return `<div class="tip"><b>⭐ ${t.name}</b>
-    <span class="tag ${cls}">${t.fee}</span><span class="tag">${t.hours}</span><span class="tag">${t.area}</span>
-    <p>${t.note}</p>
-    <a href="${dirLink(t.lat,t.lng)}" target="_blank" rel="noopener">Walk me there</a></div>`;
+// ================= SUPABASE =================
+async function sb(path){
+  const r = await fetch(SB_URL + "/rest/v1/" + path, { headers:{ apikey:SB_KEY } });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
 }
 
+// ================= ÖLÇÜM =================
+// Rastgele cihaz kimliği. İsim, e-posta, konum kaydedilmez.
+const DEVICE = (() => {
+  const make = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+  try{
+    let d = localStorage.getItem("laloo_device");
+    if (!d){ d = make(); localStorage.setItem("laloo_device", d); }
+    return d;
+  }catch(e){ return make(); }
+})();
+// Nereden geldi: laloo.org/?ref=qr gibi linkler, yoksa gelen site, yoksa "direct"
+const REF = (() => {
+  const q = new URLSearchParams(location.search);
+  let r = q.get("ref") || q.get("utm_source");
+  if (!r && document.referrer){
+    try{ const h = new URL(document.referrer).hostname; if (h !== location.hostname) r = h.replace(/^www\./, ""); }catch(e){}
+  }
+  return (r || "direct").slice(0, 100);
+})();
+function cityAt(lat, lng){
+  const c = cities.find(c => lat >= c.min_lat && lat <= c.max_lat && lng >= c.min_lng && lng <= c.max_lng);
+  return c ? c.id : null;
+}
+function track(type, o = {}){
+  const ll = myLL || [map.getCenter().lat, map.getCenter().lng];
+  const body = { device:DEVICE, type, ref:REF, city:cityAt(ll[0], ll[1]),
+                 target: o.target != null ? String(o.target).slice(0, 100) : null, business_id: o.biz || null };
+  try{
+    fetch(SB_URL + "/rest/v1/events", { method:"POST", keepalive:true,
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
+      body: JSON.stringify(body) }).catch(() => {});
+  }catch(e){}
+}
+window.track = track;
+
+// ================= HARİTA ÜZERİNDE YOL TARİFİ =================
+let routeLine = null;
+function clearRoute(){ if (routeLine){ map.removeLayer(routeLine); routeLine = null; } say(""); }
+window.route = async (lat, lng, target, biz) => {
+  track("route", { target, biz });
+  if (!myLL){ say("Allow location to get a route"); locate(); return; }
+  map.closePopup(); say("Finding the way…");
+  try{
+    const u = `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${myLL[1]},${myLL[0]};${lng},${lat}?overview=full&geometries=geojson`;
+    const d = await (await fetch(u)).json();
+    const r = d.routes[0];
+    clearRoute();
+    routeLine = L.geoJSON(r.geometry, { style:{ color:"#1c4fa0", weight:6, opacity:.85, dashArray:"1 10", lineCap:"round" } }).addTo(map);
+    map.fitBounds(routeLine.getBounds(), { padding:[40,40] });
+    const min = Math.max(1, Math.round(r.duration/60)), m = Math.round(r.distance);
+    say(`🚶 ${min} min · ${m < 1000 ? m+" m" : (m/1000).toFixed(1)+" km"}  ✕`);
+  }catch(e){ say(""); window.open(dirLink(lat,lng), "_blank"); }
+};
+function actsHtml(lat, lng, target, biz){
+  const t = target != null ? `'${esc(target)}'` : "null", b = biz ? `'${esc(biz)}'` : "null";
+  return `<div class="acts"><button class="go" onclick="route(${lat},${lng},${t},${b})">🚶 Show route</button>
+    <a href="${dirLink(lat,lng)}" target="_blank" rel="noopener" onclick="track('route',{target:${t},biz:${b}})">Google Maps</a></div>`;
+}
+window.copyCode = (i) => {
+  const s = shops[i]; if (!s) return;
+  try{ navigator.clipboard.writeText(s.promo_code); }catch(e){}
+  track("code_copy", { biz:s.id });
+  say("Code copied. Show it at the counter"); setTimeout(() => { if (!routeLine) say(""); }, 2500);
+};
+
+// ================= POPUP'LAR =================
+function tipPopup(t){
+  const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
+  return `<div class="tip"><b>⭐ ${esc(t.name)}</b>
+    ${t.fee ? `<span class="tag ${cls}">${esc(t.fee)}</span>` : ""}${t.hours ? `<span class="tag">${esc(t.hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
+    <p>${esc(t.info)}</p>${actsHtml(t.lat, t.lng, t.id)}</div>`;
+}
+function shopPopup(s, i){
+  const web = /^https?:\/\//.test(s.website || "") ? s.website : "";
+  return `<div class="ad"><b>${SHOP_ICONS[s.category] || "🛍️"} ${esc(s.name)}</b>
+    <span class="tag">Local spot</span>${s.hours ? `<span class="tag">${esc(s.hours)}</span>` : ""}
+    <p>${esc(s.blurb)}${s.address ? "<br><small>" + esc(s.address) + "</small>" : ""}</p>
+    ${s.promo_code ? `<button class="code" onclick="copyCode(${i})">🎟️ Tap to copy code: ${esc(s.promo_code)}</button>` : ""}
+    ${actsHtml(s.lat, s.lng, null, s.id)}
+    ${web ? `<div class="acts"><a href="${esc(web)}" target="_blank" rel="noopener" onclick="track('website',{biz:'${esc(s.id)}'})">Website</a></div>` : ""}</div>`;
+}
+
+// ================= ÇİZİM =================
 function draw(){
   layer.clearLayers();
-  const b = map.getBounds().pad(0.2);
+  const b = map.getBounds().pad(0.2), view = map.getBounds();
   let n = 0;
   if (filter === "all" || filter === "tip"){
-    GUIDE.forEach(t => {
+    tips.forEach(t => {
       if (!b.contains([t.lat, t.lng])) return;
       n++;
       L.marker([t.lat, t.lng], { icon: L.divIcon({ html:"⭐", className:"loo", iconSize:[28,28] }), zIndexOffset:500 })
-        .addTo(layer).bindPopup(tipPopup(t));
+        .addTo(layer).bindPopup(() => tipPopup(t));
     });
   }
-  if (filter !== "tip" && toilets.length){
-    if (map.getZoom() < 13){ say("Zoom in to see bathrooms"); return; }
+  // İşletmeler her filtrede her zaman görünür
+  shops.forEach((sp, i) => {
+    if (!b.contains([sp.lat, sp.lng])) return;
+    if (view.contains([sp.lat, sp.lng]) && !seenShops.has(sp.id)){ seenShops.add(sp.id); track("pin_view", { biz:sp.id }); }
+    L.marker([sp.lat, sp.lng], { icon: L.divIcon({ html:`<div class="shop">${SHOP_ICONS[sp.category] || "🛍️"}</div>`, className:"", iconSize:[34,34], iconAnchor:[17,17] }), zIndexOffset:800 })
+      .addTo(layer).bindPopup(() => { track("pin_click", { biz:sp.id }); return shopPopup(sp, i); });
+  });
+  if (filter !== "tip"){
+    if (map.getZoom() < 13){ if (!routeLine) say("Zoom in to see bathrooms"); return; }
     toilets.forEach(p => {
       if (filter !== "all" && p.kind !== filter) return;
       if (!b.contains([p.lat, p.lng])) return;
       n++;
       L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className:"loo", iconSize:[26,26] }) })
         .addTo(layer)
-        .bindPopup(`<b>${p.name}</b>${p.info ? "<br>"+p.info : ""}<br><a href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">Walk me there</a>`);
+        .bindPopup(() => `<b>${esc(p.name)}</b>${p.info ? "<br>" + esc(p.info) : ""}${actsHtml(p.lat, p.lng, p.id)}`);
     });
   }
-  if (filter === "tip" && !n) say("Tips cover Venice and Santa Monica so far");
+  if (routeLine) return;
+  if (filter === "tip" && !n) say("No tips in this area yet, zoom out");
   else say(n ? "" : "No bathrooms in this area");
 }
 
-async function load(){
-  if (loading) return;
-  loading = true;
-  say("Loading bathrooms…");
+// ================= VERİ =================
+// Tuvaletler ekrandaki bölgeye göre 0.1 derecelik karelerle iner (dünya ölçeği için)
+const T = 0.1;
+async function loadArea(){
+  if (mode !== "sb" || map.getZoom() < 13) return;
+  const b = map.getBounds(), need = [];
+  for (let y = Math.floor(b.getSouth()/T); y <= Math.floor(b.getNorth()/T); y++)
+    for (let x = Math.floor(b.getWest()/T); x <= Math.floor(b.getEast()/T); x++){
+      const k = y + ":" + x;
+      if (!tiles.has(k)){ tiles.add(k); need.push([y, x]); }
+    }
+  if (!need.length) return;
+  if (!toilets.length) say("Loading bathrooms…");
   try{
-    // GitHub her hafta güncelliyor, tarayıcı eski dosyayı tutmasın diye günlük parametre
-    const res = await fetch("toilets.json?d=" + new Date().toISOString().slice(0,10));
-    if (!res.ok) throw new Error(res.status);
-    toilets = (await res.json()).map(p => ({ lat:p.a, lng:p.o, kind:p.k, name:p.n, info:p.i }));
+    const res = await Promise.all(need.map(([y, x]) => sb(
+      `places?select=id,kind,name,info,lat,lng&kind=neq.tip` +
+      `&lat=gte.${(y*T).toFixed(2)}&lat=lt.${((y+1)*T).toFixed(2)}` +
+      `&lng=gte.${(x*T).toFixed(2)}&lng=lt.${((x+1)*T).toFixed(2)}&limit=1000`)));
+    res.forEach(r => toilets.push(...r));
     draw();
-  }catch(e){ say("Couldn't load bathrooms, tap to retry"); }
-  loading = false;
+  }catch(e){
+    need.forEach(([y, x]) => tiles.delete(y + ":" + x));
+    say("Couldn't load bathrooms, tap to retry");
+  }
 }
 
-// Konum: açılışta otomatik iste, sonra canlı takip et
+// Yedek: Supabase'de henüz OSM verisi yoksa ya da ulaşılamazsa eski dosya
+async function loadJson(){
+  mode = "json";
+  try{
+    const res = await fetch("toilets.json?d=" + new Date().toISOString().slice(0,10));
+    if (!res.ok) throw new Error(res.status);
+    toilets = (await res.json()).map(p => ({ lat:p.a, lng:p.o, kind:p.k === "place" ? "cafe" : p.k, name:p.n, info:p.i }));
+    draw();
+  }catch(e){ say("Couldn't load bathrooms, tap to retry"); }
+}
+
+async function init(){
+  say("Loading…");
+  try{
+    const [c, t, s, osm] = await Promise.all([
+      sb("cities?select=id,min_lat,min_lng,max_lat,max_lng"),
+      sb("places?select=id,name,info,area,fee,hours,lat,lng&kind=eq.tip"),
+      sb("businesses_public?select=*"),
+      sb("places?select=id&source=eq.osm&limit=1"),
+    ]);
+    cities = c; tips = t; shops = s;
+    draw();
+    if (osm.length) loadArea(); else await loadJson();
+  }catch(e){
+    await loadJson();
+  }
+  // Ziyaret kaydı: konum gelince ya da en geç 4 saniye sonra, bir kez
+  let sent = false;
+  const visit = () => { if (!sent){ sent = true; track("visit"); } };
+  if (myLL) visit(); else { window._visit = visit; setTimeout(visit, 4000); }
+}
+
+// ================= KONUM =================
 function showMe(p){
   myLL = [p.coords.latitude, p.coords.longitude];
   if (!me) me = L.marker(myLL, { icon: L.divIcon({ className:"", html:'<div class="me"></div>', iconSize:[22,22], iconAnchor:[11,11] }), zIndexOffset:1000 }).addTo(map);
   else me.setLatLng(myLL);
+  if (window._visit){ window._visit(); window._visit = null; }
   if (!centered){ centered = true; map.setView(myLL, 16); }
 }
 function locate(){
@@ -178,12 +308,12 @@ document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
   document.querySelectorAll(".bar button").forEach(b => b.classList.remove("on"));
   btn.classList.add("on"); filter = btn.dataset.f; draw();
 });
-document.getElementById("locate").onclick = locate;
-map.on("moveend", draw);
-msg.onclick = () => { if (!toilets.length) load(); };
+document.getElementById("locate").onclick = () => { track("near_me"); locate(); };
+map.on("moveend", () => { draw(); loadArea(); });
+msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) init(); };
 
 locate();
-load();
+init();
 </script>
 </body>
 </html>
