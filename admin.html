@@ -333,7 +333,7 @@ async function sugg(){
     <h2>Bekleyen öneriler</h2>
     <p class="hint">Günlük tarayıcı ve sitedeki öneri formu buraya düşürecek. Onaylarsan yıldızlı yer formu dolu gelir, son kontrolü sen yaparsın.</p>
     <div class="tbl"><table><tr><th>Öneri</th><th>Kaynak</th><th></th></tr>
-      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}</span><br>${esc(s.note)}</td>
+      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}${s.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=18/${s.lat}/${s.lng}" target="_blank" rel="noopener">haritada gör</a>` : ""}</span><br>${esc(s.note)}<br><span class="hint">${s.created_at.slice(0, 10)}</span></td>
         <td>${esc(s.source)}${s.url ? `<br><a href="${esc(s.url)}" target="_blank" rel="noopener">bağlantı</a>` : ""}</td>
         <td class="row"><button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="3">Bekleyen öneri yok</td></tr>`}
     </table></div>`;
@@ -341,7 +341,7 @@ async function sugg(){
     const s = list.find(x => x.id == b.dataset.ap);
     await db(`suggestions?id=eq.${s.id}`, "PATCH", { status:"approved" });
     document.querySelectorAll("nav button").forEach(n => n.classList.toggle("on", n.dataset.t === "tips"));
-    tips({ name:s.name, city:s.city, address:s.address, info:s.note });
+    tips({ name:s.name, city:s.city || "la", address:s.address, info:s.note, lat:s.lat, lng:s.lng });
   });
   document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); sugg(); });
 }
