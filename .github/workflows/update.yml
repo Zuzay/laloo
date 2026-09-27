@@ -5,11 +5,16 @@ on:
   push:
     paths:
       - build.py
+      - pages.py
   schedule:
     - cron: "0 10 * * *"
 
 permissions:
   contents: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -19,11 +24,13 @@ jobs:
       - run: python3 build.py
         env:
           SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET }}
+          PYTHONUNBUFFERED: "1"
       - if: always()
         run: |
           git config user.name "laloo-bot"
           git config user.email "actions@github.com"
-          git add toilets.json
+          git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Update bathrooms"
+          git commit -m "Update bathrooms and city pages"
+          git pull --rebase -X theirs || true
           git push
