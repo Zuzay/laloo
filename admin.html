@@ -6,9 +6,17 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Laloo Yönetim</title>
 <link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="manifest" href="admin.webmanifest">
+<link rel="apple-touch-icon" href="admin-apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Laloo Admin">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
 <style>
   :root{--navy:#10223d;--blue:#1c4fa0;--line:#e3e0d6;--bg:#fefef8;--muted:#6b7688;--red:#c62828;--green:#1b7a3a}
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--navy)}
   header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
   header img{height:34px}
@@ -44,6 +52,8 @@
   #login{max-width:340px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px}
   #login img{height:44px;align-self:center}
   #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;font-size:14px;display:none;z-index:20;max-width:90vw}
+  .note{font-size:12px;color:var(--muted);background:#f4f6fa;border-radius:10px;padding:10px;line-height:1.4}
+  #offline{max-width:340px;margin:60px auto;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
   @media (max-width:640px){ form.f{grid-template-columns:1fr} }
 </style>
 </head>
@@ -56,6 +66,14 @@
   <label>Şifre<input id="pw" type="password" autocomplete="current-password"></label>
   <button class="b p" id="go">Giriş yap</button>
   <small id="lerr" style="color:var(--red)"></small>
+  <p class="note" id="a2hs">📱 Uygulama gibi kullanmak için: Safari'de Paylaş &gt; Ana Ekrana Ekle. Ana ekrandaki ikondan açınca bir kez giriş yapman gerekir, sonra oturum açık kalır.</p>
+</div>
+
+<div id="offline" hidden>
+  <img src="logo-header.png" alt="LALOO" style="height:44px">
+  <b>İnternet yok gibi görünüyor</b>
+  <span class="hint">Oturumun duruyor, bağlantı gelince devam eder.</span>
+  <button class="b p" id="retry">Tekrar dene</button>
 </div>
 
 <div id="app" hidden>
@@ -96,24 +114,36 @@ function saveSession(d){
   try{ localStorage.setItem("laloo_admin", JSON.stringify(S)); }catch(e){}
 }
 function logout(){ S = null; try{ localStorage.removeItem("laloo_admin"); }catch(e){} showLogin(); }
+const STANDALONE = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+class NetErr extends Error{}
 async function auth(grant, body){
-  const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=${grant}`, { method:"POST",
-    headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify(body) });
-  const d = await r.json();
+  let r;
+  try{ r = await fetch(`${SB_URL}/auth/v1/token?grant_type=${grant}`, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify(body) }); }
+  catch(e){ throw new NetErr("İnternet bağlantısı yok"); }
+  const d = await r.json().catch(() => ({}));
+  if (r.status >= 500) throw new NetErr("Sunucuya ulaşılamadı");
   if (!r.ok) throw new Error(d.error_description || d.msg || "Giriş başarısız");
   saveSession(d);
 }
+// Oturum kendini yeniler; internet yoksa çıkış yaptırmaz
+let refreshing = null;
 async function fresh(){
   if (S && Date.now()/1000 > S.expires_at - 60){
-    try{ await auth("refresh_token", { refresh_token:S.refresh_token }); }
-    catch(e){ logout(); throw new Error("Oturum bitti, tekrar giriş yap"); }
+    refreshing = refreshing || auth("refresh_token", { refresh_token:S.refresh_token }).finally(() => refreshing = null);
+    try{ await refreshing; }
+    catch(e){ if (e instanceof NetErr) throw e; logout(); throw new Error("Oturum bitti, tekrar giriş yap"); }
   }
 }
+setInterval(() => { if (S && navigator.onLine) fresh().catch(() => {}); }, 5 * 60 * 1000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden && S) fresh().catch(() => {}); });
 async function db(path, method = "GET", body = null, prefer = ""){
   await fresh();
   const h = { apikey:SB_KEY, Authorization:"Bearer " + S.access_token, "Content-Type":"application/json" };
   if (prefer) h.Prefer = prefer;
-  const r = await fetch(`${SB_URL}/rest/v1/${path}`, { method, headers:h, body: body ? JSON.stringify(body) : null });
+  let r;
+  try{ r = await fetch(`${SB_URL}/rest/v1/${path}`, { method, headers:h, body: body ? JSON.stringify(body) : null }); }
+  catch(e){ throw new NetErr("İnternet bağlantısı yok"); }
   if (r.status === 401){ logout(); throw new Error("Oturum bitti, tekrar giriş yap"); }
   const t = await r.text();
   if (!r.ok){ let m = t; try{ m = JSON.parse(t).message; }catch(e){} throw new Error(m); }
@@ -126,11 +156,12 @@ async function geocode(q){
   return { lat: +(+d[0].lat).toFixed(6), lng: +(+d[0].lon).toFixed(6) };
 }
 
-function showLogin(){ $("#app").hidden = true; $("#login").hidden = false; }
+function showLogin(){ $("#app").hidden = true; $("#offline").hidden = true; $("#login").hidden = false; }
+function showOffline(){ $("#app").hidden = true; $("#login").hidden = true; $("#offline").hidden = false; }
 async function showApp(){
   const me = await db("admins?select=email");
   if (!me.length){ $("#lerr").textContent = "Bu hesap yönetici değil."; logout(); return; }
-  $("#login").hidden = true; $("#app").hidden = false;
+  $("#login").hidden = true; $("#offline").hidden = true; $("#app").hidden = false;
   $("#who").textContent = S.email || "";
   await loadCities();
   tab("stats");
@@ -404,9 +435,9 @@ async function set(){
   let off = false; try{ off = !!localStorage.getItem("laloo_notrack"); }catch(e){}
   $("#main").innerHTML = `
     <h2>Bu cihaz</h2>
-    <div class="card"><div class="row"><span>${off ? "✅ Bu cihaz istatistiklere <b>sayılmıyor</b>." : "Bu cihaz şu an istatistiklere sayılıyor."}</span>
+    <div class="card">${STANDALONE ? `<p class="note" style="margin:0">Bu ayar tarayıcıya kaydedilir. Ana ekran uygulamasının hafızası tarayıcıdan ayrı olduğu için burada işe yaramaz. Haritayı hangi tarayıcıda açıyorsan (Safari, Chrome) orada laloo.org/admin.html'i aç ve giriş ekranındaki "Bu cihazı istatistiğe sayma" düğmesine bas.</p>` : `<div class="row"><span>${off ? "✅ Bu cihaz istatistiklere <b>sayılmıyor</b>." : "Bu cihaz şu an istatistiklere sayılıyor."}</span>
       <button class="b ${off ? "" : "p"}" id="nt">${off ? "Tekrar say" : "Bu cihazı sayma"}</button></div>
-      <p class="hint">Senin ve çalışanların telefonlarında laloo.org/admin.html'i bir kez açıp bu düğmeye basın. Giriş yapmaya gerek yok, düğme giriş ekranının altında da var.</p></div>
+      <p class="hint">Senin ve çalışanların telefonlarında laloo.org/admin.html'i bir kez açıp bu düğmeye basın. Giriş yapmaya gerek yok, düğme giriş ekranının altında da var.</p>`}</div>
     <h2>Test verileri</h2>
     <div class="card"><div class="row"><span>Tüm ölçüm kayıtlarını sil (gerçek sayıma başlamadan önce bir kez).</span><button class="b r" id="wipe">Hepsini sil</button></div></div>
     <h2>Şehirler</h2>
@@ -415,7 +446,7 @@ async function set(){
         <td><button class="b" data-ct="${c.id}">${c.active ? "Kapat" : "Aç"}</button></td></tr>`).join("")}
     </table></div>
     <p class="hint">Yeni şehir eklemek için bana şehir adını söylemen yeterli, sınırlarını ben hazırlarım.</p>`;
-  $("#nt").onclick = () => { try{ off ? localStorage.removeItem("laloo_notrack") : localStorage.setItem("laloo_notrack", "1"); }catch(e){} toast(off ? "Bu cihaz tekrar sayılıyor" : "Bu cihaz artık sayılmıyor"); set(); };
+  if ($("#nt")) $("#nt").onclick = () => { try{ off ? localStorage.removeItem("laloo_notrack") : localStorage.setItem("laloo_notrack", "1"); }catch(e){} toast(off ? "Bu cihaz tekrar sayılıyor" : "Bu cihaz artık sayılmıyor"); set(); };
   $("#wipe").onclick = async () => {
     if (!confirm("Tüm ölçüm kayıtları kalıcı olarak silinsin mi?")) return;
     await db("events?id=gt.0", "DELETE"); toast("Silindi, sayım sıfırdan başladı");
@@ -428,6 +459,7 @@ async function set(){
 
 // Giriş ekranında da "bu cihazı sayma"
 (() => {
+  if (STANDALONE){ $("#a2hs").textContent = "Uygulama modundasın. \"Bu cihazı sayma\" ayarı tarayıcıda (Safari/Chrome) laloo.org/admin.html açılarak yapılır."; return; }
   const btn = document.createElement("button");
   btn.className = "b"; btn.type = "button";
   const lbl = () => { let off = false; try{ off = !!localStorage.getItem("laloo_notrack"); }catch(e){} btn.textContent = off ? "✅ Bu cihaz sayılmıyor" : "Bu cihazı istatistiğe sayma"; return off; };
@@ -437,7 +469,14 @@ async function set(){
 })();
 
 // Başlat
-if (S) showApp().catch(() => showLogin()); else showLogin();
+async function start(){
+  if (!S) return showLogin();
+  try{ await showApp(); }
+  catch(e){ if (e instanceof NetErr) showOffline(); else showLogin(); }
+}
+$("#retry").onclick = start;
+window.addEventListener("online", () => { if (!$("#offline").hidden) start(); });
+start();
 </script>
 </body>
 </html>
