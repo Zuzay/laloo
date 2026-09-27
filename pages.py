@@ -14,6 +14,7 @@ PER_AREA = 25            # semt başına en fazla umumi tuvalet
 MAX_MUNI = 20            # belediye grubunda en fazla
 MAX_PUBLIC = 400         # sayfa başına en fazla umumi tuvalet
 MANIFEST = "pages-manifest.json"
+ROUTES_FILE = "routes.json"   # Loo Routes yazıları (Claude yazar, Uzay yükler)
 
 # Hedef şehirlerin dillere göre adları (yoksa veritabanındaki ad kullanılır)
 NAMES = {
@@ -44,7 +45,7 @@ T = {
         "ask": "Ask inside, usually for customers", "upd": "Updated {d}.", "all": "All cities",
         "home": "Find a bathroom anywhere", "cities_t": "Public bathrooms by city", "cities_h1": "Find a bathroom in these cities",
         "cities_d": "Public restrooms, free toilets and hand-picked spots in {n} cities. Pick a city or open the live map.",
-        "stat": "{p} public restrooms · {t} hand-picked spots", "src": "Map data © OpenStreetMap contributors."},
+        "stat": "{p} public restrooms · {t} hand-picked spots", "src": "Map data © OpenStreetMap contributors.", "routes": "Loo Routes", "routes_city": "Walking routes in {c}", "routes_h1": "Loo Routes: walks with bathroom stops", "routes_d": "Walking routes through the world's busiest tourist spots, with every bathroom stop on the way.", "partner": "Laloo partner", "stops": "Bathroom stops", "open_route": "Open this area on the map", "pub_d": "Published {d}"},
  "es": {"title": "Baños públicos en {c}: aseos gratis y dónde ir",
         "desc": "{n} baños públicos, aseos gratuitos y lugares recomendados en {c}. Mira precios y horarios y abre el mapa en vivo para encontrar el más cercano. Sin descargar ninguna app.",
         "h1": "Baños públicos en {c}",
@@ -57,7 +58,7 @@ T = {
         "ask": "Pregunta dentro, normalmente para clientes", "upd": "Actualizado: {d}.", "all": "Todas las ciudades",
         "home": "Encuentra un baño en cualquier lugar", "cities_t": "Baños públicos por ciudad", "cities_h1": "Encuentra un baño en estas ciudades",
         "cities_d": "Baños públicos, aseos gratuitos y lugares recomendados en {n} ciudades. Elige una ciudad o abre el mapa.",
-        "stat": "{p} baños públicos · {t} lugares recomendados", "src": "Datos del mapa © colaboradores de OpenStreetMap."},
+        "stat": "{p} baños públicos · {t} lugares recomendados", "src": "Datos del mapa © colaboradores de OpenStreetMap.", "routes": "Loo Routes", "routes_city": "Rutas a pie en {c}", "routes_h1": "Loo Routes: paseos con paradas para ir al baño", "routes_d": "Rutas a pie por los lugares más turísticos del mundo, con cada parada para ir al baño en el camino.", "partner": "Socio de Laloo", "stops": "Paradas para ir al baño", "open_route": "Abrir esta zona en el mapa", "pub_d": "Publicado: {d}"},
  "de": {"title": "Öffentliche Toiletten in {c}: kostenlose WCs und wo man hingeht",
         "desc": "{n} öffentliche Toiletten, kostenlose WCs und ausgewählte Orte in {c}. Preise und Öffnungszeiten ansehen und auf der Live-Karte die nächste finden. Ohne App.",
         "h1": "Öffentliche Toiletten in {c}",
@@ -70,7 +71,7 @@ T = {
         "ask": "Drinnen fragen, meist für Kunden", "upd": "Aktualisiert: {d}.", "all": "Alle Städte",
         "home": "Finde überall eine Toilette", "cities_t": "Öffentliche Toiletten nach Stadt", "cities_h1": "Finde eine Toilette in diesen Städten",
         "cities_d": "Öffentliche Toiletten, kostenlose WCs und ausgewählte Orte in {n} Städten. Wähle eine Stadt oder öffne die Karte.",
-        "stat": "{p} öffentliche Toiletten · {t} ausgewählte Orte", "src": "Kartendaten © OpenStreetMap-Mitwirkende."},
+        "stat": "{p} öffentliche Toiletten · {t} ausgewählte Orte", "src": "Kartendaten © OpenStreetMap-Mitwirkende.", "routes": "Loo Routes", "routes_city": "Spaziergänge in {c}", "routes_h1": "Loo Routes: Spaziergänge mit Toilettenstopps", "routes_d": "Spaziergänge durch die beliebtesten Touristenorte der Welt, mit jedem Toilettenstopp unterwegs.", "partner": "Laloo-Partner", "stops": "Toilettenstopps", "open_route": "Diese Gegend auf der Karte öffnen", "pub_d": "Veröffentlicht: {d}"},
  "fr": {"title": "Toilettes publiques à {c} : WC gratuits et où aller",
         "desc": "{n} toilettes publiques, WC gratuits et bonnes adresses à {c}. Tarifs et horaires, puis la carte en direct pour trouver les plus proches. Sans application.",
         "h1": "Toilettes publiques à {c}",
@@ -83,7 +84,7 @@ T = {
         "ask": "Demandez à l'intérieur, en général pour les clients", "upd": "Mis à jour : {d}.", "all": "Toutes les villes",
         "home": "Trouvez des toilettes partout", "cities_t": "Toilettes publiques par ville", "cities_h1": "Trouvez des toilettes dans ces villes",
         "cities_d": "Toilettes publiques, WC gratuits et bonnes adresses dans {n} villes. Choisissez une ville ou ouvrez la carte.",
-        "stat": "{p} toilettes publiques · {t} bonnes adresses", "src": "Données cartographiques © contributeurs OpenStreetMap."},
+        "stat": "{p} toilettes publiques · {t} bonnes adresses", "src": "Données cartographiques © contributeurs OpenStreetMap.", "routes": "Loo Routes", "routes_city": "Balades à {c}", "routes_h1": "Loo Routes : balades avec pauses toilettes", "routes_d": "Des balades dans les lieux les plus touristiques du monde, avec chaque pause toilettes sur le chemin.", "partner": "Partenaire Laloo", "stops": "Pauses toilettes", "open_route": "Ouvrir ce quartier sur la carte", "pub_d": "Publié : {d}"},
  "tr": {"title": "{c} umumi tuvaletleri: ücretsiz tuvaletler ve nereye gidilir",
         "desc": "{c} içinde {n} umumi tuvalet, ücretsiz WC ve seçilmiş yer. Ücret ve saatlere bak, canlı haritada en yakınını bul. Uygulama gerekmez.",
         "h1": "{c} umumi tuvaletleri",
@@ -96,7 +97,7 @@ T = {
         "ask": "İçeride sor, genelde müşterilere", "upd": "Güncelleme: {d}.", "all": "Tüm şehirler",
         "home": "Her yerde tuvalet bul", "cities_t": "Şehir şehir umumi tuvaletler", "cities_h1": "Bu şehirlerde tuvalet bul",
         "cities_d": "{n} şehirde umumi tuvaletler, ücretsiz WC'ler ve seçilmiş yerler. Bir şehir seç ya da haritayı aç.",
-        "stat": "{p} umumi tuvalet · {t} seçilmiş yer", "src": "Harita verisi © OpenStreetMap katkıcıları."},
+        "stat": "{p} umumi tuvalet · {t} seçilmiş yer", "src": "Harita verisi © OpenStreetMap katkıcıları.", "routes": "Loo Routes", "routes_city": "{c} yürüyüş rotaları", "routes_h1": "Loo Routes: tuvalet molalı yürüyüşler", "routes_d": "Dünyanın en turistik yerlerinde, yol üstündeki her tuvalet molasıyla yürüyüş rotaları.", "partner": "Laloo partneri", "stops": "Tuvalet molaları", "open_route": "Bu bölgeyi haritada aç", "pub_d": "Yayın: {d}"},
 }
 MONTHS = {
  "en": "January February March April May June July August September October November December",
@@ -166,6 +167,11 @@ ul.pl b{display:block}ul.pl p{margin:4px 0 0;font-size:14px}.h{color:var(--muted
 .t.f{background:var(--greenbg);color:var(--green)}
 ul.sm li{padding:7px 10px;margin:0 0 5px;border-radius:9px;font-size:15px}ul.sm b{display:inline;margin-right:6px}ul.sm .t{margin:0 4px 0 0}ul.sm .h{display:inline}.t.c{background:var(--amberbg);color:var(--amber)}
 ul.cl{columns:2;gap:20px;padding-left:18px}@media(max-width:520px){ul.cl{columns:1}}
+article p{margin:0 0 14px}.box{background:var(--tag);border-radius:12px;padding:12px 14px;margin:14px 0}
+.stop{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 12px;position:relative}
+.stop .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#1c4fa0;color:#fff;font-weight:700;font-size:13px;margin-right:8px;vertical-align:1px}
+.stop .d{color:var(--muted);font-size:13px;margin:2px 0 6px}.stop.pt{border-color:#e0453a}.stop.pt .n{background:#e0453a}.t.p{background:#fde8e8;color:#b3261e}
+.rl{list-style:none;padding:0;margin:0}.rl li{margin:0 0 10px}.rl a{font-weight:700}.rl span{display:block;color:var(--muted);font-size:14px}
 footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}"""
 
 def tag_html(tags, lang):
@@ -264,6 +270,32 @@ def city_body(c, lang, tips, pubs, areas, now):
   b.append(cta)
   return "\n".join(b), n
 
+def md(text):
+  """Düz metin: **kalın** desteklenir, geri kalan her şey kaçışlanır."""
+  return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", esc(text))
+
+def route_body(r, lang, now):
+  t = T[lang]; d = r["i18n"][lang]
+  b = [f'<p class="note">{esc(t["routes"])} · {esc(t["pub_d"].format(d=month(lang, datetime.fromisoformat(r["date"]))))}</p>',
+       f'<h1>{esc(d["h1"])}</h1><article>']
+  k = 0
+  for blk in d["body"]:
+    if "p" in blk: b.append(f'<p>{md(blk["p"])}</p>')
+    elif "h2" in blk: b.append(f'<h2>{esc(blk["h2"])}</h2>')
+    elif "box" in blk: b.append(f'<div class="box">{md(blk["box"])}</div>')
+    elif "stop" in blk:
+      st = blk["stop"]; pt = st.get("partner")
+      k += 0 if pt else 1
+      num = "★" if pt else str(k)
+      tags = (f'<span class="t p">{esc(t["partner"])}</span>' if pt else "") + tag_html(fee_tags("", lang, st.get("fee"))[0], lang)
+      name = esc(st["name"])
+      if st.get("url"): name = f'<a href="{esc(st["url"])}" rel="{"sponsored noopener" if pt else "noopener"}">{name}</a>'
+      b.append(f'<div class="stop{" pt" if pt else ""}"><b><span class="n">{num}</span>{name}</b> {tags}'
+               + (f'<div class="d">{esc(st["where"])}</div>' if st.get("where") else "") + f'<div>{md(st["text"])}</div></div>')
+  b.append("</article>")
+  b.append(f'<a class="cta" href="/?at={r["lat"]:.4f},{r["lng"]:.4f},15&amp;ref=route-{esc(r["slug"])}">📍 {esc(t["open_route"])}</a>')
+  return "\n".join(b)
+
 def write(path, text):
   os.makedirs(os.path.dirname(path), exist_ok=True)
   old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
@@ -276,6 +308,8 @@ def generate(cities, places_for, root=".", now=None):
   old = set(json.load(open(os.path.join(root, MANIFEST)))) if os.path.exists(os.path.join(root, MANIFEST)) else set()
   made, listed = [], []
   used = set()
+  routes = json.load(open(os.path.join(root, ROUTES_FILE), encoding="utf-8")) if os.path.exists(os.path.join(root, ROUTES_FILE)) else []
+  rpath = lambda l, slug: f"/routes/{slug}/" if l == "en" else f"/{l}/routes/{slug}/"
   for c in sorted(cities, key=lambda c: c["name"]):
     if not c.get("active", True): continue
     slug = SLUGS.get(c["id"]) or slugify(NAMES.get(c["id"], {}).get("en") or c["name"]) or c["id"]
@@ -289,12 +323,38 @@ def generate(cities, places_for, root=".", now=None):
     alts = [(l, url(l, slug)) for l in LANGS]
     for lang in LANGS:
       body, n = city_body(c, lang, tips, pubs, areas, now)
+      mine = [r for r in routes if r["city"] == c["id"] and lang in r["i18n"]]
+      if mine:
+        body = body.replace('<h2>', f'<h2>{esc(T[lang]["routes_city"].format(c=cname(c, lang)))}</h2><ul class="rl">' + "".join(
+          f'<li><a href="{rpath(lang, r["slug"])}">{esc(r["i18n"][lang]["h1"])}</a><span>{esc(r["i18n"][lang]["desc"])}</span></li>' for r in mine) + '</ul><h2>', 1)
       cn = cname(c, lang); t = T[lang]
       rel = f"{slug}/index.html" if lang == "en" else f"{lang}/{slug}/index.html"
       write(os.path.join(root, rel), page(lang, t["title"].format(c=cn), t["desc"].format(c=cn, n=n), url(lang, slug), alts, body,
                                           lambda l, s=slug: f"/{s}/" if l == "en" else f"/{l}/{s}/"))
       made.append(rel)
     listed.append((c, slug, len(tips), len(pubs)))
+  # Loo Routes yazıları ve /routes/ listesi
+  for r in routes:
+    langs = [l for l in LANGS if l in r["i18n"]]
+    alts = [(l, SITE + rpath(l, r["slug"])) for l in langs]
+    if "en" not in langs: continue
+    for lang in langs:
+      d = r["i18n"][lang]
+      rel = rpath(lang, r["slug"]).strip("/") + "/index.html"
+      write(os.path.join(root, rel), page(lang, d["title"], d["desc"], SITE + rpath(lang, r["slug"]), alts, route_body(r, lang, now),
+                                          lambda l, s=r["slug"], ls=langs: rpath(l, s) if l in ls else ("/" if l == "en" else f"/{l}/cities/")))
+      made.append(rel)
+  if routes:
+    for lang in LANGS:
+      t = T[lang]; mine = [r for r in sorted(routes, key=lambda r: r["date"], reverse=True) if lang in r["i18n"]]
+      body = [f'<h1>{esc(t["routes_h1"])}</h1><p class="lead">{esc(t["routes_d"])}</p><ul class="rl">']
+      body += [f'<li><a href="{rpath(lang, r["slug"])}">{esc(r["i18n"][lang]["h1"])}</a><span>{esc(r["i18n"][lang]["desc"])}</span></li>' for r in mine]
+      body.append("</ul>")
+      rel = "routes/index.html" if lang == "en" else f"{lang}/routes/index.html"
+      write(os.path.join(root, rel), page(lang, t["routes_h1"], t["routes_d"], SITE + rpath(lang, "").replace("//", "/").rstrip("/") + "/",
+                                          [(l, SITE + ("/routes/" if l == "en" else f"/{l}/routes/")) for l in LANGS], "\n".join(body),
+                                          lambda l: "/routes/" if l == "en" else f"/{l}/routes/"))
+      made.append(rel)
   # /cities/ listeleri
   for lang in LANGS:
     t = T[lang]

@@ -1,0 +1,890 @@
+[
+ {
+  "slug": "santa-monica-to-venice-beach-bathrooms",
+  "city": "la",
+  "date": "2026-09-27",
+  "lat": 34.0008,
+  "lng": -118.4846,
+  "i18n": {
+   "en": {
+    "title": "Santa Monica to Venice Beach walk: every bathroom stop on the way",
+    "desc": "Walking from Santa Monica Pier to Venice Beach? Here are the free public restrooms along the 2.5-mile beach path, where they are and when they close.",
+    "h1": "Santa Monica to Venice Beach: every bathroom stop on the walk",
+    "body": [
+     {
+      "p": "It's about 2.5 miles (4 km) from Santa Monica Pier to the Venice skatepark. Flat, sunny, and full of things to look at. It's also about 50 minutes of walking, which is exactly when your body remembers that large iced coffee."
+     },
+     {
+      "p": "Good news: this stretch of coast is one of the easiest in LA for bathrooms, and almost every stop below is **free**. Here they are, in walking order."
+     },
+     {
+      "h2": "Before you start"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Place",
+       "fee": "Free",
+       "where": "395 Santa Monica Pl · top of Third Street Promenade",
+       "text": "The open-air mall at the end of the Promenade. Restrooms are on the upper level. The last calm, indoor option before the beach."
+      }
+     },
+     {
+      "h2": "The walk"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Pier",
+       "fee": "Free",
+       "where": "Pier deck and beach level",
+       "text": "Public restrooms on the pier and below it by the sand. On summer weekends there can be a line; if one is busy, try the other."
+      }
+     },
+     {
+      "stop": {
+       "name": "Beach restrooms at Bay Street",
+       "fee": "Free",
+       "where": "2600 Barnard Way · on the beach path, about 1 mile south of the pier",
+       "text": "A simple restroom building right on the bike and walking path. Handy halfway point."
+      }
+     },
+     {
+      "stop": {
+       "name": "Ocean Park Branch Library",
+       "fee": "Free",
+       "where": "2601 Main St · two blocks inland",
+       "text": "A small detour to Main Street, which has good cafés anyway. Open during library hours only."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Rose Avenue",
+       "fee": "Free",
+       "where": "Rose Ave and Ocean Front Walk",
+       "text": "Where the Venice Boardwalk begins. The restroom building is next to the beach parking lot."
+      }
+     },
+     {
+      "stop": {
+       "name": "Heron CA",
+       "partner": true,
+       "url": "https://heronca.com",
+       "where": "517 Ocean Front Walk, Venice",
+       "text": "California coastal clothing, vintage and original designs, right on the Boardwalk. Show the code **LALOO10** at the register. Full disclosure: Heron CA is run by Laloo's founder. This is a shop stop, not a restroom."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Windward Avenue",
+       "fee": "Free",
+       "where": "Near the skatepark and Muscle Beach",
+       "text": "The busiest part of the Boardwalk. Restrooms are right by the skatepark, so you can watch the tricks while you wait."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Pier",
+       "fee": "Free",
+       "where": "Washington Blvd · south end of the Boardwalk",
+       "text": "If you keep walking to the fishing pier, there are restrooms at its foot. From here, Marina del Rey is next door."
+      }
+     },
+     {
+      "h2": "Good to know"
+     },
+     {
+      "box": "As of September 2026, all the public restrooms on this route are free. They are run by the cities of Santa Monica and Los Angeles. Beach restrooms are open in the daytime and some close around sunset. Carry a few tissues, just in case."
+     },
+     {
+      "p": "Want the nearest one right now instead of reading? Open the map below. It works in your browser, no app to download."
+     }
+    ]
+   },
+   "es": {
+    "title": "De Santa Monica a Venice Beach a pie: todas las paradas para ir al baño",
+    "desc": "¿Caminas del muelle de Santa Monica a Venice Beach? Estos son los baños públicos gratis en los 4 km del paseo de playa, dónde están y cuándo cierran.",
+    "h1": "De Santa Monica a Venice Beach: todas las paradas para ir al baño",
+    "body": [
+     {
+      "p": "Hay unos 4 km (2,5 millas) del muelle de Santa Monica al skatepark de Venice. Llano, soleado y lleno de cosas que mirar. También son unos 50 minutos a pie, justo cuando tu cuerpo se acuerda de aquel café helado grande."
+     },
+     {
+      "p": "Buena noticia: este tramo de costa es de los más fáciles de LA para encontrar baño, y casi todas las paradas son **gratis**. Aquí van, en orden de paseo."
+     },
+     {
+      "h2": "Antes de empezar"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Place",
+       "fee": "Free",
+       "where": "395 Santa Monica Pl · al final de Third Street Promenade",
+       "text": "El centro comercial al aire libre al final del Promenade. Los baños están en la planta alta. La última opción tranquila y bajo techo antes de la playa."
+      }
+     },
+     {
+      "h2": "El paseo"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Pier",
+       "fee": "Free",
+       "where": "En el muelle y a nivel de playa",
+       "text": "Baños públicos en el muelle y debajo, junto a la arena. Los fines de semana de verano puede haber cola; si uno está lleno, prueba el otro."
+      }
+     },
+     {
+      "stop": {
+       "name": "Beach restrooms at Bay Street",
+       "fee": "Free",
+       "where": "2600 Barnard Way · en el paseo de playa, a 1,5 km al sur del muelle",
+       "text": "Un edificio sencillo de baños justo en el carril bici y peatonal. Buena parada a mitad de camino."
+      }
+     },
+     {
+      "stop": {
+       "name": "Ocean Park Branch Library",
+       "fee": "Free",
+       "where": "2601 Main St · a dos cuadras de la playa",
+       "text": "Un pequeño desvío a Main Street, que además tiene buenos cafés. Abierto solo en horario de biblioteca."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Rose Avenue",
+       "fee": "Free",
+       "where": "Rose Ave y Ocean Front Walk",
+       "text": "Aquí empieza el Boardwalk de Venice. El edificio de baños está junto al estacionamiento de la playa."
+      }
+     },
+     {
+      "stop": {
+       "name": "Heron CA",
+       "partner": true,
+       "url": "https://heronca.com",
+       "where": "517 Ocean Front Walk, Venice",
+       "text": "Ropa costera de California, vintage y diseños propios, en pleno Boardwalk. Muestra el código **LALOO10** en caja. Para ser claros: Heron CA es de quien fundó Laloo. Es una parada de compras, no un baño."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Windward Avenue",
+       "fee": "Free",
+       "where": "Junto al skatepark y Muscle Beach",
+       "text": "La parte más animada del Boardwalk. Los baños están al lado del skatepark, así que puedes ver los trucos mientras esperas."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Pier",
+       "fee": "Free",
+       "where": "Washington Blvd · extremo sur del Boardwalk",
+       "text": "Si sigues hasta el muelle de pesca, hay baños a su entrada. Desde aquí, Marina del Rey está al lado."
+      }
+     },
+     {
+      "h2": "Conviene saber"
+     },
+     {
+      "box": "A septiembre de 2026, todos los baños públicos de esta ruta son gratis. Los gestionan las ciudades de Santa Monica y Los Ángeles. Los baños de playa abren de día y algunos cierran al atardecer. Lleva unos pañuelos, por si acaso."
+     },
+     {
+      "p": "¿Prefieres ver el más cercano ahora mismo? Abre el mapa aquí abajo. Funciona en el navegador, sin descargar ninguna app."
+     }
+    ]
+   },
+   "de": {
+    "title": "Von Santa Monica nach Venice Beach zu Fuß: jeder Toilettenstopp unterwegs",
+    "desc": "Zu Fuß vom Santa Monica Pier nach Venice Beach? Hier sind die kostenlosen öffentlichen Toiletten auf dem 4 km langen Strandweg, wo sie sind und wann sie schließen.",
+    "h1": "Von Santa Monica nach Venice Beach: jeder Toilettenstopp auf dem Weg",
+    "body": [
+     {
+      "p": "Vom Santa Monica Pier bis zum Skatepark in Venice sind es etwa 4 km. Flach, sonnig und voller Dinge zum Anschauen. Es sind aber auch rund 50 Minuten zu Fuß, genau dann meldet sich der große Eiskaffee von vorhin."
+     },
+     {
+      "p": "Die gute Nachricht: Dieser Küstenabschnitt ist einer der einfachsten in LA, was Toiletten angeht, und fast jeder Stopp unten ist **kostenlos**. Hier sind sie, in Laufrichtung."
+     },
+     {
+      "h2": "Bevor es losgeht"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Place",
+       "fee": "Free",
+       "where": "395 Santa Monica Pl · am Ende der Third Street Promenade",
+       "text": "Das offene Einkaufszentrum am Ende der Promenade. Die Toiletten sind im oberen Stock. Die letzte ruhige Möglichkeit drinnen vor dem Strand."
+      }
+     },
+     {
+      "h2": "Der Spaziergang"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Pier",
+       "fee": "Free",
+       "where": "Auf dem Pier und auf Strandhöhe",
+       "text": "Öffentliche Toiletten auf dem Pier und darunter am Sand. An Sommerwochenenden gibt es manchmal eine Schlange; ist eine voll, probier die andere."
+      }
+     },
+     {
+      "stop": {
+       "name": "Beach restrooms at Bay Street",
+       "fee": "Free",
+       "where": "2600 Barnard Way · am Strandweg, etwa 1,5 km südlich vom Pier",
+       "text": "Ein schlichtes Toilettenhaus direkt am Rad- und Fußweg. Praktisch auf halber Strecke."
+      }
+     },
+     {
+      "stop": {
+       "name": "Ocean Park Branch Library",
+       "fee": "Free",
+       "where": "2601 Main St · zwei Blocks landeinwärts",
+       "text": "Ein kleiner Abstecher zur Main Street, die sowieso gute Cafés hat. Nur zu den Öffnungszeiten der Bibliothek."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Rose Avenue",
+       "fee": "Free",
+       "where": "Rose Ave und Ocean Front Walk",
+       "text": "Hier beginnt der Venice Boardwalk. Das Toilettenhaus steht neben dem Strandparkplatz."
+      }
+     },
+     {
+      "stop": {
+       "name": "Heron CA",
+       "partner": true,
+       "url": "https://heronca.com",
+       "where": "517 Ocean Front Walk, Venice",
+       "text": "Kalifornische Küstenmode, Vintage und eigene Designs, direkt am Boardwalk. Zeig an der Kasse den Code **LALOO10**. Zur Transparenz: Heron CA gehört dem Gründer von Laloo. Das ist ein Shopping-Stopp, keine Toilette."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Windward Avenue",
+       "fee": "Free",
+       "where": "Beim Skatepark und Muscle Beach",
+       "text": "Der belebteste Teil des Boardwalks. Die Toiletten sind direkt am Skatepark, also kannst du beim Warten den Tricks zusehen."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Pier",
+       "fee": "Free",
+       "where": "Washington Blvd · südliches Ende des Boardwalks",
+       "text": "Wenn du bis zum Angelpier weitergehst, gibt es an seinem Anfang Toiletten. Von hier ist Marina del Rey gleich nebenan."
+      }
+     },
+     {
+      "h2": "Gut zu wissen"
+     },
+     {
+      "box": "Stand September 2026 sind alle öffentlichen Toiletten auf dieser Route kostenlos. Betrieben werden sie von den Städten Santa Monica und Los Angeles. Die Strandtoiletten sind tagsüber offen, manche schließen gegen Sonnenuntergang. Ein paar Taschentücher schaden nicht."
+     },
+     {
+      "p": "Lieber gleich die nächste finden statt lesen? Öffne unten die Karte. Sie läuft im Browser, ohne App."
+     }
+    ]
+   },
+   "fr": {
+    "title": "De Santa Monica à Venice Beach à pied : toutes les pauses toilettes du trajet",
+    "desc": "Vous marchez du Santa Monica Pier à Venice Beach ? Voici les toilettes publiques gratuites sur les 4 km de promenade, où elles sont et quand elles ferment.",
+    "h1": "De Santa Monica à Venice Beach : toutes les pauses toilettes de la balade",
+    "body": [
+     {
+      "p": "Il y a environ 4 km entre le Santa Monica Pier et le skatepark de Venice. C'est plat, ensoleillé et plein de choses à voir. C'est aussi une cinquantaine de minutes de marche, pile le moment où votre corps se souvient du grand café glacé."
+     },
+     {
+      "p": "Bonne nouvelle : ce bout de côte est l'un des plus simples de LA pour trouver des toilettes, et presque toutes les étapes ci-dessous sont **gratuites**. Les voici, dans l'ordre de la balade."
+     },
+     {
+      "h2": "Avant de partir"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Place",
+       "fee": "Free",
+       "where": "395 Santa Monica Pl · au bout de la Third Street Promenade",
+       "text": "Le centre commercial à ciel ouvert au bout de la Promenade. Les toilettes sont à l'étage. La dernière option calme et couverte avant la plage."
+      }
+     },
+     {
+      "h2": "La balade"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Pier",
+       "fee": "Free",
+       "where": "Sur la jetée et au niveau de la plage",
+       "text": "Toilettes publiques sur la jetée et en dessous, côté sable. Les week-ends d'été, il peut y avoir la queue ; si l'une est pleine, essayez l'autre."
+      }
+     },
+     {
+      "stop": {
+       "name": "Beach restrooms at Bay Street",
+       "fee": "Free",
+       "where": "2600 Barnard Way · sur la promenade, à environ 1,5 km au sud de la jetée",
+       "text": "Un petit bâtiment de toilettes directement sur la piste cyclable et piétonne. Pratique à mi-chemin."
+      }
+     },
+     {
+      "stop": {
+       "name": "Ocean Park Branch Library",
+       "fee": "Free",
+       "where": "2601 Main St · à deux rues de la plage",
+       "text": "Un petit détour par Main Street, qui a de toute façon de bons cafés. Ouvert seulement aux horaires de la bibliothèque."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Rose Avenue",
+       "fee": "Free",
+       "where": "Rose Ave et Ocean Front Walk",
+       "text": "Là où commence le Boardwalk de Venice. Le bâtiment des toilettes est à côté du parking de la plage."
+      }
+     },
+     {
+      "stop": {
+       "name": "Heron CA",
+       "partner": true,
+       "url": "https://heronca.com",
+       "where": "517 Ocean Front Walk, Venice",
+       "text": "Mode côtière californienne, vintage et créations maison, en plein Boardwalk. Montrez le code **LALOO10** à la caisse. En toute transparence : Heron CA appartient au fondateur de Laloo. C'est une étape shopping, pas des toilettes."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Windward Avenue",
+       "fee": "Free",
+       "where": "Près du skatepark et de Muscle Beach",
+       "text": "La partie la plus animée du Boardwalk. Les toilettes sont juste à côté du skatepark, de quoi regarder les figures en attendant."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Pier",
+       "fee": "Free",
+       "where": "Washington Blvd · extrémité sud du Boardwalk",
+       "text": "Si vous continuez jusqu'à la jetée de pêche, il y a des toilettes à son entrée. D'ici, Marina del Rey est juste à côté."
+      }
+     },
+     {
+      "h2": "Bon à savoir"
+     },
+     {
+      "box": "En septembre 2026, toutes les toilettes publiques de cet itinéraire sont gratuites. Elles sont gérées par les villes de Santa Monica et de Los Angeles. Les toilettes de plage ouvrent en journée et certaines ferment vers le coucher du soleil. Prévoyez quelques mouchoirs, au cas où."
+     },
+     {
+      "p": "Vous préférez trouver les plus proches tout de suite ? Ouvrez la carte ci-dessous. Elle marche dans le navigateur, sans application."
+     }
+    ]
+   },
+   "tr": {
+    "title": "Santa Monica'dan Venice Beach'e yürüyüş: yol üstündeki bütün tuvalet molaları",
+    "desc": "Santa Monica Pier'dan Venice Beach'e mi yürüyorsun? 4 km'lik sahil yolundaki ücretsiz umumi tuvaletler, nerede oldukları ve kaçta kapandıkları burada.",
+    "h1": "Santa Monica'dan Venice Beach'e: yürüyüşteki bütün tuvalet molaları",
+    "body": [
+     {
+      "p": "Santa Monica Pier'dan Venice'teki kaykay parkına yaklaşık 4 km var. Düz, güneşli ve bakacak bir sürü şey var. Aynı zamanda 50 dakikalık bir yürüyüş, yani vücudunun o büyük buzlu kahveyi hatırladığı an tam da bu."
+     },
+     {
+      "p": "İyi haber: Sahilin bu kısmı LA'de tuvalet bulması en kolay yerlerden biri ve aşağıdaki durakların neredeyse hepsi **ücretsiz**. Yürüyüş sırasıyla şöyle:"
+     },
+     {
+      "h2": "Yola çıkmadan önce"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Place",
+       "fee": "Free",
+       "where": "395 Santa Monica Pl · Third Street Promenade'in sonunda",
+       "text": "Promenade'in ucundaki açık hava AVM'si. Tuvaletler üst katta. Sahilden önceki son sakin, kapalı seçenek."
+      }
+     },
+     {
+      "h2": "Yürüyüş"
+     },
+     {
+      "stop": {
+       "name": "Santa Monica Pier",
+       "fee": "Free",
+       "where": "İskelenin üstünde ve kum seviyesinde",
+       "text": "İskelenin üstünde ve altında, kumun yanında umumi tuvaletler var. Yaz hafta sonlarında sıra olabilir; biri doluysa diğerini dene."
+      }
+     },
+     {
+      "stop": {
+       "name": "Beach restrooms at Bay Street",
+       "fee": "Free",
+       "where": "2600 Barnard Way · sahil yolunda, iskelenin yaklaşık 1,5 km güneyinde",
+       "text": "Bisiklet ve yürüyüş yolunun hemen üstünde sade bir tuvalet binası. Yolun yarısında işe yarar."
+      }
+     },
+     {
+      "stop": {
+       "name": "Ocean Park Branch Library",
+       "fee": "Free",
+       "where": "2601 Main St · sahilden iki sokak içeride",
+       "text": "Main Street'e küçük bir sapma, zaten güzel kafeleri var. Sadece kütüphane saatlerinde açık."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Rose Avenue",
+       "fee": "Free",
+       "where": "Rose Ave ve Ocean Front Walk köşesi",
+       "text": "Venice Boardwalk'un başladığı yer. Tuvalet binası sahil otoparkının yanında."
+      }
+     },
+     {
+      "stop": {
+       "name": "Heron CA",
+       "partner": true,
+       "url": "https://heronca.com",
+       "where": "517 Ocean Front Walk, Venice",
+       "text": "Kaliforniya sahil giyimi, vintage ve özgün tasarımlar, tam Boardwalk'un üstünde. Kasada **LALOO10** kodunu göster. Açık olalım: Heron CA'yı Laloo'nun kurucusu işletiyor. Bu bir alışveriş durağı, tuvalet değil."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Beach restrooms at Windward Avenue",
+       "fee": "Free",
+       "where": "Kaykay parkı ve Muscle Beach'in yanında",
+       "text": "Boardwalk'un en kalabalık kısmı. Tuvaletler kaykay parkının hemen yanında, sıra beklerken hareketleri izleyebilirsin."
+      }
+     },
+     {
+      "stop": {
+       "name": "Venice Pier",
+       "fee": "Free",
+       "where": "Washington Blvd · Boardwalk'un güney ucu",
+       "text": "Balıkçı iskelesine kadar devam edersen girişinde tuvalet var. Buradan Marina del Rey hemen yanında."
+      }
+     },
+     {
+      "h2": "Bilmekte fayda var"
+     },
+     {
+      "box": "Eylül 2026 itibarıyla bu rotadaki bütün umumi tuvaletler ücretsiz. Santa Monica ve Los Angeles belediyeleri işletiyor. Sahil tuvaletleri gündüz açık, bazıları gün batımına doğru kapanıyor. Yanında birkaç peçete bulunsun, ne olur ne olmaz."
+     },
+     {
+      "p": "Okumak yerine en yakınını hemen mi görmek istiyorsun? Aşağıdan haritayı aç. Tarayıcıda çalışır, uygulama indirmeye gerek yok."
+     }
+    ]
+   }
+  }
+ },
+ {
+  "slug": "midtown-manhattan-bathrooms-walk",
+  "city": "nyc",
+  "date": "2026-09-27",
+  "lat": 40.758,
+  "lng": -73.979,
+  "i18n": {
+   "en": {
+    "title": "Midtown Manhattan bathrooms: a walking route from Times Square to Central Park",
+    "desc": "Times Square has almost no public bathrooms. Here's a 2.5-mile Midtown walk with free restroom stops at Bryant Park, the library, Grand Central and more.",
+    "h1": "Midtown Manhattan: a bathroom-friendly walk from Times Square to Central Park",
+    "body": [
+     {
+      "p": "Times Square has everything: giant screens, costumed characters, someone selling comedy show tickets. What it doesn't really have is public bathrooms."
+     },
+     {
+      "p": "So here's a walk that keeps you a few minutes from a **free** restroom all the way from Times Square to Central Park. About 2.5 miles (4 km), with plenty of reasons to stop anyway."
+     },
+     {
+      "h2": "The walk"
+     },
+     {
+      "stop": {
+       "name": "Bryant Park restrooms",
+       "fee": "Free",
+       "where": "42nd St between 5th and 6th Ave · 5 minutes from Times Square",
+       "text": "Probably the most famous public restroom in the city, behind the library, with attendants and fresh flowers. Open from morning to evening. Start here."
+      }
+     },
+     {
+      "stop": {
+       "name": "New York Public Library (Stephen A. Schwarzman Building)",
+       "fee": "Free",
+       "where": "5th Ave and 42nd St",
+       "text": "The library with the stone lions, right next to the park. Free to enter, restrooms inside, and the Rose Main Reading Room is worth a look."
+      }
+     },
+     {
+      "stop": {
+       "name": "Stavros Niarchos Foundation Library",
+       "fee": "Free",
+       "where": "455 5th Ave · across the street",
+       "text": "The modern library opposite the lions. Restrooms, and a free rooftop terrace with a view of the old library."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Central Terminal",
+       "fee": "Free",
+       "where": "89 E 42nd St · Dining Concourse, one level down",
+       "text": "Look up at the ceiling in the main hall, then go downstairs. The restrooms are on the Dining Concourse."
+      }
+     },
+     {
+      "stop": {
+       "name": "Rockefeller Center Concourse",
+       "fee": "Free",
+       "where": "Underground, below 30 Rockefeller Plaza",
+       "text": "Walk up 5th Avenue past the shop windows. Under the plaza there is a concourse with restrooms. The skating rink or the Top of the Rock are right above."
+      }
+     },
+     {
+      "stop": {
+       "name": "Central Park: Heckscher Playground restrooms",
+       "fee": "Free",
+       "where": "Enter at Central Park South and 6th Ave",
+       "text": "The first restrooms inside the park from the south. The Dairy Visitor Center is a short walk away too."
+      }
+     },
+     {
+      "stop": {
+       "name": "The Shops at Columbus Circle",
+       "fee": "Free",
+       "where": "10 Columbus Circle · southwest corner of the park",
+       "text": "A good last stop if you leave the park on the west side. Restrooms inside the mall."
+      }
+     },
+     {
+      "h2": "Good to know"
+     },
+     {
+      "box": "As of September 2026, all the stops above are free. Midtown cafés and many coffee chains usually keep restrooms for paying customers, so don't count on them. Parks and libraries close at night; Grand Central stays open late."
+     },
+     {
+      "p": "Lost somewhere between two avenues? Open the map below to see the nearest restroom and walk there."
+     }
+    ]
+   },
+   "es": {
+    "title": "Baños en Midtown Manhattan: una ruta a pie de Times Square a Central Park",
+    "desc": "Times Square casi no tiene baños públicos. Aquí tienes un paseo de 4 km por Midtown con baños gratis en Bryant Park, la biblioteca, Grand Central y más.",
+    "h1": "Midtown Manhattan: un paseo con baños a mano de Times Square a Central Park",
+    "body": [
+     {
+      "p": "Times Square lo tiene todo: pantallas gigantes, personajes disfrazados, alguien vendiendo entradas para un show de comedia. Lo que no tiene, de verdad, son baños públicos."
+     },
+     {
+      "p": "Así que aquí va un paseo que te mantiene a pocos minutos de un baño **gratis** desde Times Square hasta Central Park. Unos 4 km, con muchas razones para parar de todos modos."
+     },
+     {
+      "h2": "El paseo"
+     },
+     {
+      "stop": {
+       "name": "Bryant Park restrooms",
+       "fee": "Free",
+       "where": "Calle 42 entre la 5.ª y la 6.ª Av · a 5 minutos de Times Square",
+       "text": "Probablemente el baño público más famoso de la ciudad, detrás de la biblioteca, con personal y flores frescas. Abre de la mañana a la noche. Empieza aquí."
+      }
+     },
+     {
+      "stop": {
+       "name": "New York Public Library (Stephen A. Schwarzman Building)",
+       "fee": "Free",
+       "where": "5.ª Av y calle 42",
+       "text": "La biblioteca de los leones de piedra, justo al lado del parque. Entrada gratis, baños dentro, y la Rose Main Reading Room merece una mirada."
+      }
+     },
+     {
+      "stop": {
+       "name": "Stavros Niarchos Foundation Library",
+       "fee": "Free",
+       "where": "455 5th Ave · al otro lado de la calle",
+       "text": "La biblioteca moderna frente a los leones. Baños y una terraza en la azotea gratis con vista a la biblioteca antigua."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Central Terminal",
+       "fee": "Free",
+       "where": "89 E 42nd St · Dining Concourse, un nivel abajo",
+       "text": "Mira el techo del vestíbulo principal y luego baja. Los baños están en el Dining Concourse."
+      }
+     },
+     {
+      "stop": {
+       "name": "Rockefeller Center Concourse",
+       "fee": "Free",
+       "where": "Subterráneo, bajo 30 Rockefeller Plaza",
+       "text": "Sube por la Quinta Avenida entre escaparates. Bajo la plaza hay una galería con baños. La pista de patinaje y Top of the Rock están justo encima."
+      }
+     },
+     {
+      "stop": {
+       "name": "Central Park: Heckscher Playground restrooms",
+       "fee": "Free",
+       "where": "Entrada por Central Park South y la 6.ª Av",
+       "text": "Los primeros baños dentro del parque viniendo del sur. El Dairy Visitor Center también está cerca."
+      }
+     },
+     {
+      "stop": {
+       "name": "The Shops at Columbus Circle",
+       "fee": "Free",
+       "where": "10 Columbus Circle · esquina suroeste del parque",
+       "text": "Buena última parada si sales del parque por el oeste. Baños dentro del centro comercial."
+      }
+     },
+     {
+      "h2": "Conviene saber"
+     },
+     {
+      "box": "A septiembre de 2026, todas las paradas son gratis. Los cafés de Midtown y muchas cadenas de café suelen reservar el baño para clientes, así que no cuentes con ellos. Parques y bibliotecas cierran de noche; Grand Central abre hasta tarde."
+     },
+     {
+      "p": "¿Perdido entre dos avenidas? Abre el mapa aquí abajo para ver el baño más cercano y llegar caminando."
+     }
+    ]
+   },
+   "de": {
+    "title": "Toiletten in Midtown Manhattan: ein Spaziergang vom Times Square zum Central Park",
+    "desc": "Am Times Square gibt es kaum öffentliche Toiletten. Hier ist ein 4 km langer Spaziergang durch Midtown mit kostenlosen Toiletten im Bryant Park, in der Bibliothek, in der Grand Central und mehr.",
+    "h1": "Midtown Manhattan: toilettenfreundlich vom Times Square zum Central Park",
+    "body": [
+     {
+      "p": "Der Times Square hat alles: riesige Bildschirme, verkleidete Figuren, jemanden, der Karten für eine Comedy-Show verkauft. Was er nicht wirklich hat, sind öffentliche Toiletten."
+     },
+     {
+      "p": "Deshalb hier ein Spaziergang, bei dem du vom Times Square bis zum Central Park immer nur ein paar Minuten von einer **kostenlosen** Toilette entfernt bist. Etwa 4 km, mit genug Gründen, sowieso anzuhalten."
+     },
+     {
+      "h2": "Der Spaziergang"
+     },
+     {
+      "stop": {
+       "name": "Bryant Park restrooms",
+       "fee": "Free",
+       "where": "42nd St zwischen 5th und 6th Ave · 5 Minuten vom Times Square",
+       "text": "Wahrscheinlich die berühmteste öffentliche Toilette der Stadt, hinter der Bibliothek, mit Personal und frischen Blumen. Geöffnet von morgens bis abends. Fang hier an."
+      }
+     },
+     {
+      "stop": {
+       "name": "New York Public Library (Stephen A. Schwarzman Building)",
+       "fee": "Free",
+       "where": "5th Ave und 42nd St",
+       "text": "Die Bibliothek mit den Steinlöwen, direkt neben dem Park. Eintritt frei, Toiletten drinnen, und der Rose Main Reading Room ist einen Blick wert."
+      }
+     },
+     {
+      "stop": {
+       "name": "Stavros Niarchos Foundation Library",
+       "fee": "Free",
+       "where": "455 5th Ave · gegenüber",
+       "text": "Die moderne Bibliothek gegenüber den Löwen. Toiletten und eine kostenlose Dachterrasse mit Blick auf die alte Bibliothek."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Central Terminal",
+       "fee": "Free",
+       "where": "89 E 42nd St · Dining Concourse, eine Ebene tiefer",
+       "text": "Schau in der Haupthalle nach oben an die Decke, dann geh nach unten. Die Toiletten sind im Dining Concourse."
+      }
+     },
+     {
+      "stop": {
+       "name": "Rockefeller Center Concourse",
+       "fee": "Free",
+       "where": "Unterirdisch, unter 30 Rockefeller Plaza",
+       "text": "Geh die 5th Avenue an den Schaufenstern entlang hoch. Unter dem Platz gibt es eine Passage mit Toiletten. Eisbahn und Top of the Rock sind direkt darüber."
+      }
+     },
+     {
+      "stop": {
+       "name": "Central Park: Heckscher Playground restrooms",
+       "fee": "Free",
+       "where": "Eingang Central Park South und 6th Ave",
+       "text": "Die ersten Toiletten im Park, wenn du von Süden kommst. Das Dairy Visitor Center ist auch nicht weit."
+      }
+     },
+     {
+      "stop": {
+       "name": "The Shops at Columbus Circle",
+       "fee": "Free",
+       "where": "10 Columbus Circle · Südwestecke des Parks",
+       "text": "Ein guter letzter Stopp, wenn du den Park auf der Westseite verlässt. Toiletten im Einkaufszentrum."
+      }
+     },
+     {
+      "h2": "Gut zu wissen"
+     },
+     {
+      "box": "Stand September 2026 sind alle Stopps oben kostenlos. Cafés in Midtown und viele Kaffeeketten lassen meist nur zahlende Kunden auf die Toilette, verlass dich also nicht darauf. Parks und Bibliotheken schließen nachts; die Grand Central ist bis spät offen."
+     },
+     {
+      "p": "Zwischen zwei Avenues verloren? Öffne unten die Karte, um die nächste Toilette zu sehen und hinzulaufen."
+     }
+    ]
+   },
+   "fr": {
+    "title": "Toilettes à Midtown Manhattan : un itinéraire à pied de Times Square à Central Park",
+    "desc": "Times Square n'a presque pas de toilettes publiques. Voici une balade de 4 km dans Midtown avec des toilettes gratuites à Bryant Park, à la bibliothèque, à Grand Central et plus.",
+    "h1": "Midtown Manhattan : une balade avec toilettes, de Times Square à Central Park",
+    "body": [
+     {
+      "p": "Times Square a tout : des écrans géants, des personnages déguisés, quelqu'un qui vend des places pour un spectacle d'humour. Ce qu'il n'a pas vraiment, ce sont des toilettes publiques."
+     },
+     {
+      "p": "Voici donc une balade qui vous garde à quelques minutes de toilettes **gratuites** de Times Square jusqu'à Central Park. Environ 4 km, avec plein de raisons de s'arrêter de toute façon."
+     },
+     {
+      "h2": "La balade"
+     },
+     {
+      "stop": {
+       "name": "Bryant Park restrooms",
+       "fee": "Free",
+       "where": "42nd St entre la 5e et la 6e Avenue · à 5 minutes de Times Square",
+       "text": "Sans doute les toilettes publiques les plus célèbres de la ville, derrière la bibliothèque, avec du personnel et des fleurs fraîches. Ouvertes du matin au soir. Commencez ici."
+      }
+     },
+     {
+      "stop": {
+       "name": "New York Public Library (Stephen A. Schwarzman Building)",
+       "fee": "Free",
+       "where": "5th Ave et 42nd St",
+       "text": "La bibliothèque aux lions de pierre, juste à côté du parc. Entrée gratuite, toilettes à l'intérieur, et la Rose Main Reading Room vaut le coup d'œil."
+      }
+     },
+     {
+      "stop": {
+       "name": "Stavros Niarchos Foundation Library",
+       "fee": "Free",
+       "where": "455 5th Ave · en face",
+       "text": "La bibliothèque moderne en face des lions. Des toilettes et une terrasse sur le toit gratuite avec vue sur l'ancienne bibliothèque."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Central Terminal",
+       "fee": "Free",
+       "where": "89 E 42nd St · Dining Concourse, un niveau plus bas",
+       "text": "Levez les yeux vers le plafond du grand hall, puis descendez. Les toilettes sont au Dining Concourse."
+      }
+     },
+     {
+      "stop": {
+       "name": "Rockefeller Center Concourse",
+       "fee": "Free",
+       "where": "En sous-sol, sous le 30 Rockefeller Plaza",
+       "text": "Remontez la 5e Avenue devant les vitrines. Sous la place, une galerie souterraine a des toilettes. La patinoire et Top of the Rock sont juste au-dessus."
+      }
+     },
+     {
+      "stop": {
+       "name": "Central Park: Heckscher Playground restrooms",
+       "fee": "Free",
+       "where": "Entrée par Central Park South et la 6e Avenue",
+       "text": "Les premières toilettes dans le parc en venant du sud. Le Dairy Visitor Center est aussi tout près."
+      }
+     },
+     {
+      "stop": {
+       "name": "The Shops at Columbus Circle",
+       "fee": "Free",
+       "where": "10 Columbus Circle · coin sud-ouest du parc",
+       "text": "Une bonne dernière étape si vous sortez du parc côté ouest. Toilettes dans le centre commercial."
+      }
+     },
+     {
+      "h2": "Bon à savoir"
+     },
+     {
+      "box": "En septembre 2026, toutes les étapes ci-dessus sont gratuites. Les cafés de Midtown et beaucoup de chaînes de café réservent en général leurs toilettes aux clients, ne comptez donc pas dessus. Parcs et bibliothèques ferment le soir ; Grand Central reste ouverte tard."
+     },
+     {
+      "p": "Perdu entre deux avenues ? Ouvrez la carte ci-dessous pour voir les toilettes les plus proches et y aller à pied."
+     }
+    ]
+   },
+   "tr": {
+    "title": "Midtown Manhattan tuvaletleri: Times Square'den Central Park'a yürüyüş rotası",
+    "desc": "Times Square'de neredeyse hiç umumi tuvalet yok. Bryant Park, kütüphane, Grand Central ve daha fazlasında ücretsiz tuvalet molalı 4 km'lik bir Midtown yürüyüşü.",
+    "h1": "Midtown Manhattan: Times Square'den Central Park'a tuvalet dostu bir yürüyüş",
+    "body": [
+     {
+      "p": "Times Square'de her şey var: dev ekranlar, kostümlü karakterler, komedi gösterisine bilet satan biri. Gerçekten olmayan tek şey umumi tuvalet."
+     },
+     {
+      "p": "O yüzden Times Square'den Central Park'a kadar seni hep **ücretsiz** bir tuvalete birkaç dakika mesafede tutan bir yürüyüş hazırladık. Yaklaşık 4 km, zaten durmak için bir sürü sebep var."
+     },
+     {
+      "h2": "Yürüyüş"
+     },
+     {
+      "stop": {
+       "name": "Bryant Park restrooms",
+       "fee": "Free",
+       "where": "42. Cadde, 5. ve 6. Caddeler arası · Times Square'e 5 dakika",
+       "text": "Muhtemelen şehrin en ünlü umumi tuvaleti; kütüphanenin arkasında, görevlisi ve taze çiçekleriyle. Sabahtan akşama açık. Buradan başla."
+      }
+     },
+     {
+      "stop": {
+       "name": "New York Public Library (Stephen A. Schwarzman Building)",
+       "fee": "Free",
+       "where": "5. Cadde ve 42. Cadde köşesi",
+       "text": "Taş aslanlı kütüphane, parkın hemen yanında. Giriş ücretsiz, içeride tuvalet var, Rose Main Reading Room'a da bir göz at."
+      }
+     },
+     {
+      "stop": {
+       "name": "Stavros Niarchos Foundation Library",
+       "fee": "Free",
+       "where": "455 5th Ave · karşı kaldırım",
+       "text": "Aslanların karşısındaki modern kütüphane. Tuvalet ve eski kütüphaneye bakan ücretsiz bir çatı terası var."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Central Terminal",
+       "fee": "Free",
+       "where": "89 E 42nd St · Dining Concourse, bir kat aşağıda",
+       "text": "Ana salonda tavana bak, sonra aşağı in. Tuvaletler Dining Concourse katında."
+      }
+     },
+     {
+      "stop": {
+       "name": "Rockefeller Center Concourse",
+       "fee": "Free",
+       "where": "Yer altında, 30 Rockefeller Plaza'nın altında",
+       "text": "5. Cadde'den vitrinlere baka baka yukarı yürü. Meydanın altındaki pasajda tuvalet var. Buz pisti ve Top of the Rock tam üstünde."
+      }
+     },
+     {
+      "stop": {
+       "name": "Central Park: Heckscher Playground restrooms",
+       "fee": "Free",
+       "where": "Girişi Central Park South ve 6. Cadde köşesinden",
+       "text": "Güneyden gelince parkın içindeki ilk tuvaletler. The Dairy Ziyaretçi Merkezi de yakında."
+      }
+     },
+     {
+      "stop": {
+       "name": "The Shops at Columbus Circle",
+       "fee": "Free",
+       "where": "10 Columbus Circle · parkın güneybatı köşesi",
+       "text": "Parktan batı tarafından çıkarsan iyi bir son durak. Tuvaletler AVM'nin içinde."
+      }
+     },
+     {
+      "h2": "Bilmekte fayda var"
+     },
+     {
+      "box": "Eylül 2026 itibarıyla yukarıdaki durakların hepsi ücretsiz. Midtown'daki kafeler ve birçok kahve zinciri tuvaleti genelde sadece müşterilere açıyor, onlara güvenme. Parklar ve kütüphaneler gece kapanır; Grand Central geç saate kadar açık."
+     },
+     {
+      "p": "İki cadde arasında mı kayboldun? En yakın tuvaleti görüp oraya yürümek için aşağıdan haritayı aç."
+     }
+    ]
+   }
+  }
+ }
+]
