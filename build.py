@@ -2,7 +2,9 @@
 # - Supabase'deki aktif şehirler için OSM'den tuvaletleri çeker ve places tablosuna yazar
 # - LA için toilets.json yedek dosyasını da üretir
 # SUPABASE_SECRET yoksa sadece toilets.json üretir (eski davranış)
-import json, os, sys, time, urllib.request, urllib.parse
+import json, os, shutil, sys, time, urllib.request, urllib.parse
+sys.dont_write_bytecode = True                       # repoya __pycache__ yazılmasın
+shutil.rmtree("__pycache__", ignore_errors=True)
 from datetime import datetime, timezone
 
 SB_URL = os.environ.get("SUPABASE_URL", "https://tizfdnsjhhepxnqqrzuk.supabase.co")
@@ -224,6 +226,7 @@ for c in cities:
   sb("PATCH", f"places?source=eq.osm&city=eq.{c['id']}&updated_at=lt.{urllib.parse.quote(run)}", {"active": False})
   sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run})
   print(f"  Upserted {len(rows)}")
+  time.sleep(4)   # Overpass'a nefes aldır (429 Too Many Requests olmasın)
   ar = areas((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
   if ar: sb("PATCH", f"cities?id=eq.{c['id']}", {"areas": ar}); print(f"  Areas {len(ar)}")
   if c["id"] == "la": save_json(pts)
