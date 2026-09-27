@@ -632,6 +632,13 @@ document.getElementById("instbtn").onclick = async () => {
 // Birkaç şeye baktıktan sonra da nazikçe sor
 setTimeout(nudge, 25000);
 
+// Şehir sayfalarından gelen link: laloo.org/?at=enlem,boylam,zoom haritayı orada açar
+(() => {
+  const at = (new URLSearchParams(location.search).get("at") || "").split(",").map(Number);
+  if (at.length >= 2 && at.every(isFinite) && Math.abs(at[0]) <= 90 && Math.abs(at[1]) <= 180){
+    map.setView([at[0], at[1]], Math.min(Math.max(at[2] || 14, 3), 18)); centered = true;
+  }
+})();
 locate();
 init();
 </script>

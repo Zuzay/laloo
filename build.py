@@ -37,6 +37,20 @@ out center tags;'''
     time.sleep(30)
   return None
 
+def areas(bbox):
+  """Şehir sayfaları için semt adları (place=suburb/quarter/neighbourhood)."""
+  b = ",".join(str(x) for x in bbox)
+  q = f'[out:json][timeout:90];node["place"~"^(suburb|quarter|neighbourhood)$"]["name"]({b});out;'
+  for s in SERVERS:
+    try:
+      req = urllib.request.Request(s, data=urllib.parse.urlencode({"data": q}).encode(), headers={"User-Agent": "laloo.org updater"})
+      with urllib.request.urlopen(req, timeout=120) as r:
+        els = json.load(r)["elements"]
+      return [{"n": e["tags"].get("name:en") or e["tags"]["name"], "a": round(e["lat"], 5), "o": round(e["lon"], 5)} for e in els][:400]
+    except Exception as e:
+      print("  areas failed", s, e)
+  return None
+
 def parse(data):
   out, seen = [], set()
   for e in data["elements"]:
@@ -62,6 +76,8 @@ def parse(data):
       "kind": "public" if pub else "cafe",
       "name": t.get("name") or t.get("brand") or ("Public restroom" if pub else "Restroom"),
       "info": ", ".join(x for x in info if x),
+      "operator": (t.get("operator") or "")[:120] or None,
+      "charge": (t.get("charge") or "")[:60] or None,
     })
   return out
 
@@ -204,7 +220,26 @@ for c in cities:
   sb("PATCH", f"places?source=eq.osm&city=eq.{c['id']}&updated_at=lt.{urllib.parse.quote(run)}", {"active": False})
   sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run})
   print(f"  Upserted {len(rows)}")
+  ar = areas((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
+  if ar: sb("PATCH", f"cities?id=eq.{c['id']}", {"areas": ar}); print(f"  Areas {len(ar)}")
   if c["id"] == "la": save_json(pts)
   time.sleep(5)
 
 if failed: print(f"WARNING: will retry tomorrow: {failed}")
+
+# ---------- 5) Şehir sayfaları, sitemap.xml, robots.txt (her gece) ----------
+def all_rows(path):
+  out, off = [], 0
+  while True:
+    chunk = sb("GET", f"{path}&limit=1000&offset={off}", prefer="")
+    out += chunk
+    if len(chunk) < 1000: return out
+    off += 1000
+
+try:
+  import pages
+  all_cities = sb("GET", "cities?select=id,name,min_lat,min_lng,max_lat,max_lng,active,areas", prefer="")
+  cols = "select=kind,name,info,area,fee,hours,lat,lng,i18n,operator"
+  pages.generate(all_cities, lambda cid: all_rows(f"places?{cols}&city=eq.{cid}&active=eq.true&kind=in.(tip,public)&order=id"))
+except Exception as ex:
+  print("pages failed:", ex)

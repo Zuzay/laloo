@@ -1,5 +1,5 @@
 // Laloo service worker: uygulama kabuğunu saklar, veri ve harita her zaman canlı gelir
-const V = "laloo-v2";
+const V = "laloo-v3";
 const SHELL = ["./", "index.html", "logo-header.png", "favicon-32.png", "icon-192.png", "icon-512.png",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"];
@@ -20,6 +20,8 @@ self.addEventListener("fetch", e => {
   if (u.hostname.endsWith("supabase.co") || u.hostname.includes("openstreetmap") || u.pathname.endsWith("admin.html")) return;
   // Sayfanın kendisi: önce internet (güncel kalsın), yoksa kayıtlı kopya
   if (r.mode === "navigate"){
+    // Sadece harita sayfası önbelleğe yazılır; şehir sayfaları ve diğerleri normal yüklenir
+    if (u.origin !== location.origin || !(u.pathname === "/" || u.pathname.endsWith("/index.html") && u.pathname.split("/").length === 2)) return;
     e.respondWith(fetch(r).then(res => { const c = res.clone(); caches.open(V).then(x => x.put("index.html", c)); return res; })
       .catch(() => caches.match("index.html")));
     return;
