@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Public bathrooms by city · Laloo</title>
+<meta name="description" content="Public restrooms, free toilets and hand-picked spots in 177 cities. Pick a city or open the live map.">
+<link rel="canonical" href="https://laloo.org/cities/">
+<link rel="alternate" hreflang="en" href="https://laloo.org/cities/"><link rel="alternate" hreflang="es" href="https://laloo.org/es/cities/"><link rel="alternate" hreflang="de" href="https://laloo.org/de/cities/"><link rel="alternate" hreflang="fr" href="https://laloo.org/fr/cities/"><link rel="alternate" hreflang="tr" href="https://laloo.org/tr/cities/"><link rel="alternate" hreflang="x-default" href="https://laloo.org/cities/">
+<meta property="og:title" content="Public bathrooms by city · Laloo">
+<meta property="og:description" content="Public restrooms, free toilets and hand-picked spots in 177 cities. Pick a city or open the live map.">
+<meta property="og:url" content="https://laloo.org/cities/">
+<meta property="og:image" content="https://laloo.org/favicon-512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#fefef8">
+<style>:root{--navy:#10223d;--blue:#1c4fa0;--line:#e6e1d4;--bg:#fefef8;--muted:#5f6b7d;--card:#fff;--green:#1b7a3a;--greenbg:#e3f6e8;--amber:#8a5a00;--amberbg:#fff4df;--tag:#e8f0fb}
+@media (prefers-color-scheme:dark){:root{--navy:#e9eef6;--blue:#8fb4ff;--line:#2a3445;--bg:#111722;--muted:#9aa6b8;--card:#172030;--green:#7fd79a;--greenbg:#1d3326;--amber:#f0c070;--amberbg:#3a2e17;--tag:#1f2e48}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--blue)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
+header img{height:34px;display:block;border-radius:8px}
+@media (prefers-color-scheme:dark){header img{background:#fefef8;padding:2px 6px;height:38px}}
+.langs{display:flex;gap:4px;flex-wrap:wrap;font-size:13px}.langs a{padding:3px 7px;border-radius:7px;text-decoration:none;color:var(--muted)}.langs a.on{background:var(--tag);color:var(--blue);font-weight:700}
+main{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:28px;line-height:1.2;margin:8px 0 10px}
+h2{font-size:20px;margin:30px 0 6px}h3{font-size:16px;margin:18px 0 6px;color:var(--muted)}
+.lead{font-size:17px;margin:0 0 6px}.stat{color:var(--muted);font-size:14px;margin:0 0 16px}
+.cta{display:inline-block;background:#1c4fa0;color:#fff;font-weight:700;text-decoration:none;padding:12px 18px;border-radius:12px;margin:6px 0 4px}
+.note{color:var(--muted);font-size:14px;margin:0 0 8px}
+ul.pl{list-style:none;margin:0;padding:0}
+ul.pl li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px;overflow-wrap:anywhere}
+ul.pl b{display:block}ul.pl p{margin:4px 0 0;font-size:14px}.h{color:var(--muted);font-size:13px}
+.t{display:inline-block;font-size:12px;font-weight:700;padding:2px 7px;border-radius:8px;margin:4px 4px 0 0;background:var(--tag);color:var(--blue)}
+.t.f{background:var(--greenbg);color:var(--green)}
+ul.sm li{padding:7px 10px;margin:0 0 5px;border-radius:9px;font-size:15px}ul.sm b{display:inline;margin-right:6px}ul.sm .t{margin:0 4px 0 0}ul.sm .h{display:inline}.t.c{background:var(--amberbg);color:var(--amber)}
+ul.cl{columns:2;gap:20px;padding-left:18px}@media(max-width:520px){ul.cl{columns:1}}
+article p{margin:0 0 14px}.box{background:var(--tag);border-radius:12px;padding:12px 14px;margin:14px 0}
+.stop{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 12px;position:relative}
+.stop .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#1c4fa0;color:#fff;font-weight:700;font-size:13px;margin-right:8px;vertical-align:1px}
+.stop .d{color:var(--muted);font-size:13px;margin:2px 0 6px}.stop.pt{border-color:#e0453a}.stop.pt .n{background:#e0453a}.t.p{background:#fde8e8;color:#b3261e}
+.rl{list-style:none;padding:0;margin:0}.rl li{margin:0 0 10px}.rl a{font-weight:700}.rl span{display:block;color:var(--muted);font-size:14px}
+footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}</style>
+</head>
+<body>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs"><a href="/cities/" class="on" lang="en">EN</a><a href="/es/cities/" class="" lang="es">ES</a><a href="/de/cities/" class="" lang="de">DE</a><a href="/fr/cities/" class="" lang="fr">FR</a><a href="/tr/cities/" class="" lang="tr">TR</a></nav></header>
+<main>
+<h1>Find a bathroom in these cities</h1><p class="lead">Public restrooms, free toilets and hand-picked spots in 177 cities. Pick a city or open the live map.</p>
+<a class="cta" href="/?ref=cities">📍 Find a bathroom anywhere</a><ul class="cl">
+<li><a href="/abu-dhabi/">Abu Dhabi</a></li>
+<li><a href="/agra/">Agra</a></li>
+<li><a href="/amman/">Amman</a></li>
+<li><a href="/amsterdam/">Amsterdam</a></li>
+<li><a href="/antalya/">Antalya</a></li>
+<li><a href="/athens/">Athens</a></li>
+<li><a href="/atlanta/">Atlanta</a></li>
+<li><a href="/auckland/">Auckland</a></li>
+<li><a href="/austin/">Austin</a></li>
+<li><a href="/baku/">Baku</a></li>
+<li><a href="/bali-kuta-seminyak/">Bali (Kuta &amp; Seminyak)</a></li>
+<li><a href="/bangkok/">Bangkok</a></li>
+<li><a href="/barcelona/">Barcelona</a></li>
+<li><a href="/beijing/">Beijing</a></li>
+<li><a href="/belgrade/">Belgrade</a></li>
+<li><a href="/berlin/">Berlin</a></li>
+<li><a href="/bodrum/">Bodrum</a></li>
+<li><a href="/bologna/">Bologna</a></li>
+<li><a href="/bordeaux/">Bordeaux</a></li>
+<li><a href="/boston/">Boston</a></li>
+<li><a href="/brisbane/">Brisbane</a></li>
+<li><a href="/bruges/">Bruges</a></li>
+<li><a href="/brussels/">Brussels</a></li>
+<li><a href="/bucharest/">Bucharest</a></li>
+<li><a href="/budapest/">Budapest</a></li>
+<li><a href="/busan/">Busan</a></li>
+<li><a href="/cairo/">Cairo</a></li>
+<li><a href="/cancun/">Cancún</a></li>
+<li><a href="/cape-town/">Cape Town</a></li>
+<li><a href="/cappadocia-goreme/">Cappadocia (Göreme)</a></li>
+<li><a href="/casablanca/">Casablanca</a></li>
+<li><a href="/cebu/">Cebu</a></li>
+<li><a href="/chiang-mai/">Chiang Mai</a></li>
+<li><a href="/chicago/">Chicago</a></li>
+<li><a href="/cologne/">Cologne</a></li>
+<li><a href="/colombo/">Colombo</a></li>
+<li><a href="/copenhagen/">Copenhagen</a></li>
+<li><a href="/corfu/">Corfu</a></li>
+<li><a href="/da-nang-hoi-an/">Da Nang &amp; Hoi An</a></li>
+<li><a href="/delhi/">Delhi</a></li>
+<li><a href="/denver/">Denver</a></li>
+<li><a href="/doha/">Doha</a></li>
+<li><a href="/dubai/">Dubai</a></li>
+<li><a href="/dublin/">Dublin</a></li>
+<li><a href="/dubrovnik/">Dubrovnik</a></li>
+<li><a href="/edinburgh/">Edinburgh</a></li>
+<li><a href="/florence/">Florence</a></li>
+<li><a href="/frankfurt/">Frankfurt</a></li>
+<li><a href="/funchal-madeira/">Funchal (Madeira)</a></li>
+<li><a href="/geneva/">Geneva</a></li>
+<li><a href="/gold-coast/">Gold Coast</a></li>
+<li><a href="/granada/">Granada</a></li>
+<li><a href="/guangzhou/">Guangzhou</a></li>
+<li><a href="/hamburg/">Hamburg</a></li>
+<li><a href="/hanoi/">Hanoi</a></li>
+<li><a href="/havana/">Havana</a></li>
+<li><a href="/helsinki/">Helsinki</a></li>
+<li><a href="/heraklion/">Heraklion</a></li>
+<li><a href="/hiroshima/">Hiroshima</a></li>
+<li><a href="/ho-chi-minh-city/">Ho Chi Minh City</a></li>
+<li><a href="/hong-kong/">Hong Kong</a></li>
+<li><a href="/honolulu/">Honolulu</a></li>
+<li><a href="/hurghada/">Hurghada</a></li>
+<li><a href="/ibiza/">Ibiza</a></li>
+<li><a href="/innsbruck/">Innsbruck</a></li>
+<li><a href="/interlaken/">Interlaken</a></li>
+<li><a href="/istanbul/">Istanbul</a></li>
+<li><a href="/izmir/">Izmir</a></li>
+<li><a href="/jaipur/">Jaipur</a></li>
+<li><a href="/jakarta/">Jakarta</a></li>
+<li><a href="/jeju/">Jeju</a></li>
+<li><a href="/jerusalem/">Jerusalem</a></li>
+<li><a href="/johannesburg/">Johannesburg</a></li>
+<li><a href="/kathmandu/">Kathmandu</a></li>
+<li><a href="/koh-samui/">Koh Samui</a></li>
+<li><a href="/krabi-ao-nang/">Krabi (Ao Nang)</a></li>
+<li><a href="/krakow/">Kraków</a></li>
+<li><a href="/kuala-lumpur/">Kuala Lumpur</a></li>
+<li><a href="/kyoto/">Kyoto</a></li>
+<li><a href="/las-palmas-de-gran-canaria/">Las Palmas de Gran Canaria</a></li>
+<li><a href="/las-vegas/">Las Vegas</a></li>
+<li><a href="/lisbon/">Lisbon</a></li>
+<li><a href="/liverpool/">Liverpool</a></li>
+<li><a href="/ljubljana/">Ljubljana</a></li>
+<li><a href="/london/">London</a></li>
+<li><a href="/los-angeles/">Los Angeles</a></li>
+<li><a href="/lucerne/">Lucerne</a></li>
+<li><a href="/luxor/">Luxor</a></li>
+<li><a href="/lyon/">Lyon</a></li>
+<li><a href="/macau/">Macau</a></li>
+<li><a href="/madrid/">Madrid</a></li>
+<li><a href="/malaga/">Malaga</a></li>
+<li><a href="/manchester/">Manchester</a></li>
+<li><a href="/manila/">Manila</a></li>
+<li><a href="/marrakech/">Marrakech</a></li>
+<li><a href="/marseille/">Marseille</a></li>
+<li><a href="/mecca/">Mecca</a></li>
+<li><a href="/melbourne/">Melbourne</a></li>
+<li><a href="/mexico-city/">Mexico City</a></li>
+<li><a href="/miami/">Miami</a></li>
+<li><a href="/milan/">Milan</a></li>
+<li><a href="/montreal/">Montreal</a></li>
+<li><a href="/moscow/">Moscow</a></li>
+<li><a href="/mumbai/">Mumbai</a></li>
+<li><a href="/munich/">Munich</a></li>
+<li><a href="/muscat/">Muscat</a></li>
+<li><a href="/mykonos/">Mykonos</a></li>
+<li><a href="/nairobi/">Nairobi</a></li>
+<li><a href="/naples/">Naples</a></li>
+<li><a href="/nashville/">Nashville</a></li>
+<li><a href="/new-orleans/">New Orleans</a></li>
+<li><a href="/new-york/">New York City</a></li>
+<li><a href="/nice/">Nice</a></li>
+<li><a href="/orlando/">Orlando</a></li>
+<li><a href="/osaka/">Osaka</a></li>
+<li><a href="/oslo/">Oslo</a></li>
+<li><a href="/oxford/">Oxford</a></li>
+<li><a href="/palma-de-mallorca/">Palma de Mallorca</a></li>
+<li><a href="/panama-city/">Panama City</a></li>
+<li><a href="/paris/">Paris</a></li>
+<li><a href="/pattaya/">Pattaya</a></li>
+<li><a href="/penang-george-town/">Penang (George Town)</a></li>
+<li><a href="/perth/">Perth</a></li>
+<li><a href="/philadelphia/">Philadelphia</a></li>
+<li><a href="/phuket-patong/">Phuket (Patong)</a></li>
+<li><a href="/pisa/">Pisa</a></li>
+<li><a href="/playa-del-carmen/">Playa del Carmen</a></li>
+<li><a href="/portland/">Portland</a></li>
+<li><a href="/porto/">Porto</a></li>
+<li><a href="/prague/">Prague</a></li>
+<li><a href="/punta-cana/">Punta Cana</a></li>
+<li><a href="/quebec-city/">Quebec City</a></li>
+<li><a href="/queenstown/">Queenstown</a></li>
+<li><a href="/reykjavik/">Reykjavik</a></li>
+<li><a href="/rhodes/">Rhodes</a></li>
+<li><a href="/riga/">Riga</a></li>
+<li><a href="/riyadh/">Riyadh</a></li>
+<li><a href="/rome/">Rome</a></li>
+<li><a href="/rotterdam/">Rotterdam</a></li>
+<li><a href="/saint-petersburg/">Saint Petersburg</a></li>
+<li><a href="/salzburg/">Salzburg</a></li>
+<li><a href="/san-diego/">San Diego</a></li>
+<li><a href="/san-francisco-bay-area/">San Francisco Bay Area</a></li>
+<li><a href="/san-juan/">San Juan</a></li>
+<li><a href="/san-sebastian/">San Sebastián</a></li>
+<li><a href="/santorini/">Santorini</a></li>
+<li><a href="/sapporo/">Sapporo</a></li>
+<li><a href="/seattle/">Seattle</a></li>
+<li><a href="/seoul/">Seoul</a></li>
+<li><a href="/seville/">Seville</a></li>
+<li><a href="/shanghai/">Shanghai</a></li>
+<li><a href="/sharm-el-sheikh/">Sharm El Sheikh</a></li>
+<li><a href="/shenzhen/">Shenzhen</a></li>
+<li><a href="/siem-reap/">Siem Reap</a></li>
+<li><a href="/singapore/">Singapore</a></li>
+<li><a href="/sofia/">Sofia</a></li>
+<li><a href="/split/">Split</a></li>
+<li><a href="/stockholm/">Stockholm</a></li>
+<li><a href="/sydney/">Sydney</a></li>
+<li><a href="/taipei/">Taipei</a></li>
+<li><a href="/tallinn/">Tallinn</a></li>
+<li><a href="/tbilisi/">Tbilisi</a></li>
+<li><a href="/tel-aviv/">Tel Aviv</a></li>
+<li><a href="/tenerife-puerto-de-la-cruz/">Tenerife (Puerto de la Cruz)</a></li>
+<li><a href="/thessaloniki/">Thessaloniki</a></li>
+<li><a href="/tokyo/">Tokyo</a></li>
+<li><a href="/toronto/">Toronto</a></li>
+<li><a href="/valencia/">Valencia</a></li>
+<li><a href="/valletta/">Valletta</a></li>
+<li><a href="/vancouver/">Vancouver</a></li>
+<li><a href="/venice/">Venice</a></li>
+<li><a href="/verona/">Verona</a></li>
+<li><a href="/vienna/">Vienna</a></li>
+<li><a href="/vilnius/">Vilnius</a></li>
+<li><a href="/warsaw/">Warsaw</a></li>
+<li><a href="/washington-dc/">Washington, DC</a></li>
+<li><a href="/zurich/">Zurich</a></li>
+</ul>
+</main>
+<footer><a href="/">laloo.org · Find a bathroom anywhere</a> · <a href="/cities/">All cities</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>Map data © OpenStreetMap contributors.</footer>
+</body>
+</html>
