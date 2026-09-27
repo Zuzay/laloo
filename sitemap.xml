@@ -18,6 +18,7 @@
   <url><loc>https://laloo.org/belgrade/</loc></url>
   <url><loc>https://laloo.org/berlin/</loc></url>
   <url><loc>https://laloo.org/bodrum/</loc></url>
+  <url><loc>https://laloo.org/bogota/</loc></url>
   <url><loc>https://laloo.org/bologna/</loc></url>
   <url><loc>https://laloo.org/bordeaux/</loc></url>
   <url><loc>https://laloo.org/boston/</loc></url>
@@ -26,11 +27,13 @@
   <url><loc>https://laloo.org/brussels/</loc></url>
   <url><loc>https://laloo.org/bucharest/</loc></url>
   <url><loc>https://laloo.org/budapest/</loc></url>
+  <url><loc>https://laloo.org/buenos-aires/</loc></url>
   <url><loc>https://laloo.org/busan/</loc></url>
   <url><loc>https://laloo.org/cairo/</loc></url>
   <url><loc>https://laloo.org/cancun/</loc></url>
   <url><loc>https://laloo.org/cape-town/</loc></url>
   <url><loc>https://laloo.org/cappadocia-goreme/</loc></url>
+  <url><loc>https://laloo.org/cartagena/</loc></url>
   <url><loc>https://laloo.org/casablanca/</loc></url>
   <url><loc>https://laloo.org/cebu/</loc></url>
   <url><loc>https://laloo.org/chiang-mai/</loc></url>
@@ -40,6 +43,7 @@
   <url><loc>https://laloo.org/colombo/</loc></url>
   <url><loc>https://laloo.org/copenhagen/</loc></url>
   <url><loc>https://laloo.org/corfu/</loc></url>
+  <url><loc>https://laloo.org/cusco/</loc></url>
   <url><loc>https://laloo.org/da-nang-hoi-an/</loc></url>
   <url><loc>https://laloo.org/de/abu-dhabi/</loc></url>
   <url><loc>https://laloo.org/de/agra/</loc></url>
@@ -58,6 +62,7 @@
   <url><loc>https://laloo.org/de/belgrade/</loc></url>
   <url><loc>https://laloo.org/de/berlin/</loc></url>
   <url><loc>https://laloo.org/de/bodrum/</loc></url>
+  <url><loc>https://laloo.org/de/bogota/</loc></url>
   <url><loc>https://laloo.org/de/bologna/</loc></url>
   <url><loc>https://laloo.org/de/bordeaux/</loc></url>
   <url><loc>https://laloo.org/de/boston/</loc></url>
@@ -66,11 +71,13 @@
   <url><loc>https://laloo.org/de/brussels/</loc></url>
   <url><loc>https://laloo.org/de/bucharest/</loc></url>
   <url><loc>https://laloo.org/de/budapest/</loc></url>
+  <url><loc>https://laloo.org/de/buenos-aires/</loc></url>
   <url><loc>https://laloo.org/de/busan/</loc></url>
   <url><loc>https://laloo.org/de/cairo/</loc></url>
   <url><loc>https://laloo.org/de/cancun/</loc></url>
   <url><loc>https://laloo.org/de/cape-town/</loc></url>
   <url><loc>https://laloo.org/de/cappadocia-goreme/</loc></url>
+  <url><loc>https://laloo.org/de/cartagena/</loc></url>
   <url><loc>https://laloo.org/de/casablanca/</loc></url>
   <url><loc>https://laloo.org/de/cebu/</loc></url>
   <url><loc>https://laloo.org/de/chiang-mai/</loc></url>
@@ -80,6 +87,7 @@
   <url><loc>https://laloo.org/de/colombo/</loc></url>
   <url><loc>https://laloo.org/de/copenhagen/</loc></url>
   <url><loc>https://laloo.org/de/corfu/</loc></url>
+  <url><loc>https://laloo.org/de/cusco/</loc></url>
   <url><loc>https://laloo.org/de/da-nang-hoi-an/</loc></url>
   <url><loc>https://laloo.org/de/delhi/</loc></url>
   <url><loc>https://laloo.org/de/denver/</loc></url>
@@ -123,6 +131,7 @@
   <url><loc>https://laloo.org/de/kyoto/</loc></url>
   <url><loc>https://laloo.org/de/las-palmas-de-gran-canaria/</loc></url>
   <url><loc>https://laloo.org/de/las-vegas/</loc></url>
+  <url><loc>https://laloo.org/de/lima/</loc></url>
   <url><loc>https://laloo.org/de/lisbon/</loc></url>
   <url><loc>https://laloo.org/de/liverpool/</loc></url>
   <url><loc>https://laloo.org/de/ljubljana/</loc></url>
@@ -139,6 +148,7 @@
   <url><loc>https://laloo.org/de/marrakech/</loc></url>
   <url><loc>https://laloo.org/de/marseille/</loc></url>
   <url><loc>https://laloo.org/de/mecca/</loc></url>
+  <url><loc>https://laloo.org/de/medellin/</loc></url>
   <url><loc>https://laloo.org/de/melbourne/</loc></url>
   <url><loc>https://laloo.org/de/mexico-city/</loc></url>
   <url><loc>https://laloo.org/de/miami/</loc></url>
@@ -178,10 +188,13 @@
   <url><loc>https://laloo.org/de/reykjavik/</loc></url>
   <url><loc>https://laloo.org/de/rhodes/</loc></url>
   <url><loc>https://laloo.org/de/riga/</loc></url>
+  <url><loc>https://laloo.org/de/rio-de-janeiro/</loc></url>
   <url><loc>https://laloo.org/de/riyadh/</loc></url>
   <url><loc>https://laloo.org/de/rome/</loc></url>
   <url><loc>https://laloo.org/de/rotterdam/</loc></url>
+  <url><loc>https://laloo.org/de/routes/eiffel-tower-to-louvre-bathrooms/</loc></url>
   <url><loc>https://laloo.org/de/routes/</loc></url>
+  <url><loc>https://laloo.org/de/routes/istanbul-old-city-toilets-sultanahmet-grand-bazaar/</loc></url>
   <url><loc>https://laloo.org/de/routes/midtown-manhattan-bathrooms-walk/</loc></url>
   <url><loc>https://laloo.org/de/routes/santa-monica-to-venice-beach-bathrooms/</loc></url>
   <url><loc>https://laloo.org/de/saint-petersburg/</loc></url>
@@ -190,7 +203,9 @@
   <url><loc>https://laloo.org/de/san-francisco-bay-area/</loc></url>
   <url><loc>https://laloo.org/de/san-juan/</loc></url>
   <url><loc>https://laloo.org/de/san-sebastian/</loc></url>
+  <url><loc>https://laloo.org/de/santiago/</loc></url>
   <url><loc>https://laloo.org/de/santorini/</loc></url>
+  <url><loc>https://laloo.org/de/sao-paulo/</loc></url>
   <url><loc>https://laloo.org/de/sapporo/</loc></url>
   <url><loc>https://laloo.org/de/seattle/</loc></url>
   <url><loc>https://laloo.org/de/seoul/</loc></url>
@@ -246,6 +261,7 @@
   <url><loc>https://laloo.org/es/belgrade/</loc></url>
   <url><loc>https://laloo.org/es/berlin/</loc></url>
   <url><loc>https://laloo.org/es/bodrum/</loc></url>
+  <url><loc>https://laloo.org/es/bogota/</loc></url>
   <url><loc>https://laloo.org/es/bologna/</loc></url>
   <url><loc>https://laloo.org/es/bordeaux/</loc></url>
   <url><loc>https://laloo.org/es/boston/</loc></url>
@@ -254,11 +270,13 @@
   <url><loc>https://laloo.org/es/brussels/</loc></url>
   <url><loc>https://laloo.org/es/bucharest/</loc></url>
   <url><loc>https://laloo.org/es/budapest/</loc></url>
+  <url><loc>https://laloo.org/es/buenos-aires/</loc></url>
   <url><loc>https://laloo.org/es/busan/</loc></url>
   <url><loc>https://laloo.org/es/cairo/</loc></url>
   <url><loc>https://laloo.org/es/cancun/</loc></url>
   <url><loc>https://laloo.org/es/cape-town/</loc></url>
   <url><loc>https://laloo.org/es/cappadocia-goreme/</loc></url>
+  <url><loc>https://laloo.org/es/cartagena/</loc></url>
   <url><loc>https://laloo.org/es/casablanca/</loc></url>
   <url><loc>https://laloo.org/es/cebu/</loc></url>
   <url><loc>https://laloo.org/es/chiang-mai/</loc></url>
@@ -268,6 +286,7 @@
   <url><loc>https://laloo.org/es/colombo/</loc></url>
   <url><loc>https://laloo.org/es/copenhagen/</loc></url>
   <url><loc>https://laloo.org/es/corfu/</loc></url>
+  <url><loc>https://laloo.org/es/cusco/</loc></url>
   <url><loc>https://laloo.org/es/da-nang-hoi-an/</loc></url>
   <url><loc>https://laloo.org/es/delhi/</loc></url>
   <url><loc>https://laloo.org/es/denver/</loc></url>
@@ -311,6 +330,7 @@
   <url><loc>https://laloo.org/es/kyoto/</loc></url>
   <url><loc>https://laloo.org/es/las-palmas-de-gran-canaria/</loc></url>
   <url><loc>https://laloo.org/es/las-vegas/</loc></url>
+  <url><loc>https://laloo.org/es/lima/</loc></url>
   <url><loc>https://laloo.org/es/lisbon/</loc></url>
   <url><loc>https://laloo.org/es/liverpool/</loc></url>
   <url><loc>https://laloo.org/es/ljubljana/</loc></url>
@@ -327,6 +347,7 @@
   <url><loc>https://laloo.org/es/marrakech/</loc></url>
   <url><loc>https://laloo.org/es/marseille/</loc></url>
   <url><loc>https://laloo.org/es/mecca/</loc></url>
+  <url><loc>https://laloo.org/es/medellin/</loc></url>
   <url><loc>https://laloo.org/es/melbourne/</loc></url>
   <url><loc>https://laloo.org/es/mexico-city/</loc></url>
   <url><loc>https://laloo.org/es/miami/</loc></url>
@@ -366,10 +387,13 @@
   <url><loc>https://laloo.org/es/reykjavik/</loc></url>
   <url><loc>https://laloo.org/es/rhodes/</loc></url>
   <url><loc>https://laloo.org/es/riga/</loc></url>
+  <url><loc>https://laloo.org/es/rio-de-janeiro/</loc></url>
   <url><loc>https://laloo.org/es/riyadh/</loc></url>
   <url><loc>https://laloo.org/es/rome/</loc></url>
   <url><loc>https://laloo.org/es/rotterdam/</loc></url>
+  <url><loc>https://laloo.org/es/routes/eiffel-tower-to-louvre-bathrooms/</loc></url>
   <url><loc>https://laloo.org/es/routes/</loc></url>
+  <url><loc>https://laloo.org/es/routes/istanbul-old-city-toilets-sultanahmet-grand-bazaar/</loc></url>
   <url><loc>https://laloo.org/es/routes/midtown-manhattan-bathrooms-walk/</loc></url>
   <url><loc>https://laloo.org/es/routes/santa-monica-to-venice-beach-bathrooms/</loc></url>
   <url><loc>https://laloo.org/es/saint-petersburg/</loc></url>
@@ -378,7 +402,9 @@
   <url><loc>https://laloo.org/es/san-francisco-bay-area/</loc></url>
   <url><loc>https://laloo.org/es/san-juan/</loc></url>
   <url><loc>https://laloo.org/es/san-sebastian/</loc></url>
+  <url><loc>https://laloo.org/es/santiago/</loc></url>
   <url><loc>https://laloo.org/es/santorini/</loc></url>
+  <url><loc>https://laloo.org/es/sao-paulo/</loc></url>
   <url><loc>https://laloo.org/es/sapporo/</loc></url>
   <url><loc>https://laloo.org/es/seattle/</loc></url>
   <url><loc>https://laloo.org/es/seoul/</loc></url>
@@ -428,6 +454,7 @@
   <url><loc>https://laloo.org/fr/belgrade/</loc></url>
   <url><loc>https://laloo.org/fr/berlin/</loc></url>
   <url><loc>https://laloo.org/fr/bodrum/</loc></url>
+  <url><loc>https://laloo.org/fr/bogota/</loc></url>
   <url><loc>https://laloo.org/fr/bologna/</loc></url>
   <url><loc>https://laloo.org/fr/bordeaux/</loc></url>
   <url><loc>https://laloo.org/fr/boston/</loc></url>
@@ -436,11 +463,13 @@
   <url><loc>https://laloo.org/fr/brussels/</loc></url>
   <url><loc>https://laloo.org/fr/bucharest/</loc></url>
   <url><loc>https://laloo.org/fr/budapest/</loc></url>
+  <url><loc>https://laloo.org/fr/buenos-aires/</loc></url>
   <url><loc>https://laloo.org/fr/busan/</loc></url>
   <url><loc>https://laloo.org/fr/cairo/</loc></url>
   <url><loc>https://laloo.org/fr/cancun/</loc></url>
   <url><loc>https://laloo.org/fr/cape-town/</loc></url>
   <url><loc>https://laloo.org/fr/cappadocia-goreme/</loc></url>
+  <url><loc>https://laloo.org/fr/cartagena/</loc></url>
   <url><loc>https://laloo.org/fr/casablanca/</loc></url>
   <url><loc>https://laloo.org/fr/cebu/</loc></url>
   <url><loc>https://laloo.org/fr/chiang-mai/</loc></url>
@@ -450,6 +479,7 @@
   <url><loc>https://laloo.org/fr/colombo/</loc></url>
   <url><loc>https://laloo.org/fr/copenhagen/</loc></url>
   <url><loc>https://laloo.org/fr/corfu/</loc></url>
+  <url><loc>https://laloo.org/fr/cusco/</loc></url>
   <url><loc>https://laloo.org/fr/da-nang-hoi-an/</loc></url>
   <url><loc>https://laloo.org/fr/delhi/</loc></url>
   <url><loc>https://laloo.org/fr/denver/</loc></url>
@@ -493,6 +523,7 @@
   <url><loc>https://laloo.org/fr/kyoto/</loc></url>
   <url><loc>https://laloo.org/fr/las-palmas-de-gran-canaria/</loc></url>
   <url><loc>https://laloo.org/fr/las-vegas/</loc></url>
+  <url><loc>https://laloo.org/fr/lima/</loc></url>
   <url><loc>https://laloo.org/fr/lisbon/</loc></url>
   <url><loc>https://laloo.org/fr/liverpool/</loc></url>
   <url><loc>https://laloo.org/fr/ljubljana/</loc></url>
@@ -509,6 +540,7 @@
   <url><loc>https://laloo.org/fr/marrakech/</loc></url>
   <url><loc>https://laloo.org/fr/marseille/</loc></url>
   <url><loc>https://laloo.org/fr/mecca/</loc></url>
+  <url><loc>https://laloo.org/fr/medellin/</loc></url>
   <url><loc>https://laloo.org/fr/melbourne/</loc></url>
   <url><loc>https://laloo.org/fr/mexico-city/</loc></url>
   <url><loc>https://laloo.org/fr/miami/</loc></url>
@@ -548,10 +580,13 @@
   <url><loc>https://laloo.org/fr/reykjavik/</loc></url>
   <url><loc>https://laloo.org/fr/rhodes/</loc></url>
   <url><loc>https://laloo.org/fr/riga/</loc></url>
+  <url><loc>https://laloo.org/fr/rio-de-janeiro/</loc></url>
   <url><loc>https://laloo.org/fr/riyadh/</loc></url>
   <url><loc>https://laloo.org/fr/rome/</loc></url>
   <url><loc>https://laloo.org/fr/rotterdam/</loc></url>
+  <url><loc>https://laloo.org/fr/routes/eiffel-tower-to-louvre-bathrooms/</loc></url>
   <url><loc>https://laloo.org/fr/routes/</loc></url>
+  <url><loc>https://laloo.org/fr/routes/istanbul-old-city-toilets-sultanahmet-grand-bazaar/</loc></url>
   <url><loc>https://laloo.org/fr/routes/midtown-manhattan-bathrooms-walk/</loc></url>
   <url><loc>https://laloo.org/fr/routes/santa-monica-to-venice-beach-bathrooms/</loc></url>
   <url><loc>https://laloo.org/fr/saint-petersburg/</loc></url>
@@ -560,7 +595,9 @@
   <url><loc>https://laloo.org/fr/san-francisco-bay-area/</loc></url>
   <url><loc>https://laloo.org/fr/san-juan/</loc></url>
   <url><loc>https://laloo.org/fr/san-sebastian/</loc></url>
+  <url><loc>https://laloo.org/fr/santiago/</loc></url>
   <url><loc>https://laloo.org/fr/santorini/</loc></url>
+  <url><loc>https://laloo.org/fr/sao-paulo/</loc></url>
   <url><loc>https://laloo.org/fr/sapporo/</loc></url>
   <url><loc>https://laloo.org/fr/seattle/</loc></url>
   <url><loc>https://laloo.org/fr/seoul/</loc></url>
@@ -626,6 +663,7 @@
   <url><loc>https://laloo.org/kyoto/</loc></url>
   <url><loc>https://laloo.org/las-palmas-de-gran-canaria/</loc></url>
   <url><loc>https://laloo.org/las-vegas/</loc></url>
+  <url><loc>https://laloo.org/lima/</loc></url>
   <url><loc>https://laloo.org/lisbon/</loc></url>
   <url><loc>https://laloo.org/liverpool/</loc></url>
   <url><loc>https://laloo.org/ljubljana/</loc></url>
@@ -642,6 +680,7 @@
   <url><loc>https://laloo.org/marrakech/</loc></url>
   <url><loc>https://laloo.org/marseille/</loc></url>
   <url><loc>https://laloo.org/mecca/</loc></url>
+  <url><loc>https://laloo.org/medellin/</loc></url>
   <url><loc>https://laloo.org/melbourne/</loc></url>
   <url><loc>https://laloo.org/mexico-city/</loc></url>
   <url><loc>https://laloo.org/miami/</loc></url>
@@ -681,10 +720,13 @@
   <url><loc>https://laloo.org/reykjavik/</loc></url>
   <url><loc>https://laloo.org/rhodes/</loc></url>
   <url><loc>https://laloo.org/riga/</loc></url>
+  <url><loc>https://laloo.org/rio-de-janeiro/</loc></url>
   <url><loc>https://laloo.org/riyadh/</loc></url>
   <url><loc>https://laloo.org/rome/</loc></url>
   <url><loc>https://laloo.org/rotterdam/</loc></url>
+  <url><loc>https://laloo.org/routes/eiffel-tower-to-louvre-bathrooms/</loc></url>
   <url><loc>https://laloo.org/routes/</loc></url>
+  <url><loc>https://laloo.org/routes/istanbul-old-city-toilets-sultanahmet-grand-bazaar/</loc></url>
   <url><loc>https://laloo.org/routes/midtown-manhattan-bathrooms-walk/</loc></url>
   <url><loc>https://laloo.org/routes/santa-monica-to-venice-beach-bathrooms/</loc></url>
   <url><loc>https://laloo.org/saint-petersburg/</loc></url>
@@ -693,7 +735,9 @@
   <url><loc>https://laloo.org/san-francisco-bay-area/</loc></url>
   <url><loc>https://laloo.org/san-juan/</loc></url>
   <url><loc>https://laloo.org/san-sebastian/</loc></url>
+  <url><loc>https://laloo.org/santiago/</loc></url>
   <url><loc>https://laloo.org/santorini/</loc></url>
+  <url><loc>https://laloo.org/sao-paulo/</loc></url>
   <url><loc>https://laloo.org/sapporo/</loc></url>
   <url><loc>https://laloo.org/seattle/</loc></url>
   <url><loc>https://laloo.org/seoul/</loc></url>
@@ -732,6 +776,7 @@
   <url><loc>https://laloo.org/tr/belgrade/</loc></url>
   <url><loc>https://laloo.org/tr/berlin/</loc></url>
   <url><loc>https://laloo.org/tr/bodrum/</loc></url>
+  <url><loc>https://laloo.org/tr/bogota/</loc></url>
   <url><loc>https://laloo.org/tr/bologna/</loc></url>
   <url><loc>https://laloo.org/tr/bordeaux/</loc></url>
   <url><loc>https://laloo.org/tr/boston/</loc></url>
@@ -740,11 +785,13 @@
   <url><loc>https://laloo.org/tr/brussels/</loc></url>
   <url><loc>https://laloo.org/tr/bucharest/</loc></url>
   <url><loc>https://laloo.org/tr/budapest/</loc></url>
+  <url><loc>https://laloo.org/tr/buenos-aires/</loc></url>
   <url><loc>https://laloo.org/tr/busan/</loc></url>
   <url><loc>https://laloo.org/tr/cairo/</loc></url>
   <url><loc>https://laloo.org/tr/cancun/</loc></url>
   <url><loc>https://laloo.org/tr/cape-town/</loc></url>
   <url><loc>https://laloo.org/tr/cappadocia-goreme/</loc></url>
+  <url><loc>https://laloo.org/tr/cartagena/</loc></url>
   <url><loc>https://laloo.org/tr/casablanca/</loc></url>
   <url><loc>https://laloo.org/tr/cebu/</loc></url>
   <url><loc>https://laloo.org/tr/chiang-mai/</loc></url>
@@ -754,6 +801,7 @@
   <url><loc>https://laloo.org/tr/colombo/</loc></url>
   <url><loc>https://laloo.org/tr/copenhagen/</loc></url>
   <url><loc>https://laloo.org/tr/corfu/</loc></url>
+  <url><loc>https://laloo.org/tr/cusco/</loc></url>
   <url><loc>https://laloo.org/tr/da-nang-hoi-an/</loc></url>
   <url><loc>https://laloo.org/tr/delhi/</loc></url>
   <url><loc>https://laloo.org/tr/denver/</loc></url>
@@ -797,6 +845,7 @@
   <url><loc>https://laloo.org/tr/kyoto/</loc></url>
   <url><loc>https://laloo.org/tr/las-palmas-de-gran-canaria/</loc></url>
   <url><loc>https://laloo.org/tr/las-vegas/</loc></url>
+  <url><loc>https://laloo.org/tr/lima/</loc></url>
   <url><loc>https://laloo.org/tr/lisbon/</loc></url>
   <url><loc>https://laloo.org/tr/liverpool/</loc></url>
   <url><loc>https://laloo.org/tr/ljubljana/</loc></url>
@@ -813,6 +862,7 @@
   <url><loc>https://laloo.org/tr/marrakech/</loc></url>
   <url><loc>https://laloo.org/tr/marseille/</loc></url>
   <url><loc>https://laloo.org/tr/mecca/</loc></url>
+  <url><loc>https://laloo.org/tr/medellin/</loc></url>
   <url><loc>https://laloo.org/tr/melbourne/</loc></url>
   <url><loc>https://laloo.org/tr/mexico-city/</loc></url>
   <url><loc>https://laloo.org/tr/miami/</loc></url>
@@ -852,10 +902,13 @@
   <url><loc>https://laloo.org/tr/reykjavik/</loc></url>
   <url><loc>https://laloo.org/tr/rhodes/</loc></url>
   <url><loc>https://laloo.org/tr/riga/</loc></url>
+  <url><loc>https://laloo.org/tr/rio-de-janeiro/</loc></url>
   <url><loc>https://laloo.org/tr/riyadh/</loc></url>
   <url><loc>https://laloo.org/tr/rome/</loc></url>
   <url><loc>https://laloo.org/tr/rotterdam/</loc></url>
+  <url><loc>https://laloo.org/tr/routes/eiffel-tower-to-louvre-bathrooms/</loc></url>
   <url><loc>https://laloo.org/tr/routes/</loc></url>
+  <url><loc>https://laloo.org/tr/routes/istanbul-old-city-toilets-sultanahmet-grand-bazaar/</loc></url>
   <url><loc>https://laloo.org/tr/routes/midtown-manhattan-bathrooms-walk/</loc></url>
   <url><loc>https://laloo.org/tr/routes/santa-monica-to-venice-beach-bathrooms/</loc></url>
   <url><loc>https://laloo.org/tr/saint-petersburg/</loc></url>
@@ -864,7 +917,9 @@
   <url><loc>https://laloo.org/tr/san-francisco-bay-area/</loc></url>
   <url><loc>https://laloo.org/tr/san-juan/</loc></url>
   <url><loc>https://laloo.org/tr/san-sebastian/</loc></url>
+  <url><loc>https://laloo.org/tr/santiago/</loc></url>
   <url><loc>https://laloo.org/tr/santorini/</loc></url>
+  <url><loc>https://laloo.org/tr/sao-paulo/</loc></url>
   <url><loc>https://laloo.org/tr/sapporo/</loc></url>
   <url><loc>https://laloo.org/tr/seattle/</loc></url>
   <url><loc>https://laloo.org/tr/seoul/</loc></url>
