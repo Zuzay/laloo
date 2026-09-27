@@ -89,24 +89,39 @@ if not SB_SECRET:
   save_json(pts); sys.exit(0)
 
 # ---------- 1) Adresle eklenen ipuçlarına koordinat bul (her gün) ----------
+def nominatim(q):
+  u = urllib.parse.urlencode({"q": q, "format": "json", "limit": 1})
+  req = urllib.request.Request("https://nominatim.openstreetmap.org/search?" + u,
+                               headers={"User-Agent": "laloo.org updater (hello@laloo.org)"})
+  try:
+    with urllib.request.urlopen(req, timeout=30) as r:
+      res = json.load(r)
+  except Exception as e:
+    print("  error", q, e); res = []
+  time.sleep(1.2)   # Nominatim kuralı: saniyede en fazla 1 istek
+  return res[0] if res else None
+
 def geocode():
-  todo = sb("GET", "places?select=id,name,address,city&lat=is.null&address=not.is.null&limit=200", prefer="")
+  todo = sb("GET", "places?select=id,name,address,area,city&lat=is.null&address=not.is.null&address=not.like.%3F%3F*&order=id&limit=450", prefer="")
+  names = {c["id"]: c["name"] for c in sb("GET", "cities?select=id,name", prefer="")}
   print(f"Geocoding {len(todo)} places")
+  ok = miss = 0
   for p in todo:
-    q = urllib.parse.urlencode({"q": p["address"], "format": "json", "limit": 1})
-    req = urllib.request.Request("https://nominatim.openstreetmap.org/search?" + q,
-                                 headers={"User-Agent": "laloo.org updater (hello@laloo.org)"})
-    try:
-      with urllib.request.urlopen(req, timeout=30) as r:
-        res = json.load(r)
-    except Exception as e:
-      print("  error", p["name"], e); res = []
-    if res:
-      sb("PATCH", f"places?id=eq.{p['id']}", {"lat": float(res[0]["lat"]), "lng": float(res[0]["lon"]), "active": True})
-      print("  OK", p["name"])
+    city = names.get(p["city"], "")
+    # 1) adres  2) ad + semt + şehir  3) ad + şehir
+    tries = [p["address"], ", ".join(x for x in (p["name"], p.get("area"), city) if x), ", ".join(x for x in (p["name"], city) if x)]
+    hit = None
+    for q in dict.fromkeys(tries):
+      hit = nominatim(q)
+      if hit: break
+    if hit:
+      sb("PATCH", f"places?id=eq.{p['id']}", {"lat": round(float(hit["lat"]), 6), "lng": round(float(hit["lon"]), 6), "active": True})
+      ok += 1
     else:
-      print("  NOT FOUND", p["name"], "|", p["address"])
-    time.sleep(1.2)   # Nominatim kuralı: saniyede en fazla 1 istek
+      # Bulunamayanlar tekrar tekrar denenmesin: adresin başına işaret koy, admin panelinde düzeltilir
+      sb("PATCH", f"places?id=eq.{p['id']}", {"address": "?? " + p["address"] if not p["address"].startswith("??") else p["address"]})
+      print("  NOT FOUND", p["name"], "|", p["address"]); miss += 1
+  print(f"  geocoded {ok}, not found {miss}")
 
 # ---------- 2) İpucu notlarını çevir (DeepL, her gün) ----------
 DEEPL_KEY = os.environ.get("DEEPL_KEY", "")
