@@ -134,7 +134,7 @@
      },
      {
       "stop": {
-       "name": "Beach restrooms at Bay Street",
+       "name": "Baños de playa en Bay Street",
        "fee": "Free",
        "where": "2600 Barnard Way · en el paseo de playa, a 1,5 km al sur del muelle",
        "text": "Un edificio sencillo de baños justo en el carril bici y peatonal. Buena parada a mitad de camino."
@@ -150,7 +150,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Rose Avenue",
+       "name": "Baños de Venice Beach en Rose Avenue",
        "fee": "Free",
        "where": "Rose Ave y Ocean Front Walk",
        "text": "Aquí empieza el Boardwalk de Venice. El edificio de baños está junto al estacionamiento de la playa."
@@ -167,7 +167,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Windward Avenue",
+       "name": "Baños de Venice Beach en Windward Avenue",
        "fee": "Free",
        "where": "Junto al skatepark y Muscle Beach",
        "text": "La parte más animada del Boardwalk. Los baños están al lado del skatepark, así que puedes ver los trucos mientras esperas."
@@ -227,7 +227,7 @@
      },
      {
       "stop": {
-       "name": "Beach restrooms at Bay Street",
+       "name": "Strandtoiletten an der Bay Street",
        "fee": "Free",
        "where": "2600 Barnard Way · am Strandweg, etwa 1,5 km südlich vom Pier",
        "text": "Ein schlichtes Toilettenhaus direkt am Rad- und Fußweg. Praktisch auf halber Strecke."
@@ -243,7 +243,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Rose Avenue",
+       "name": "Venice-Beach-Toiletten an der Rose Avenue",
        "fee": "Free",
        "where": "Rose Ave und Ocean Front Walk",
        "text": "Hier beginnt der Venice Boardwalk. Das Toilettenhaus steht neben dem Strandparkplatz."
@@ -260,7 +260,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Windward Avenue",
+       "name": "Venice-Beach-Toiletten an der Windward Avenue",
        "fee": "Free",
        "where": "Beim Skatepark und Muscle Beach",
        "text": "Der belebteste Teil des Boardwalks. Die Toiletten sind direkt am Skatepark, also kannst du beim Warten den Tricks zusehen."
@@ -320,7 +320,7 @@
      },
      {
       "stop": {
-       "name": "Beach restrooms at Bay Street",
+       "name": "Toilettes de plage à Bay Street",
        "fee": "Free",
        "where": "2600 Barnard Way · sur la promenade, à environ 1,5 km au sud de la jetée",
        "text": "Un petit bâtiment de toilettes directement sur la piste cyclable et piétonne. Pratique à mi-chemin."
@@ -336,7 +336,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Rose Avenue",
+       "name": "Toilettes de Venice Beach à Rose Avenue",
        "fee": "Free",
        "where": "Rose Ave et Ocean Front Walk",
        "text": "Là où commence le Boardwalk de Venice. Le bâtiment des toilettes est à côté du parking de la plage."
@@ -353,7 +353,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Windward Avenue",
+       "name": "Toilettes de Venice Beach à Windward Avenue",
        "fee": "Free",
        "where": "Près du skatepark et de Muscle Beach",
        "text": "La partie la plus animée du Boardwalk. Les toilettes sont juste à côté du skatepark, de quoi regarder les figures en attendant."
@@ -413,7 +413,7 @@
      },
      {
       "stop": {
-       "name": "Beach restrooms at Bay Street",
+       "name": "Bay Street sahil tuvaletleri",
        "fee": "Free",
        "where": "2600 Barnard Way · sahil yolunda, iskelenin yaklaşık 1,5 km güneyinde",
        "text": "Bisiklet ve yürüyüş yolunun hemen üstünde sade bir tuvalet binası. Yolun yarısında işe yarar."
@@ -429,7 +429,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Rose Avenue",
+       "name": "Venice Beach Rose Avenue tuvaletleri",
        "fee": "Free",
        "where": "Rose Ave ve Ocean Front Walk köşesi",
        "text": "Venice Boardwalk'un başladığı yer. Tuvalet binası sahil otoparkının yanında."
@@ -446,7 +446,7 @@
      },
      {
       "stop": {
-       "name": "Venice Beach restrooms at Windward Avenue",
+       "name": "Venice Beach Windward Avenue tuvaletleri",
        "fee": "Free",
        "where": "Kaykay parkı ve Muscle Beach'in yanında",
        "text": "Boardwalk'un en kalabalık kısmı. Tuvaletler kaykay parkının hemen yanında, sıra beklerken hareketleri izleyebilirsin."
@@ -577,7 +577,7 @@
      },
      {
       "stop": {
-       "name": "Bryant Park restrooms",
+       "name": "Baños de Bryant Park",
        "fee": "Free",
        "where": "Calle 42 entre la 5.ª y la 6.ª Av · a 5 minutos de Times Square",
        "text": "Probablemente el baño público más famoso de la ciudad, detrás de la biblioteca, con personal y flores frescas. Abre de la mañana a la noche. Empieza aquí."
@@ -617,7 +617,7 @@
      },
      {
       "stop": {
-       "name": "Central Park: Heckscher Playground restrooms",
+       "name": "Central Park: baños de Heckscher Playground",
        "fee": "Free",
        "where": "Entrada por Central Park South y la 6.ª Av",
        "text": "Los primeros baños dentro del parque viniendo del sur. El Dairy Visitor Center también está cerca."
@@ -658,7 +658,7 @@
      },
      {
       "stop": {
-       "name": "Bryant Park restrooms",
+       "name": "Toiletten im Bryant Park",
        "fee": "Free",
        "where": "42nd St zwischen 5th und 6th Ave · 5 Minuten vom Times Square",
        "text": "Wahrscheinlich die berühmteste öffentliche Toilette der Stadt, hinter der Bibliothek, mit Personal und frischen Blumen. Geöffnet von morgens bis abends. Fang hier an."
@@ -698,7 +698,7 @@
      },
      {
       "stop": {
-       "name": "Central Park: Heckscher Playground restrooms",
+       "name": "Central Park: Toiletten am Heckscher Playground",
        "fee": "Free",
        "where": "Eingang Central Park South und 6th Ave",
        "text": "Die ersten Toiletten im Park, wenn du von Süden kommst. Das Dairy Visitor Center ist auch nicht weit."
@@ -739,7 +739,7 @@
      },
      {
       "stop": {
-       "name": "Bryant Park restrooms",
+       "name": "Toilettes de Bryant Park",
        "fee": "Free",
        "where": "42nd St entre la 5e et la 6e Avenue · à 5 minutes de Times Square",
        "text": "Sans doute les toilettes publiques les plus célèbres de la ville, derrière la bibliothèque, avec du personnel et des fleurs fraîches. Ouvertes du matin au soir. Commencez ici."
@@ -779,7 +779,7 @@
      },
      {
       "stop": {
-       "name": "Central Park: Heckscher Playground restrooms",
+       "name": "Central Park : toilettes de Heckscher Playground",
        "fee": "Free",
        "where": "Entrée par Central Park South et la 6e Avenue",
        "text": "Les premières toilettes dans le parc en venant du sud. Le Dairy Visitor Center est aussi tout près."
@@ -820,7 +820,7 @@
      },
      {
       "stop": {
-       "name": "Bryant Park restrooms",
+       "name": "Bryant Park tuvaletleri",
        "fee": "Free",
        "where": "42. Cadde, 5. ve 6. Caddeler arası · Times Square'e 5 dakika",
        "text": "Muhtemelen şehrin en ünlü umumi tuvaleti; kütüphanenin arkasında, görevlisi ve taze çiçekleriyle. Sabahtan akşama açık. Buradan başla."
@@ -860,7 +860,7 @@
      },
      {
       "stop": {
-       "name": "Central Park: Heckscher Playground restrooms",
+       "name": "Central Park: Heckscher Playground tuvaletleri",
        "fee": "Free",
        "where": "Girişi Central Park South ve 6. Cadde köşesinden",
        "text": "Güneyden gelince parkın içindeki ilk tuvaletler. The Dairy Ziyaretçi Merkezi de yakında."
@@ -882,6 +882,819 @@
      },
      {
       "p": "İki cadde arasında mı kayboldun? En yakın tuvaleti görüp oraya yürümek için aşağıdan haritayı aç."
+     }
+    ]
+   }
+  }
+ },
+ {
+  "slug": "eiffel-tower-to-louvre-bathrooms",
+  "city": "paris",
+  "date": "2026-09-27",
+  "lat": 48.86,
+  "lng": 2.313,
+  "i18n": {
+   "en": {
+    "title": "Eiffel Tower to the Louvre on foot: where to find a bathroom in Paris",
+    "desc": "Walking from the Eiffel Tower to the Louvre? Free toilets on the way, from the tower's base to the Petit Palais, plus how Paris's free Sanisettes work.",
+    "h1": "Eiffel Tower to the Louvre: a Paris walk with bathroom stops",
+    "body": [
+     {
+      "p": "The classic Paris walk: start at the Eiffel Tower, follow the Seine, cross the grandest bridge in town and end at the Louvre. About 5 km, an hour and a quarter without stopping. You will stop. For photos, for crêpes, and yes, for the bathroom."
+     },
+     {
+      "p": "Paris has a reputation here, but it's better than it used to be. The grey automatic toilets on the sidewalks, the **Sanisettes**, are **free** and run by the city. You'll pass several on this walk. Here are the best stops, in order."
+     },
+     {
+      "h2": "The walk"
+     },
+     {
+      "stop": {
+       "name": "Eiffel Tower base toilets",
+       "fee": "Free",
+       "where": "Inside the security zone under the tower",
+       "text": "Free toilets at the foot of the tower, reached after the free security check. Go before the photos, not after the queue."
+      }
+     },
+     {
+      "stop": {
+       "name": "Sanisettes along the Champ de Mars",
+       "fee": "Free",
+       "where": "Around the park behind the tower",
+       "text": "The city's grey self-cleaning toilets. Push the button, wait for the green light, and don't be alarmed when it washes itself after you."
+      }
+     },
+     {
+      "stop": {
+       "name": "Esplanade des Invalides",
+       "fee": "Free",
+       "where": "The big lawn in front of the golden dome",
+       "text": "Public toilets near the lawn. From here, the golden Pont Alexandre III is straight ahead."
+      }
+     },
+     {
+      "stop": {
+       "name": "Petit Palais",
+       "fee": "Free",
+       "where": "Avenue Winston Churchill · right after the bridge",
+       "text": "A free city museum in a palace, with a beautiful garden café and clean toilets inside. The best stop on the route. Closed Mondays."
+      }
+     },
+     {
+      "stop": {
+       "name": "Jardin des Tuileries",
+       "where": "Between Concorde and the Louvre",
+       "text": "The garden has toilets near both ends. Some charge a small fee, so keep a coin or a card handy."
+      }
+     },
+     {
+      "stop": {
+       "name": "Carrousel du Louvre",
+       "fee": "Free",
+       "where": "99 Rue de Rivoli · under the inverted pyramid",
+       "text": "The underground shopping hall next to the Louvre, with free toilets and no museum ticket needed. Busy around midday."
+      }
+     },
+     {
+      "h2": "Good to know"
+     },
+     {
+      "box": "As of September 2026, the Sanisettes, the Eiffel Tower base and the Petit Palais are free. Many cafés only let customers use the toilets: ordering a coffee at the counter (au comptoir) is the cheapest way in. Metro stations generally don't have public toilets."
+     },
+     {
+      "p": "Standing on a bridge and can't wait for the Louvre? Open the map below to find the nearest Sanisette."
+     }
+    ]
+   },
+   "es": {
+    "title": "De la Torre Eiffel al Louvre a pie: dónde encontrar un baño en París",
+    "desc": "¿Caminas de la Torre Eiffel al Louvre? Baños gratis en el camino, desde la base de la torre hasta el Petit Palais, y cómo funcionan las Sanisettes gratuitas de París.",
+    "h1": "De la Torre Eiffel al Louvre: un paseo por París con paradas para ir al baño",
+    "body": [
+     {
+      "p": "El paseo clásico de París: empieza en la Torre Eiffel, sigue el Sena, cruza el puente más grandioso de la ciudad y termina en el Louvre. Unos 5 km, una hora y cuarto sin parar. Vas a parar. Para fotos, para crepes y, sí, para ir al baño."
+     },
+     {
+      "p": "París tiene su fama en esto, pero ha mejorado. Los baños automáticos grises de las aceras, las **Sanisettes**, son **gratis** y los gestiona la ciudad. Pasarás varias en este paseo. Estas son las mejores paradas, en orden."
+     },
+     {
+      "h2": "El paseo"
+     },
+     {
+      "stop": {
+       "name": "Baños al pie de la Torre Eiffel",
+       "fee": "Free",
+       "where": "Dentro de la zona de seguridad bajo la torre",
+       "text": "Baños gratis al pie de la torre, tras el control de seguridad gratuito. Ve antes de las fotos, no después de la cola."
+      }
+     },
+     {
+      "stop": {
+       "name": "Sanisettes del Campo de Marte",
+       "fee": "Free",
+       "where": "Alrededor del parque detrás de la torre",
+       "text": "Los baños grises autolimpiables de la ciudad. Pulsa el botón, espera la luz verde y no te asustes cuando se lave solo después de ti."
+      }
+     },
+     {
+      "stop": {
+       "name": "Esplanade des Invalides",
+       "fee": "Free",
+       "where": "El gran césped frente a la cúpula dorada",
+       "text": "Baños públicos junto al césped. Desde aquí, el dorado Pont Alexandre III está justo delante."
+      }
+     },
+     {
+      "stop": {
+       "name": "Petit Palais",
+       "fee": "Free",
+       "where": "Avenue Winston Churchill · justo después del puente",
+       "text": "Un museo municipal gratis dentro de un palacio, con un precioso café en el jardín y baños limpios. La mejor parada de la ruta. Cierra los lunes."
+      }
+     },
+     {
+      "stop": {
+       "name": "Jardin des Tuileries",
+       "where": "Entre Concorde y el Louvre",
+       "text": "El jardín tiene baños cerca de ambos extremos. Algunos cobran una pequeña tarifa, así que ten a mano una moneda o la tarjeta."
+      }
+     },
+     {
+      "stop": {
+       "name": "Carrousel du Louvre",
+       "fee": "Free",
+       "where": "99 Rue de Rivoli · bajo la pirámide invertida",
+       "text": "La galería comercial subterránea junto al Louvre, con baños gratis y sin necesidad de entrada al museo. Se llena a mediodía."
+      }
+     },
+     {
+      "h2": "Conviene saber"
+     },
+     {
+      "box": "A septiembre de 2026, las Sanisettes, la base de la Torre Eiffel y el Petit Palais son gratis. Muchos cafés solo dejan usar el baño a clientes: pedir un café en la barra (au comptoir) es la forma más barata de entrar. Las estaciones de metro en general no tienen baños públicos."
+     },
+     {
+      "p": "¿En un puente y sin poder esperar al Louvre? Abre el mapa aquí abajo para encontrar la Sanisette más cercana."
+     }
+    ]
+   },
+   "de": {
+    "title": "Vom Eiffelturm zum Louvre zu Fuß: wo man in Paris eine Toilette findet",
+    "desc": "Zu Fuß vom Eiffelturm zum Louvre? Kostenlose Toiletten unterwegs, vom Fuß des Turms bis zum Petit Palais, und so funktionieren die kostenlosen Sanisettes von Paris.",
+    "h1": "Vom Eiffelturm zum Louvre: ein Paris-Spaziergang mit Toilettenstopps",
+    "body": [
+     {
+      "p": "Der klassische Paris-Spaziergang: am Eiffelturm starten, der Seine folgen, über die prächtigste Brücke der Stadt und am Louvre ankommen. Etwa 5 km, eine Stunde und eine Viertelstunde ohne Pause. Du wirst Pause machen. Für Fotos, für Crêpes und, ja, für die Toilette."
+     },
+     {
+      "p": "Paris hat da einen gewissen Ruf, aber es ist besser geworden. Die grauen automatischen Toiletten auf den Gehwegen, die **Sanisettes**, sind **kostenlos** und werden von der Stadt betrieben. Auf diesem Weg kommst du an mehreren vorbei. Hier die besten Stopps, der Reihe nach."
+     },
+     {
+      "h2": "Der Spaziergang"
+     },
+     {
+      "stop": {
+       "name": "Toiletten am Fuß des Eiffelturms",
+       "fee": "Free",
+       "where": "Im Sicherheitsbereich unter dem Turm",
+       "text": "Kostenlose Toiletten am Fuß des Turms, nach der kostenlosen Sicherheitskontrolle. Geh vor den Fotos, nicht nach der Schlange."
+      }
+     },
+     {
+      "stop": {
+       "name": "Sanisettes am Champ de Mars",
+       "fee": "Free",
+       "where": "Rund um den Park hinter dem Turm",
+       "text": "Die grauen, selbstreinigenden Toiletten der Stadt. Knopf drücken, auf das grüne Licht warten und nicht erschrecken, wenn sie sich danach selbst wäscht."
+      }
+     },
+     {
+      "stop": {
+       "name": "Esplanade des Invalides",
+       "fee": "Free",
+       "where": "Der große Rasen vor der goldenen Kuppel",
+       "text": "Öffentliche Toiletten am Rasen. Von hier liegt die goldene Pont Alexandre III direkt vor dir."
+      }
+     },
+     {
+      "stop": {
+       "name": "Petit Palais",
+       "fee": "Free",
+       "where": "Avenue Winston Churchill · direkt nach der Brücke",
+       "text": "Ein kostenloses städtisches Museum in einem Palast, mit schönem Gartencafé und sauberen Toiletten. Der beste Stopp der Route. Montags geschlossen."
+      }
+     },
+     {
+      "stop": {
+       "name": "Jardin des Tuileries",
+       "where": "Zwischen Concorde und Louvre",
+       "text": "Der Garten hat Toiletten an beiden Enden. Manche kosten eine kleine Gebühr, also Münze oder Karte bereithalten."
+      }
+     },
+     {
+      "stop": {
+       "name": "Carrousel du Louvre",
+       "fee": "Free",
+       "where": "99 Rue de Rivoli · unter der umgekehrten Pyramide",
+       "text": "Die unterirdische Einkaufspassage am Louvre, mit kostenlosen Toiletten und ohne Museumsticket. Mittags viel los."
+      }
+     },
+     {
+      "h2": "Gut zu wissen"
+     },
+     {
+      "box": "Stand September 2026 sind die Sanisettes, der Fuß des Eiffelturms und das Petit Palais kostenlos. Viele Cafés lassen nur Gäste auf die Toilette: ein Kaffee am Tresen (au comptoir) ist der günstigste Weg hinein. Metrostationen haben meist keine öffentlichen Toiletten."
+     },
+     {
+      "p": "Auf einer Brücke und der Louvre ist zu weit? Öffne unten die Karte, um die nächste Sanisette zu finden."
+     }
+    ]
+   },
+   "fr": {
+    "title": "De la tour Eiffel au Louvre à pied : où trouver des toilettes à Paris",
+    "desc": "Vous marchez de la tour Eiffel au Louvre ? Les toilettes gratuites sur le chemin, du pied de la tour au Petit Palais, et comment marchent les Sanisettes gratuites de Paris.",
+    "h1": "De la tour Eiffel au Louvre : une balade parisienne avec pauses toilettes",
+    "body": [
+     {
+      "p": "La balade parisienne classique : départ de la tour Eiffel, on suit la Seine, on traverse le plus beau pont de la ville et on arrive au Louvre. Environ 5 km, une heure et quart sans s'arrêter. Vous allez vous arrêter. Pour les photos, pour une crêpe et, oui, pour les toilettes."
+     },
+     {
+      "p": "Paris a une certaine réputation sur ce point, mais ça s'est amélioré. Les toilettes automatiques grises sur les trottoirs, les **Sanisettes**, sont **gratuites** et gérées par la Ville. Vous en croiserez plusieurs. Voici les meilleures étapes, dans l'ordre."
+     },
+     {
+      "h2": "La balade"
+     },
+     {
+      "stop": {
+       "name": "Toilettes au pied de la tour Eiffel",
+       "fee": "Free",
+       "where": "Dans la zone sécurisée sous la tour",
+       "text": "Toilettes gratuites au pied de la tour, après le contrôle de sécurité gratuit. Allez-y avant les photos, pas après la file."
+      }
+     },
+     {
+      "stop": {
+       "name": "Sanisettes du Champ-de-Mars",
+       "fee": "Free",
+       "where": "Autour du parc derrière la tour",
+       "text": "Les toilettes grises autonettoyantes de la Ville. Appuyez sur le bouton, attendez le voyant vert, et pas de panique quand elles se lavent toutes seules après vous."
+      }
+     },
+     {
+      "stop": {
+       "name": "Esplanade des Invalides",
+       "fee": "Free",
+       "where": "La grande pelouse devant le dôme doré",
+       "text": "Toilettes publiques près de la pelouse. D'ici, le pont Alexandre III et ses dorures sont juste devant."
+      }
+     },
+     {
+      "stop": {
+       "name": "Petit Palais",
+       "fee": "Free",
+       "where": "Avenue Winston Churchill · juste après le pont",
+       "text": "Un musée municipal gratuit dans un palais, avec un joli café-jardin et des toilettes propres. La meilleure étape du parcours. Fermé le lundi."
+      }
+     },
+     {
+      "stop": {
+       "name": "Jardin des Tuileries",
+       "where": "Entre la Concorde et le Louvre",
+       "text": "Le jardin a des toilettes aux deux extrémités. Certaines sont payantes, gardez une pièce ou une carte à portée de main."
+      }
+     },
+     {
+      "stop": {
+       "name": "Carrousel du Louvre",
+       "fee": "Free",
+       "where": "99 rue de Rivoli · sous la pyramide inversée",
+       "text": "La galerie marchande souterraine du Louvre, avec des toilettes gratuites, sans billet de musée. Beaucoup de monde vers midi."
+      }
+     },
+     {
+      "h2": "Bon à savoir"
+     },
+     {
+      "box": "En septembre 2026, les Sanisettes, le pied de la tour Eiffel et le Petit Palais sont gratuits. Beaucoup de cafés réservent leurs toilettes aux clients : un café au comptoir est la façon la moins chère d'y entrer. Les stations de métro n'ont en général pas de toilettes publiques."
+     },
+     {
+      "p": "Sur un pont et le Louvre vous paraît loin ? Ouvrez la carte ci-dessous pour trouver la Sanisette la plus proche."
+     }
+    ]
+   },
+   "tr": {
+    "title": "Eyfel Kulesi'nden Louvre'a yürüyüş: Paris'te tuvalet nerede bulunur",
+    "desc": "Eyfel Kulesi'nden Louvre'a mı yürüyorsun? Kulenin dibinden Petit Palais'ye yol üstündeki ücretsiz tuvaletler ve Paris'in ücretsiz Sanisette'lerinin nasıl çalıştığı.",
+    "h1": "Eyfel Kulesi'nden Louvre'a: tuvalet molalı bir Paris yürüyüşü",
+    "body": [
+     {
+      "p": "Klasik Paris yürüyüşü: Eyfel Kulesi'nden başla, Seine'i takip et, şehrin en görkemli köprüsünden geç ve Louvre'da bitir. Yaklaşık 5 km, hiç durmadan bir saat çeyrek. Ama duracaksın. Fotoğraf için, krep için ve evet, tuvalet için."
+     },
+     {
+      "p": "Paris'in bu konuda bir ünü var ama eskisinden iyi. Kaldırımlardaki gri otomatik tuvaletler, yani **Sanisette**'ler, **ücretsiz** ve belediye işletiyor. Bu yürüyüşte birkaçının önünden geçeceksin. En iyi duraklar sırasıyla şöyle:"
+     },
+     {
+      "h2": "Yürüyüş"
+     },
+     {
+      "stop": {
+       "name": "Eyfel Kulesi'nin dibindeki tuvaletler",
+       "fee": "Free",
+       "where": "Kulenin altındaki güvenlik alanının içinde",
+       "text": "Kulenin dibinde, ücretsiz güvenlik kontrolünden sonra ücretsiz tuvaletler var. Fotoğraflardan önce git, kuyruktan sonra değil."
+      }
+     },
+     {
+      "stop": {
+       "name": "Champ de Mars'taki Sanisette'ler",
+       "fee": "Free",
+       "where": "Kulenin arkasındaki parkın çevresinde",
+       "text": "Belediyenin kendini temizleyen gri tuvaletleri. Düğmeye bas, yeşil ışığı bekle ve senden sonra kendini yıkamaya başlayınca korkma."
+      }
+     },
+     {
+      "stop": {
+       "name": "Esplanade des Invalides",
+       "fee": "Free",
+       "where": "Altın kubbenin önündeki büyük çimenlik",
+       "text": "Çimenliğin yanında umumi tuvaletler var. Buradan yaldızlı Pont Alexandre III köprüsü tam karşında."
+      }
+     },
+     {
+      "stop": {
+       "name": "Petit Palais",
+       "fee": "Free",
+       "where": "Avenue Winston Churchill · köprüyü geçer geçmez",
+       "text": "Bir sarayın içinde ücretsiz belediye müzesi; güzel bir bahçe kafesi ve temiz tuvaletleri var. Rotanın en iyi durağı. Pazartesi kapalı."
+      }
+     },
+     {
+      "stop": {
+       "name": "Jardin des Tuileries",
+       "where": "Concorde ile Louvre arasında",
+       "text": "Bahçenin iki ucunda da tuvalet var. Bazıları küçük bir ücret alıyor, bozuk para ya da kartını hazır tut."
+      }
+     },
+     {
+      "stop": {
+       "name": "Carrousel du Louvre",
+       "fee": "Free",
+       "where": "99 Rue de Rivoli · ters piramidin altında",
+       "text": "Louvre'un yanındaki yer altı alışveriş galerisi; ücretsiz tuvaleti var, müze bileti gerekmez. Öğle saatlerinde kalabalık."
+      }
+     },
+     {
+      "h2": "Bilmekte fayda var"
+     },
+     {
+      "box": "Eylül 2026 itibarıyla Sanisette'ler, Eyfel Kulesi'nin dibi ve Petit Palais ücretsiz. Çoğu kafe tuvaleti sadece müşterilere açıyor: tezgâhta (au comptoir) bir kahve içmek içeri girmenin en ucuz yolu. Metro istasyonlarında genelde umumi tuvalet yok."
+     },
+     {
+      "p": "Köprünün üstündesin ve Louvre'a kadar dayanamayacak mısın? En yakın Sanisette'i bulmak için aşağıdan haritayı aç."
+     }
+    ]
+   }
+  }
+ },
+ {
+  "slug": "istanbul-old-city-toilets-sultanahmet-grand-bazaar",
+  "city": "istanbul",
+  "date": "2026-09-27",
+  "lat": 41.01,
+  "lng": 28.972,
+  "i18n": {
+   "en": {
+    "title": "Sultanahmet and the Grand Bazaar: where to find a toilet in Istanbul's old city",
+    "desc": "A walking route through Istanbul's old city with every WC stop: Sultanahmet Square, the Blue Mosque, Gülhane Park, the Grand Bazaar, Süleymaniye and the Spice Bazaar.",
+    "h1": "Istanbul's old city on foot: every toilet stop from Sultanahmet to the Spice Bazaar",
+    "body": [
+     {
+      "p": "Hagia Sophia, the Blue Mosque, the Grand Bazaar, the Spice Bazaar. The best day in Istanbul is a walk of about 4 km, mostly downhill at the end, with a lot of tea along the way. A lot of tea."
+     },
+     {
+      "p": "The good news: the old city is full of public toilets. The catch: most of them charge a **small fee**. Here are the stops, in walking order, and how they work."
+     },
+     {
+      "h2": "How toilets work here"
+     },
+     {
+      "box": "Public WCs in Istanbul usually cost a few lira. Many are run by the city (İBB). Most take a contactless card or an İstanbulkart, but keep some small change just in case. Mosque WCs are separate buildings next to the mosque: you don't need to enter the mosque or follow a dress code to use them."
+     },
+     {
+      "h2": "The walk"
+     },
+     {
+      "stop": {
+       "name": "Sultanahmet Square WC",
+       "fee": "Paid",
+       "where": "Between the Blue Mosque and Hagia Sophia",
+       "text": "The first stop, right in the square. Easy to find, busy in the afternoon."
+      }
+     },
+     {
+      "stop": {
+       "name": "Blue Mosque WC",
+       "fee": "Paid",
+       "where": "On the Hippodrome side of the mosque",
+       "text": "Next to the ablution fountains. A good moment before you join the line to see the mosque."
+      }
+     },
+     {
+      "stop": {
+       "name": "Gülhane Park",
+       "fee": "Paid",
+       "where": "Below Topkapı Palace",
+       "text": "Shady park with WCs, benches and a tea garden at the far end with a view of the Bosphorus. Worth the detour."
+      }
+     },
+     {
+      "stop": {
+       "name": "Grand Bazaar WCs",
+       "fee": "Paid",
+       "where": "Inside the bazaar · closed Sundays",
+       "text": "There are several WCs inside. The maze makes them hard to spot, so just ask any shopkeeper for the 'tuvalet'. They'll point."
+      }
+     },
+     {
+      "stop": {
+       "name": "Nuruosmaniye Mosque WC",
+       "fee": "Paid",
+       "where": "At the Nuruosmaniye gate of the bazaar",
+       "text": "The easiest one to find if you're entering or leaving the bazaar on the Çemberlitaş side."
+      }
+     },
+     {
+      "stop": {
+       "name": "Süleymaniye Mosque WC",
+       "fee": "Paid",
+       "where": "On the hill above the bazaar",
+       "text": "A short uphill walk, and the best view of the Golden Horn in the old city from the mosque's back garden."
+      }
+     },
+     {
+      "stop": {
+       "name": "Spice Bazaar and Eminönü",
+       "fee": "Paid",
+       "where": "Next to the New Mosque and the ferry piers",
+       "text": "WCs at the Spice Bazaar, the New Mosque and the ferry piers. From here, a ferry to the Asian side is the perfect end of the day."
+      }
+     },
+     {
+      "h2": "Good to know"
+     },
+     {
+      "box": "As of September 2026, most WCs on this route charge a small fee; malls and museums (with a ticket) are free inside. Mosque WCs may close briefly at prayer times. The Grand Bazaar is closed on Sundays."
+     },
+     {
+      "p": "Somewhere in the backstreets with no WC in sight? Open the map below to find the nearest one."
+     }
+    ]
+   },
+   "es": {
+    "title": "Sultanahmet y el Gran Bazar: dónde encontrar un baño en el casco antiguo de Estambul",
+    "desc": "Una ruta a pie por el casco antiguo de Estambul con cada parada para ir al baño: plaza de Sultanahmet, Mezquita Azul, parque Gülhane, Gran Bazar, Süleymaniye y Bazar de las Especias.",
+    "h1": "El casco antiguo de Estambul a pie: cada baño de Sultanahmet al Bazar de las Especias",
+    "body": [
+     {
+      "p": "Santa Sofía, la Mezquita Azul, el Gran Bazar, el Bazar de las Especias. El mejor día en Estambul es un paseo de unos 4 km, casi todo cuesta abajo al final, con mucho té por el camino. Mucho té."
+     },
+     {
+      "p": "La buena noticia: el casco antiguo está lleno de baños públicos. El truco: casi todos cobran una **pequeña tarifa**. Aquí van las paradas, en orden, y cómo funcionan."
+     },
+     {
+      "h2": "Cómo funcionan los baños aquí"
+     },
+     {
+      "box": "Los baños públicos de Estambul suelen costar unas pocas liras. Muchos los gestiona la ciudad (İBB). La mayoría acepta tarjeta sin contacto o İstanbulkart, pero lleva algo de cambio por si acaso. Los baños de las mezquitas son edificios aparte: no hace falta entrar a la mezquita ni seguir un código de vestimenta para usarlos."
+     },
+     {
+      "h2": "El paseo"
+     },
+     {
+      "stop": {
+       "name": "WC de la plaza Sultanahmet",
+       "fee": "Paid",
+       "where": "Entre la Mezquita Azul y Santa Sofía",
+       "text": "La primera parada, en la misma plaza. Fácil de encontrar, con gente por la tarde."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la Mezquita Azul",
+       "fee": "Paid",
+       "where": "En el lado del Hipódromo",
+       "text": "Junto a las fuentes de abluciones. Buen momento antes de hacer la cola para ver la mezquita."
+      }
+     },
+     {
+      "stop": {
+       "name": "Parque Gülhane",
+       "fee": "Paid",
+       "where": "Debajo del palacio de Topkapı",
+       "text": "Parque con sombra, baños, bancos y un jardín de té al fondo con vista al Bósforo. Merece el desvío."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC del Gran Bazar",
+       "fee": "Paid",
+       "where": "Dentro del bazar · cerrado los domingos",
+       "text": "Hay varios baños dentro. El laberinto los esconde, así que pregunta en cualquier tienda por el 'tuvalet'. Te lo señalarán."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la mezquita Nuruosmaniye",
+       "fee": "Paid",
+       "where": "En la puerta Nuruosmaniye del bazar",
+       "text": "El más fácil de encontrar si entras o sales del bazar por el lado de Çemberlitaş."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la mezquita Süleymaniye",
+       "fee": "Paid",
+       "where": "En la colina sobre el bazar",
+       "text": "Una subida corta y la mejor vista del Cuerno de Oro en el casco antiguo desde el jardín trasero de la mezquita."
+      }
+     },
+     {
+      "stop": {
+       "name": "Bazar de las Especias y Eminönü",
+       "fee": "Paid",
+       "where": "Junto a la Mezquita Nueva y los muelles",
+       "text": "Baños en el Bazar de las Especias, la Mezquita Nueva y los muelles del ferry. Desde aquí, un ferry al lado asiático es el final perfecto del día."
+      }
+     },
+     {
+      "h2": "Conviene saber"
+     },
+     {
+      "box": "A septiembre de 2026, casi todos los baños de esta ruta cobran una pequeña tarifa; los centros comerciales y los museos (con entrada) son gratis por dentro. Los baños de las mezquitas pueden cerrar un rato a la hora del rezo. El Gran Bazar cierra los domingos."
+     },
+     {
+      "p": "¿Perdido por las callejuelas sin un baño a la vista? Abre el mapa aquí abajo para encontrar el más cercano."
+     }
+    ]
+   },
+   "de": {
+    "title": "Sultanahmet und Großer Basar: wo man in Istanbuls Altstadt eine Toilette findet",
+    "desc": "Ein Spaziergang durch Istanbuls Altstadt mit jedem WC-Stopp: Sultanahmet-Platz, Blaue Moschee, Gülhane-Park, Großer Basar, Süleymaniye und Gewürzbasar.",
+    "h1": "Istanbuls Altstadt zu Fuß: jeder Toilettenstopp von Sultanahmet bis zum Gewürzbasar",
+    "body": [
+     {
+      "p": "Hagia Sophia, Blaue Moschee, Großer Basar, Gewürzbasar. Der beste Tag in Istanbul ist ein Spaziergang von etwa 4 km, am Ende meist bergab, mit viel Tee unterwegs. Sehr viel Tee."
+     },
+     {
+      "p": "Die gute Nachricht: Die Altstadt ist voller öffentlicher Toiletten. Der Haken: Die meisten kosten eine **kleine Gebühr**. Hier die Stopps in Laufrichtung und wie es funktioniert."
+     },
+     {
+      "h2": "So funktionieren Toiletten hier"
+     },
+     {
+      "box": "Öffentliche WCs in Istanbul kosten meist ein paar Lira. Viele betreibt die Stadt (İBB). Die meisten nehmen kontaktlose Karten oder die İstanbulkart, aber ein bisschen Kleingeld schadet nicht. Moschee-WCs sind eigene Gebäude neben der Moschee: Du musst die Moschee nicht betreten und keine Kleiderordnung beachten, um sie zu benutzen."
+     },
+     {
+      "h2": "Der Spaziergang"
+     },
+     {
+      "stop": {
+       "name": "WC am Sultanahmet-Platz",
+       "fee": "Paid",
+       "where": "Zwischen Blauer Moschee und Hagia Sophia",
+       "text": "Der erste Stopp, direkt auf dem Platz. Leicht zu finden, nachmittags viel los."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC der Blauen Moschee",
+       "fee": "Paid",
+       "where": "Auf der Hippodrom-Seite der Moschee",
+       "text": "Neben den Waschbrunnen. Ein guter Moment, bevor du dich in die Schlange für die Moschee stellst."
+      }
+     },
+     {
+      "stop": {
+       "name": "Gülhane-Park",
+       "fee": "Paid",
+       "where": "Unterhalb des Topkapı-Palasts",
+       "text": "Schattiger Park mit WCs, Bänken und einem Teegarten am Ende mit Blick auf den Bosporus. Lohnt den Umweg."
+      }
+     },
+     {
+      "stop": {
+       "name": "WCs im Großen Basar",
+       "fee": "Paid",
+       "where": "Im Basar · sonntags geschlossen",
+       "text": "Drinnen gibt es mehrere WCs. Im Labyrinth sind sie schwer zu finden, frag einfach in einem Laden nach der 'tuvalet'. Man zeigt dir den Weg."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC der Nuruosmaniye-Moschee",
+       "fee": "Paid",
+       "where": "Am Nuruosmaniye-Tor des Basars",
+       "text": "Am leichtesten zu finden, wenn du den Basar auf der Çemberlitaş-Seite betrittst oder verlässt."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC der Süleymaniye-Moschee",
+       "fee": "Paid",
+       "where": "Auf dem Hügel über dem Basar",
+       "text": "Ein kurzer Anstieg, und vom hinteren Garten der Moschee der schönste Blick aufs Goldene Horn in der Altstadt."
+      }
+     },
+     {
+      "stop": {
+       "name": "Gewürzbasar und Eminönü",
+       "fee": "Paid",
+       "where": "Neben der Neuen Moschee und den Fähranlegern",
+       "text": "WCs am Gewürzbasar, an der Neuen Moschee und an den Fähranlegern. Von hier ist eine Fähre auf die asiatische Seite der perfekte Abschluss."
+      }
+     },
+     {
+      "h2": "Gut zu wissen"
+     },
+     {
+      "box": "Stand September 2026 kosten die meisten WCs auf dieser Route eine kleine Gebühr; in Einkaufszentren und Museen (mit Ticket) sind sie kostenlos. Moschee-WCs können zu Gebetszeiten kurz schließen. Der Große Basar ist sonntags geschlossen."
+     },
+     {
+      "p": "Irgendwo in den Gassen und kein WC in Sicht? Öffne unten die Karte, um das nächste zu finden."
+     }
+    ]
+   },
+   "fr": {
+    "title": "Sultanahmet et le Grand Bazar : où trouver des toilettes dans la vieille ville d'Istanbul",
+    "desc": "Une balade dans la vieille ville d'Istanbul avec chaque pause WC : place Sultanahmet, Mosquée bleue, parc Gülhane, Grand Bazar, Süleymaniye et Bazar égyptien.",
+    "h1": "La vieille ville d'Istanbul à pied : toutes les pauses toilettes de Sultanahmet au Bazar égyptien",
+    "body": [
+     {
+      "p": "Sainte-Sophie, la Mosquée bleue, le Grand Bazar, le Bazar égyptien. La plus belle journée à Istanbul, c'est une balade d'environ 4 km, surtout en descente à la fin, avec beaucoup de thé en route. Vraiment beaucoup de thé."
+     },
+     {
+      "p": "La bonne nouvelle : la vieille ville est pleine de toilettes publiques. Le hic : la plupart sont **payantes**, pour une petite somme. Voici les étapes, dans l'ordre, et comment ça marche."
+     },
+     {
+      "h2": "Comment ça marche ici"
+     },
+     {
+      "box": "Les WC publics d'Istanbul coûtent en général quelques livres. Beaucoup sont gérés par la ville (İBB). La plupart acceptent la carte sans contact ou l'İstanbulkart, mais gardez un peu de monnaie au cas où. Les WC des mosquées sont des bâtiments à part : pas besoin d'entrer dans la mosquée ni de tenue particulière pour les utiliser."
+     },
+     {
+      "h2": "La balade"
+     },
+     {
+      "stop": {
+       "name": "WC de la place Sultanahmet",
+       "fee": "Paid",
+       "where": "Entre la Mosquée bleue et Sainte-Sophie",
+       "text": "La première étape, sur la place même. Facile à trouver, du monde l'après-midi."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la Mosquée bleue",
+       "fee": "Paid",
+       "where": "Côté Hippodrome de la mosquée",
+       "text": "À côté des fontaines d'ablutions. Le bon moment avant de faire la queue pour visiter la mosquée."
+      }
+     },
+     {
+      "stop": {
+       "name": "Parc Gülhane",
+       "fee": "Paid",
+       "where": "Sous le palais de Topkapı",
+       "text": "Parc ombragé avec WC, bancs et un jardin de thé au bout avec vue sur le Bosphore. Vaut le détour."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC du Grand Bazar",
+       "fee": "Paid",
+       "where": "Dans le bazar · fermé le dimanche",
+       "text": "Il y a plusieurs WC à l'intérieur. Le labyrinthe les cache bien, demandez simplement « tuvalet » dans n'importe quelle boutique. On vous montrera."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la mosquée Nuruosmaniye",
+       "fee": "Paid",
+       "where": "À la porte Nuruosmaniye du bazar",
+       "text": "Le plus facile à trouver si vous entrez ou sortez du bazar côté Çemberlitaş."
+      }
+     },
+     {
+      "stop": {
+       "name": "WC de la mosquée Süleymaniye",
+       "fee": "Paid",
+       "where": "Sur la colline au-dessus du bazar",
+       "text": "Une petite montée, et depuis le jardin arrière de la mosquée, la plus belle vue sur la Corne d'Or de la vieille ville."
+      }
+     },
+     {
+      "stop": {
+       "name": "Bazar égyptien et Eminönü",
+       "fee": "Paid",
+       "where": "À côté de la Nouvelle Mosquée et des embarcadères",
+       "text": "WC au Bazar égyptien, à la Nouvelle Mosquée et aux embarcadères. D'ici, un ferry vers la rive asiatique est la fin parfaite de la journée."
+      }
+     },
+     {
+      "h2": "Bon à savoir"
+     },
+     {
+      "box": "En septembre 2026, la plupart des WC de ce parcours sont payants, pour une petite somme ; dans les centres commerciaux et les musées (avec billet), ils sont gratuits. Les WC des mosquées peuvent fermer un moment aux heures de prière. Le Grand Bazar est fermé le dimanche."
+     },
+     {
+      "p": "Perdu dans les ruelles, sans WC en vue ? Ouvrez la carte ci-dessous pour trouver le plus proche."
+     }
+    ]
+   },
+   "tr": {
+    "title": "Sultanahmet ve Kapalıçarşı: İstanbul tarihi yarımadada tuvalet nerede",
+    "desc": "İstanbul tarihi yarımadada her WC durağıyla bir yürüyüş rotası: Sultanahmet Meydanı, Sultanahmet Camii, Gülhane Parkı, Kapalıçarşı, Süleymaniye ve Mısır Çarşısı.",
+    "h1": "Tarihi yarımada yürüyüşü: Sultanahmet'ten Mısır Çarşısı'na bütün tuvalet molaları",
+    "body": [
+     {
+      "p": "Ayasofya, Sultanahmet Camii, Kapalıçarşı, Mısır Çarşısı. İstanbul'daki en güzel gün, sonu çoğunlukla yokuş aşağı giden yaklaşık 4 km'lik bir yürüyüş ve yol boyunca bol çay. Çok bol çay."
+     },
+     {
+      "p": "İyi haber: tarihi yarımada umumi tuvalet dolu. Tek sorun: çoğu **küçük bir ücret** alıyor. Duraklar yürüyüş sırasıyla ve nasıl işledikleri burada."
+     },
+     {
+      "h2": "Buradaki tuvaletler nasıl işliyor"
+     },
+     {
+      "box": "İstanbul'da umumi WC'ler genelde birkaç lira. Çoğunu belediye (İBB) işletiyor. Çoğunda temassız kart ya da İstanbulkart geçiyor ama yanında biraz bozuk para bulunsun. Cami WC'leri caminin yanında ayrı binalar: kullanmak için camiye girmen ya da kıyafet kuralına uyman gerekmiyor."
+     },
+     {
+      "h2": "Yürüyüş"
+     },
+     {
+      "stop": {
+       "name": "Sultanahmet Meydanı WC",
+       "fee": "Paid",
+       "where": "Sultanahmet Camii ile Ayasofya arasında",
+       "text": "İlk durak, meydanın tam ortasında. Bulması kolay, öğleden sonra kalabalık."
+      }
+     },
+     {
+      "stop": {
+       "name": "Sultanahmet Camii WC",
+       "fee": "Paid",
+       "where": "Caminin At Meydanı tarafında",
+       "text": "Şadırvanların yanında. Camiyi görmek için sıraya girmeden önce iyi bir an."
+      }
+     },
+     {
+      "stop": {
+       "name": "Gülhane Parkı",
+       "fee": "Paid",
+       "where": "Topkapı Sarayı'nın altında",
+       "text": "Gölgeli park; WC, bank ve en uçta Boğaz manzaralı bir çay bahçesi var. Sapmaya değer."
+      }
+     },
+     {
+      "stop": {
+       "name": "Kapalıçarşı WC'leri",
+       "fee": "Paid",
+       "where": "Çarşının içinde · pazar günleri kapalı",
+       "text": "İçeride birkaç WC var. Labirentte bulmak zor, herhangi bir dükkâna 'tuvalet nerede' diye sor, gösterirler."
+      }
+     },
+     {
+      "stop": {
+       "name": "Nuruosmaniye Camii WC",
+       "fee": "Paid",
+       "where": "Çarşının Nuruosmaniye kapısında",
+       "text": "Çarşıya Çemberlitaş tarafından girip çıkıyorsan en kolay bulunan WC."
+      }
+     },
+     {
+      "stop": {
+       "name": "Süleymaniye Camii WC",
+       "fee": "Paid",
+       "where": "Çarşının üstündeki tepede",
+       "text": "Kısa bir yokuş; caminin arka bahçesinden tarihi yarımadanın en güzel Haliç manzarası."
+      }
+     },
+     {
+      "stop": {
+       "name": "Mısır Çarşısı ve Eminönü",
+       "fee": "Paid",
+       "where": "Yeni Cami ve iskelelerin yanında",
+       "text": "Mısır Çarşısı'nda, Yeni Cami'de ve vapur iskelelerinde WC var. Buradan Anadolu yakasına bir vapur, günün en güzel kapanışı."
+      }
+     },
+     {
+      "h2": "Bilmekte fayda var"
+     },
+     {
+      "box": "Eylül 2026 itibarıyla bu rotadaki WC'lerin çoğu küçük bir ücret alıyor; AVM'lerde ve (biletle) müzelerin içinde ücretsiz. Cami WC'leri namaz vakitlerinde kısa süre kapanabilir. Kapalıçarşı pazar günleri kapalı."
+     },
+     {
+      "p": "Ara sokaklarda kaldın ve ortada WC yok mu? En yakınını bulmak için aşağıdan haritayı aç."
      }
     ]
    }
