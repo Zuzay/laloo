@@ -29,7 +29,7 @@ out center tags;'''
       try:
         req = urllib.request.Request(s, data=urllib.parse.urlencode({"data": q}).encode(),
                                      headers={"User-Agent": "laloo.org updater"})
-        with urllib.request.urlopen(req, timeout=300) as r:
+        with urllib.request.urlopen(req, timeout=200) as r:
           data = json.load(r)
         print("  OK from", s); return data
       except Exception as e:
@@ -206,7 +206,11 @@ run = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 cities = sb("GET", f"cities?select=*&active=eq.true&order=osm_updated.asc.nullsfirst&limit={PER_RUN}", prefer="")
 print("Cities:", [c["id"] for c in cities])
 failed = []
+OSM_BUDGET = int(os.environ.get("OSM_MINUTES", "35")) * 60   # Overpass yavaşsa işi yarın bitir, sayfalar yine üretilsin
+osm_start = time.time()
 for c in cities:
+  if time.time() - osm_start > OSM_BUDGET:
+    print(f"Time budget reached, remaining cities tomorrow"); break
   print(f"== {c['id']}")
   data = overpass((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
   if not data: failed.append(c["id"]); continue
