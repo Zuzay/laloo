@@ -108,15 +108,71 @@ def geocode():
       print("  NOT FOUND", p["name"], "|", p["address"])
     time.sleep(1.2)   # Nominatim kuralı: saniyede en fazla 1 istek
 
-geocode()
+# ---------- 2) İpucu notlarını çevir (DeepL, her gün) ----------
+DEEPL_KEY = os.environ.get("DEEPL_KEY", "")
+LANGS = {"tr":"TR", "es":"ES", "fr":"FR", "de":"DE", "it":"IT", "pt":"PT-BR", "nl":"NL", "pl":"PL", "ru":"RU", "zh":"ZH-HANS", "ja":"JA"}
+def translate():
+  if not DEEPL_KEY:
+    print("No DEEPL_KEY, skipping translation"); return
+  host = "https://api-free.deepl.com" if DEEPL_KEY.endswith(":fx") else "https://api.deepl.com"
+  todo = sb("GET", "places?select=id,info,hours&kind=eq.tip&i18n=is.null&limit=200", prefer="")
+  print(f"Translating {len(todo)} tips")
+  if not todo: return
+  out = {p["id"]: {} for p in todo}
+  for code, dl in LANGS.items():
+    for i in range(0, len(todo), 25):
+      chunk = todo[i:i+25]
+      texts = []
+      for p in chunk: texts += [p["info"] or "", p["hours"] or ""]
+      req = urllib.request.Request(host + "/v2/translate", method="POST",
+        data=json.dumps({"text": texts, "source_lang": "EN", "target_lang": dl}).encode(),
+        headers={"Authorization": "DeepL-Auth-Key " + DEEPL_KEY, "Content-Type": "application/json"})
+      with urllib.request.urlopen(req, timeout=60) as r:
+        tr = [t["text"] for t in json.load(r)["translations"]]
+      for j, p in enumerate(chunk):
+        out[p["id"]][code] = {"info": tr[2*j], "hours": tr[2*j+1]}
+  for pid, d in out.items():
+    sb("PATCH", f"places?id=eq.{pid}", {"i18n": d})
+  print("  translated", len(out))
 
-# ---------- 2) OSM tuvaletleri (pazartesi ya da elle çalıştırınca) ----------
-event = os.environ.get("GITHUB_EVENT_NAME", "manual")
-if event == "schedule" and datetime.now(timezone.utc).weekday() != 0:
-  print("Daily run: OSM refresh skipped (Mondays only)"); sys.exit(0)
+# ---------- 3) Reddit: şehir subreddit'lerinde tuvalet soruları (RSS, her gün) ----------
+SUBS = {"la": ["LosAngeles", "AskLosAngeles", "santamonica"], "bay": ["sanfrancisco", "AskSF", "bayarea"],
+        "nyc": ["AskNYC", "nyc", "NYCTravel"], "miami": ["Miami"], "paris": ["paris", "ParisTravelGuide"],
+        "amsterdam": ["Amsterdam"], "rotterdam": ["Rotterdam"], "brussels": ["brussels"], "warsaw": ["warsaw"],
+        "istanbul": ["istanbul"], "izmir": ["izmir"]}
+def reddit():
+  import xml.etree.ElementTree as ET
+  ns = {"a": "http://www.w3.org/2005/Atom"}
+  q = urllib.parse.quote("bathroom OR restroom OR toilet OR toilets OR wc OR tuvalet")
+  found = []
+  for city, subs in SUBS.items():
+    for sub in subs:
+      url = f"https://www.reddit.com/r/{sub}/search.rss?q={q}&restrict_sr=on&sort=new&t=week"
+      try:
+        req = urllib.request.Request(url, headers={"User-Agent": "laloo.org restroom helper (hello@laloo.org)"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+          root = ET.fromstring(r.read())
+        for e in root.findall("a:entry", ns):
+          link = e.find("a:link", ns).get("href")
+          title = (e.findtext("a:title", default="", namespaces=ns) or "").strip()
+          found.append({"name": title[:120] or "Reddit post", "note": f"r/{sub}", "url": link,
+                        "city": city, "source": "reddit", "status": "pending"})
+      except Exception as ex:
+        print("  reddit", sub, "failed:", ex)
+      time.sleep(3)
+  if found:
+    sb("POST", "suggestions?on_conflict=url", found, prefer="resolution=ignore-duplicates,return=minimal")
+  print(f"Reddit: {len(found)} posts checked")
 
+for step in (geocode, translate, reddit):
+  try: step()
+  except Exception as ex: print(step.__name__, "failed:", ex)
+
+# ---------- 4) OSM tuvaletleri (pazartesi ya da elle çalıştırınca) ----------
+# Her koşuda en uzun süredir yenilenmeyen 30 şehir (186 şehir ~6 günde bir tur döner, Overpass'ı yormaz)
+PER_RUN = int(os.environ.get("CITIES_PER_RUN", "30"))
 run = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-cities = sb("GET", "cities?select=*&active=eq.true", prefer="")
+cities = sb("GET", f"cities?select=*&active=eq.true&order=osm_updated.asc.nullsfirst&limit={PER_RUN}", prefer="")
 print("Cities:", [c["id"] for c in cities])
 failed = []
 for c in cities:
@@ -124,13 +180,14 @@ for c in cities:
   data = overpass((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
   if not data: failed.append(c["id"]); continue
   pts = parse(data)
-  if len(pts) < 20:
-    print(f"  Too few results ({len(pts)}), skipping"); failed.append(c["id"]); continue
+  if len(pts) < 5:
+    print(f"  Too few results ({len(pts)}), skipping"); sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run}); continue
   rows = [dict(p, city=c["id"], source="osm", active=True, updated_at=run) for p in pts]
   for i in range(0, len(rows), 500):
     sb("POST", "places?on_conflict=osm_id", rows[i:i+500], prefer="resolution=merge-duplicates,return=minimal")
   # OSM'den silinen noktaları gizle
   sb("PATCH", f"places?source=eq.osm&city=eq.{c['id']}&updated_at=lt.{urllib.parse.quote(run)}", {"active": False})
+  sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run})
   print(f"  Upserted {len(rows)}")
   if c["id"] == "la": save_json(pts)
   time.sleep(5)

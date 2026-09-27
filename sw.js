@@ -1,5 +1,5 @@
 // Laloo service worker: uygulama kabuğunu saklar, veri ve harita her zaman canlı gelir
-const V = "laloo-v1";
+const V = "laloo-v2";
 const SHELL = ["./", "index.html", "logo-header.png", "favicon-32.png", "icon-192.png", "icon-512.png",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"];

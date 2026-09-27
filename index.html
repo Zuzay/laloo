@@ -15,6 +15,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
 <style>
   html,body{margin:0;height:100%}
   body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
@@ -39,7 +40,7 @@
   .bar button.on{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
   #map{flex:1;min-height:0}
   #msg{
-    position:absolute;left:50%;top:150px;transform:translateX(-50%);
+    position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 200px);transform:translateX(-50%);
     background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:1000;white-space:nowrap;display:none;
   }
@@ -59,6 +60,15 @@
   #install button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
   #install .add{background:#1c4fa0;color:#fff}
   #install .x{background:none;color:#6b7688;padding:6px}
+  .search{position:relative;padding:6px 10px 2px;background:#eef3fa}
+  .search input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1px solid #c5d0de;border-radius:20px;padding:8px 14px;background:#fff;color:#10223d;outline:none}
+  .search input:focus{border-color:#1c4fa0;box-shadow:0 0 0 3px rgba(28,79,160,.15)}
+  #qres{position:absolute;left:10px;right:10px;top:calc(100% + 2px);z-index:1500;background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.2);overflow:hidden}
+  #qres button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #eef1f5;background:#fff;padding:10px 14px;font:inherit;color:#10223d;cursor:pointer}
+  #qres button:last-child{border-bottom:0}
+  #qres button:active,#qres button:hover{background:#f3f6fb}
+  #qres small{display:block;color:#6b7688;font-size:12px}
+  #qres .none{padding:12px 14px;color:#6b7688}
   .sheet{position:fixed;inset:0;background:rgba(16,34,61,.45);z-index:2000;display:none;align-items:flex-end;justify-content:center}
   .sheet.on{display:flex}
   .sheet .card{background:#fff;width:100%;max-width:480px;border-radius:18px 18px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom,0px) + 16px);max-height:88vh;overflow:auto;color:#10223d}
@@ -104,6 +114,7 @@
   <h1><img src="logo-header.png" alt="LALOO"><span data-i="tag">Find a bathroom anywhere</span></h1>
   <button id="locate" data-i="near">📍 Near me</button>
 </header>
+<div class="search"><input id="q" type="search" enterkeyhint="search" autocomplete="off" data-ph="search_ph"><div id="qres" hidden></div></div>
 <div class="bar">
   <button data-f="all" class="on" data-i="all">All</button>
   <button data-f="public" data-i="pub">🚻 Public</button>
@@ -134,6 +145,8 @@
 </div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
 <script>
 // ================= DİLLER =================
 // Telefonun diline göre otomatik. Yeni dil = yeni blok. Olmayan yazı İngilizceye düşer.
@@ -144,84 +157,96 @@ en:{tag:"Find a bathroom anywhere",near:"📍 Near me",all:"All",pub:"🚻 Publi
  allowRoute:"Allow location to get a route",allowLoc:"Allow location to see bathrooms near you",noLoc:"Location isn't available",finding:"Finding the way…",copied:"Code copied. Show it at the counter",min:"min",
  route:"🚶 Show route",gmaps:"Google Maps",web:"Website",local:"Local spot",code:"🎟️ Tap to copy code:",
  Free:"Free",Paid:"Paid",Customers:"Customers",Ticket:"Ticket",askInside:"Ask inside, usually for customers",custOnly:"Customers only",pubRest:"Public restroom",rest:"Restroom",
- add_t:"Add a bathroom",name_l:"Place name",where_l:"Where is it?",where_ph:"Address or a short description",note_l:"Tip for others (optional)",note_ph:"Clean? Free? Need a code?",useloc:"Use my current location",send:"Send",thanks:"Thanks! We'll check it and add it to the map.",fail:"Couldn't send, please try again.",ad:"Own a business nearby? Advertise on Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo is free and has no accounts. We count visits anonymously with a random ID stored on your device, so we can see what helps. We never store your name, email or location. Your location stays in your browser; when you ask for a route, only the start and end points are sent to the OpenStreetMap routing service. Questions: hello@laloo.org",close:"Close",toomany:"You've sent a lot today, thank you! Try again tomorrow."},
+ add_t:"Add a bathroom",name_l:"Place name",where_l:"Where is it?",where_ph:"Address or a short description",note_l:"Tip for others (optional)",note_ph:"Clean? Free? Need a code?",useloc:"Use my current location",send:"Send",thanks:"Thanks! We'll check it and add it to the map.",fail:"Couldn't send, please try again.",ad:"Own a business nearby? Advertise on Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo is free and has no accounts. We count visits anonymously with a random ID stored on your device, so we can see what helps. We never store your name, email or location. Your location stays in your browser; when you ask for a route, only the start and end points are sent to the OpenStreetMap routing service. Questions: hello@laloo.org",close:"Close",toomany:"You've sent a lot today, thank you! Try again tomorrow.",
+ search_ph:"🔍 Search a city or place",noResults:"No results"},
 tr:{tag:"Her yerde tuvalet bul",near:"📍 Yakınımda",all:"Tümü",pub:"🚻 Umumi",cafe:"☕ Kafeler",tips:"⭐ Öneriler",contact:"➕ Tuvalet ekle",
  inst_t:"Laloo'yu ana ekranına ekle",inst_s:"En yakın tuvalete tek dokunuş. Uygulama mağazası yok.",inst_add:"Ekle",inst_ios:"Paylaş düğmesine, sonra \"Ana Ekrana Ekle\"ye dokun.",
  loading:"Yükleniyor…",loadingB:"Tuvaletler yükleniyor…",loadFail:"Tuvaletler yüklenemedi, tekrar denemek için dokun",zoom:"Tuvaletleri görmek için yakınlaştır",noTips:"Bu bölgede henüz öneri yok, uzaklaştır",noBath:"Bu bölgede tuvalet yok",
  allowRoute:"Rota için konum izni ver",allowLoc:"Yakındaki tuvaletleri görmek için konum izni ver",noLoc:"Konum kullanılamıyor",finding:"Yol bulunuyor…",copied:"Kod kopyalandı. Kasada göster",min:"dk",
  route:"🚶 Rotayı göster",gmaps:"Google Haritalar",web:"Web sitesi",local:"Yerel mekan",code:"🎟️ Kodu kopyalamak için dokun:",
  Free:"Ücretsiz",Paid:"Ücretli",Customers:"Müşterilere",Ticket:"Biletle",askInside:"İçeride sor, genelde müşterilere",custOnly:"Sadece müşterilere",pubRest:"Umumi tuvalet",rest:"Tuvalet",
- add_t:"Tuvalet ekle",name_l:"Yerin adı",where_l:"Nerede?",where_ph:"Adres ya da kısa bir tarif",note_l:"Diğerlerine ipucu (isteğe bağlı)",note_ph:"Temiz mi? Ücretsiz mi? Şifre gerekiyor mu?",useloc:"Şu anki konumumu kullan",send:"Gönder",thanks:"Teşekkürler! Kontrol edip haritaya ekleyeceğiz.",fail:"Gönderilemedi, lütfen tekrar dene.",ad:"Yakında bir işletmen mi var? Laloo'da reklam ver",privacy:"Gizlilik",priv_t:"Gizlilik",priv_b:"Laloo ücretsizdir ve hesap gerektirmez. Ziyaretleri, cihazında saklanan rastgele bir kimlikle anonim olarak sayarız; böylece neyin işe yaradığını görürüz. Adını, e-postanı ya da konumunu asla kaydetmeyiz. Konumun tarayıcında kalır; rota istediğinde yalnızca başlangıç ve varış noktası OpenStreetMap rota servisine gönderilir. Sorular: hello@laloo.org",close:"Kapat",toomany:"Bugün çok öneri gönderdin, teşekkürler! Yarın tekrar dene."},
+ add_t:"Tuvalet ekle",name_l:"Yerin adı",where_l:"Nerede?",where_ph:"Adres ya da kısa bir tarif",note_l:"Diğerlerine ipucu (isteğe bağlı)",note_ph:"Temiz mi? Ücretsiz mi? Şifre gerekiyor mu?",useloc:"Şu anki konumumu kullan",send:"Gönder",thanks:"Teşekkürler! Kontrol edip haritaya ekleyeceğiz.",fail:"Gönderilemedi, lütfen tekrar dene.",ad:"Yakında bir işletmen mi var? Laloo'da reklam ver",privacy:"Gizlilik",priv_t:"Gizlilik",priv_b:"Laloo ücretsizdir ve hesap gerektirmez. Ziyaretleri, cihazında saklanan rastgele bir kimlikle anonim olarak sayarız; böylece neyin işe yaradığını görürüz. Adını, e-postanı ya da konumunu asla kaydetmeyiz. Konumun tarayıcında kalır; rota istediğinde yalnızca başlangıç ve varış noktası OpenStreetMap rota servisine gönderilir. Sorular: hello@laloo.org",close:"Kapat",toomany:"Bugün çok öneri gönderdin, teşekkürler! Yarın tekrar dene.",
+ search_ph:"🔍 Şehir ya da yer ara",noResults:"Sonuç yok"},
 es:{tag:"Encuentra un baño en cualquier lugar",near:"📍 Cerca de mí",all:"Todo",pub:"🚻 Públicos",cafe:"☕ Cafés",tips:"⭐ Consejos",contact:"➕ Añadir un baño",
  inst_t:"Añade Laloo a tu pantalla de inicio",inst_s:"A un toque del baño más cercano. Sin tienda de apps.",inst_add:"Añadir",inst_ios:"Toca Compartir y luego \"Añadir a pantalla de inicio\".",
  loading:"Cargando…",loadingB:"Cargando baños…",loadFail:"No se pudieron cargar los baños, toca para reintentar",zoom:"Acerca el mapa para ver baños",noTips:"Aún no hay consejos en esta zona, aleja el mapa",noBath:"No hay baños en esta zona",
  allowRoute:"Permite la ubicación para ver la ruta",allowLoc:"Permite la ubicación para ver baños cerca de ti",noLoc:"Ubicación no disponible",finding:"Buscando el camino…",copied:"Código copiado. Muéstralo en caja",min:"min",
  route:"🚶 Ver ruta",gmaps:"Google Maps",web:"Sitio web",local:"Negocio local",code:"🎟️ Toca para copiar el código:",
  Free:"Gratis",Paid:"De pago",Customers:"Clientes",Ticket:"Con entrada",askInside:"Pregunta dentro, suele ser para clientes",custOnly:"Solo clientes",pubRest:"Baño público",rest:"Baño",
- add_t:"Añadir un baño",name_l:"Nombre del lugar",where_l:"¿Dónde está?",where_ph:"Dirección o una breve descripción",note_l:"Consejo para otros (opcional)",note_ph:"¿Limpio? ¿Gratis? ¿Hace falta código?",useloc:"Usar mi ubicación actual",send:"Enviar",thanks:"¡Gracias! Lo revisaremos y lo añadiremos al mapa.",fail:"No se pudo enviar, inténtalo de nuevo.",ad:"¿Tienes un negocio cerca? Anúnciate en Laloo",privacy:"Privacidad",priv_t:"Privacidad",priv_b:"Laloo es gratis y no necesita cuenta. Contamos las visitas de forma anónima con un identificador aleatorio guardado en tu dispositivo, para saber qué funciona. Nunca guardamos tu nombre, correo ni ubicación. Tu ubicación se queda en tu navegador; cuando pides una ruta, solo se envían el origen y el destino al servicio de rutas de OpenStreetMap. Preguntas: hello@laloo.org",close:"Cerrar",toomany:"Hoy ya has enviado muchos, ¡gracias! Vuelve a intentarlo mañana."},
+ add_t:"Añadir un baño",name_l:"Nombre del lugar",where_l:"¿Dónde está?",where_ph:"Dirección o una breve descripción",note_l:"Consejo para otros (opcional)",note_ph:"¿Limpio? ¿Gratis? ¿Hace falta código?",useloc:"Usar mi ubicación actual",send:"Enviar",thanks:"¡Gracias! Lo revisaremos y lo añadiremos al mapa.",fail:"No se pudo enviar, inténtalo de nuevo.",ad:"¿Tienes un negocio cerca? Anúnciate en Laloo",privacy:"Privacidad",priv_t:"Privacidad",priv_b:"Laloo es gratis y no necesita cuenta. Contamos las visitas de forma anónima con un identificador aleatorio guardado en tu dispositivo, para saber qué funciona. Nunca guardamos tu nombre, correo ni ubicación. Tu ubicación se queda en tu navegador; cuando pides una ruta, solo se envían el origen y el destino al servicio de rutas de OpenStreetMap. Preguntas: hello@laloo.org",close:"Cerrar",toomany:"Hoy ya has enviado muchos, ¡gracias! Vuelve a intentarlo mañana.",
+ search_ph:"🔍 Busca una ciudad o lugar",noResults:"Sin resultados"},
 fr:{tag:"Trouvez des toilettes partout",near:"📍 Près de moi",all:"Tout",pub:"🚻 Publiques",cafe:"☕ Cafés",tips:"⭐ Bons plans",contact:"➕ Ajouter des toilettes",
  inst_t:"Ajoutez Laloo à votre écran d'accueil",inst_s:"Les toilettes les plus proches en un geste. Sans app store.",inst_add:"Ajouter",inst_ios:"Touchez Partager, puis « Sur l'écran d'accueil ».",
  loading:"Chargement…",loadingB:"Chargement des toilettes…",loadFail:"Impossible de charger les toilettes, touchez pour réessayer",zoom:"Zoomez pour voir les toilettes",noTips:"Pas encore de bons plans ici, dézoomez",noBath:"Pas de toilettes dans cette zone",
  allowRoute:"Autorisez la localisation pour l'itinéraire",allowLoc:"Autorisez la localisation pour voir les toilettes proches",noLoc:"Localisation indisponible",finding:"Recherche du chemin…",copied:"Code copié. Montrez-le en caisse",min:"min",
  route:"🚶 Itinéraire",gmaps:"Google Maps",web:"Site web",local:"Adresse locale",code:"🎟️ Touchez pour copier le code :",
  Free:"Gratuit",Paid:"Payant",Customers:"Clients",Ticket:"Avec billet",askInside:"Demandez à l'intérieur, souvent pour les clients",custOnly:"Clients uniquement",pubRest:"Toilettes publiques",rest:"Toilettes",
- add_t:"Ajouter des toilettes",name_l:"Nom du lieu",where_l:"Où est-ce ?",where_ph:"Adresse ou courte description",note_l:"Conseil pour les autres (facultatif)",note_ph:"Propre ? Gratuit ? Code nécessaire ?",useloc:"Utiliser ma position actuelle",send:"Envoyer",thanks:"Merci ! Nous allons vérifier et l'ajouter à la carte.",fail:"Envoi impossible, réessayez.",ad:"Vous avez un commerce près d'ici ? Faites de la pub sur Laloo",privacy:"Confidentialité",priv_t:"Confidentialité",priv_b:"Laloo est gratuit et sans compte. Nous comptons les visites de façon anonyme avec un identifiant aléatoire enregistré sur votre appareil, pour savoir ce qui est utile. Nous n'enregistrons jamais votre nom, votre e-mail ni votre position. Votre position reste dans votre navigateur ; quand vous demandez un itinéraire, seuls le départ et l'arrivée sont envoyés au service d'itinéraires d'OpenStreetMap. Questions : hello@laloo.org",close:"Fermer",toomany:"Vous en avez envoyé beaucoup aujourd'hui, merci ! Réessayez demain."},
+ add_t:"Ajouter des toilettes",name_l:"Nom du lieu",where_l:"Où est-ce ?",where_ph:"Adresse ou courte description",note_l:"Conseil pour les autres (facultatif)",note_ph:"Propre ? Gratuit ? Code nécessaire ?",useloc:"Utiliser ma position actuelle",send:"Envoyer",thanks:"Merci ! Nous allons vérifier et l'ajouter à la carte.",fail:"Envoi impossible, réessayez.",ad:"Vous avez un commerce près d'ici ? Faites de la pub sur Laloo",privacy:"Confidentialité",priv_t:"Confidentialité",priv_b:"Laloo est gratuit et sans compte. Nous comptons les visites de façon anonyme avec un identifiant aléatoire enregistré sur votre appareil, pour savoir ce qui est utile. Nous n'enregistrons jamais votre nom, votre e-mail ni votre position. Votre position reste dans votre navigateur ; quand vous demandez un itinéraire, seuls le départ et l'arrivée sont envoyés au service d'itinéraires d'OpenStreetMap. Questions : hello@laloo.org",close:"Fermer",toomany:"Vous en avez envoyé beaucoup aujourd'hui, merci ! Réessayez demain.",
+ search_ph:"🔍 Chercher une ville ou un lieu",noResults:"Aucun résultat"},
 de:{tag:"Finde überall eine Toilette",near:"📍 In der Nähe",all:"Alle",pub:"🚻 Öffentlich",cafe:"☕ Cafés",tips:"⭐ Tipps",contact:"➕ Toilette melden",
  inst_t:"Laloo zum Home-Bildschirm hinzufügen",inst_s:"Ein Tipp zur nächsten Toilette. Kein App Store.",inst_add:"Hinzufügen",inst_ios:"Tippe auf Teilen, dann auf „Zum Home-Bildschirm“.",
  loading:"Lädt…",loadingB:"Toiletten werden geladen…",loadFail:"Toiletten konnten nicht geladen werden, zum Wiederholen tippen",zoom:"Hineinzoomen, um Toiletten zu sehen",noTips:"Hier noch keine Tipps, herauszoomen",noBath:"Keine Toiletten in diesem Bereich",
  allowRoute:"Standort erlauben, um eine Route zu sehen",allowLoc:"Standort erlauben, um Toiletten in der Nähe zu sehen",noLoc:"Standort nicht verfügbar",finding:"Weg wird gesucht…",copied:"Code kopiert. An der Kasse zeigen",min:"Min.",
  route:"🚶 Route zeigen",gmaps:"Google Maps",web:"Website",local:"Lokaler Tipp",code:"🎟️ Tippen, um den Code zu kopieren:",
  Free:"Kostenlos",Paid:"Kostenpflichtig",Customers:"Für Kunden",Ticket:"Mit Ticket",askInside:"Drinnen fragen, meist für Kunden",custOnly:"Nur für Kunden",pubRest:"Öffentliche Toilette",rest:"Toilette",
- add_t:"Toilette melden",name_l:"Name des Ortes",where_l:"Wo ist sie?",where_ph:"Adresse oder kurze Beschreibung",note_l:"Tipp für andere (optional)",note_ph:"Sauber? Kostenlos? Code nötig?",useloc:"Meinen aktuellen Standort verwenden",send:"Senden",thanks:"Danke! Wir prüfen es und fügen es der Karte hinzu.",fail:"Senden fehlgeschlagen, bitte erneut versuchen.",ad:"Eigenes Geschäft in der Nähe? Werbung auf Laloo",privacy:"Datenschutz",priv_t:"Datenschutz",priv_b:"Laloo ist kostenlos und braucht kein Konto. Wir zählen Besuche anonym mit einer zufälligen ID, die auf deinem Gerät gespeichert ist, um zu sehen, was hilft. Wir speichern nie deinen Namen, deine E-Mail oder deinen Standort. Dein Standort bleibt in deinem Browser; wenn du eine Route anforderst, werden nur Start- und Zielpunkt an den Routendienst von OpenStreetMap gesendet. Fragen: hello@laloo.org",close:"Schließen",toomany:"Du hast heute schon viel gesendet, danke! Versuch es morgen wieder."},
+ add_t:"Toilette melden",name_l:"Name des Ortes",where_l:"Wo ist sie?",where_ph:"Adresse oder kurze Beschreibung",note_l:"Tipp für andere (optional)",note_ph:"Sauber? Kostenlos? Code nötig?",useloc:"Meinen aktuellen Standort verwenden",send:"Senden",thanks:"Danke! Wir prüfen es und fügen es der Karte hinzu.",fail:"Senden fehlgeschlagen, bitte erneut versuchen.",ad:"Eigenes Geschäft in der Nähe? Werbung auf Laloo",privacy:"Datenschutz",priv_t:"Datenschutz",priv_b:"Laloo ist kostenlos und braucht kein Konto. Wir zählen Besuche anonym mit einer zufälligen ID, die auf deinem Gerät gespeichert ist, um zu sehen, was hilft. Wir speichern nie deinen Namen, deine E-Mail oder deinen Standort. Dein Standort bleibt in deinem Browser; wenn du eine Route anforderst, werden nur Start- und Zielpunkt an den Routendienst von OpenStreetMap gesendet. Fragen: hello@laloo.org",close:"Schließen",toomany:"Du hast heute schon viel gesendet, danke! Versuch es morgen wieder.",
+ search_ph:"🔍 Stadt oder Ort suchen",noResults:"Keine Ergebnisse"},
 it:{tag:"Trova un bagno ovunque",near:"📍 Vicino a me",all:"Tutti",pub:"🚻 Pubblici",cafe:"☕ Bar e caffè",tips:"⭐ Consigli",contact:"➕ Aggiungi un bagno",
  inst_t:"Aggiungi Laloo alla schermata Home",inst_s:"Il bagno più vicino in un tocco. Senza app store.",inst_add:"Aggiungi",inst_ios:"Tocca Condividi, poi \"Aggiungi alla schermata Home\".",
  loading:"Caricamento…",loadingB:"Caricamento bagni…",loadFail:"Impossibile caricare i bagni, tocca per riprovare",zoom:"Ingrandisci per vedere i bagni",noTips:"Ancora nessun consiglio qui, riduci lo zoom",noBath:"Nessun bagno in questa zona",
  allowRoute:"Consenti la posizione per il percorso",allowLoc:"Consenti la posizione per vedere i bagni vicini",noLoc:"Posizione non disponibile",finding:"Cerco la strada…",copied:"Codice copiato. Mostralo alla cassa",min:"min",
  route:"🚶 Mostra percorso",gmaps:"Google Maps",web:"Sito web",local:"Locale della zona",code:"🎟️ Tocca per copiare il codice:",
  Free:"Gratis",Paid:"A pagamento",Customers:"Clienti",Ticket:"Con biglietto",askInside:"Chiedi dentro, di solito per i clienti",custOnly:"Solo clienti",pubRest:"Bagno pubblico",rest:"Bagno",
- add_t:"Aggiungi un bagno",name_l:"Nome del posto",where_l:"Dove si trova?",where_ph:"Indirizzo o breve descrizione",note_l:"Consiglio per gli altri (facoltativo)",note_ph:"Pulito? Gratis? Serve un codice?",useloc:"Usa la mia posizione attuale",send:"Invia",thanks:"Grazie! Lo controlleremo e lo aggiungeremo alla mappa.",fail:"Invio non riuscito, riprova.",ad:"Hai un'attività qui vicino? Fatti pubblicità su Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo è gratuito e non serve un account. Contiamo le visite in modo anonimo con un ID casuale salvato sul tuo dispositivo, per capire cosa è utile. Non salviamo mai il tuo nome, la tua email o la tua posizione. La tua posizione resta nel browser; quando chiedi un percorso, solo partenza e arrivo vengono inviati al servizio percorsi di OpenStreetMap. Domande: hello@laloo.org",close:"Chiudi",toomany:"Oggi ne hai inviati tanti, grazie! Riprova domani."},
+ add_t:"Aggiungi un bagno",name_l:"Nome del posto",where_l:"Dove si trova?",where_ph:"Indirizzo o breve descrizione",note_l:"Consiglio per gli altri (facoltativo)",note_ph:"Pulito? Gratis? Serve un codice?",useloc:"Usa la mia posizione attuale",send:"Invia",thanks:"Grazie! Lo controlleremo e lo aggiungeremo alla mappa.",fail:"Invio non riuscito, riprova.",ad:"Hai un'attività qui vicino? Fatti pubblicità su Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo è gratuito e non serve un account. Contiamo le visite in modo anonimo con un ID casuale salvato sul tuo dispositivo, per capire cosa è utile. Non salviamo mai il tuo nome, la tua email o la tua posizione. La tua posizione resta nel browser; quando chiedi un percorso, solo partenza e arrivo vengono inviati al servizio percorsi di OpenStreetMap. Domande: hello@laloo.org",close:"Chiudi",toomany:"Oggi ne hai inviati tanti, grazie! Riprova domani.",
+ search_ph:"🔍 Cerca una città o un luogo",noResults:"Nessun risultato"},
 pt:{tag:"Encontre um banheiro em qualquer lugar",near:"📍 Perto de mim",all:"Todos",pub:"🚻 Públicos",cafe:"☕ Cafés",tips:"⭐ Dicas",contact:"➕ Adicionar banheiro",
  inst_t:"Adicione o Laloo à tela inicial",inst_s:"O banheiro mais próximo em um toque. Sem loja de apps.",inst_add:"Adicionar",inst_ios:"Toque em Compartilhar e depois em \"Adicionar à Tela de Início\".",
  loading:"Carregando…",loadingB:"Carregando banheiros…",loadFail:"Não foi possível carregar, toque para tentar de novo",zoom:"Aproxime o mapa para ver banheiros",noTips:"Ainda não há dicas aqui, afaste o mapa",noBath:"Nenhum banheiro nesta área",
  allowRoute:"Permita a localização para ver a rota",allowLoc:"Permita a localização para ver banheiros perto de você",noLoc:"Localização indisponível",finding:"Buscando o caminho…",copied:"Código copiado. Mostre no caixa",min:"min",
  route:"🚶 Ver rota",gmaps:"Google Maps",web:"Site",local:"Negócio local",code:"🎟️ Toque para copiar o código:",
  Free:"Grátis",Paid:"Pago",Customers:"Clientes",Ticket:"Com ingresso",askInside:"Pergunte lá dentro, geralmente para clientes",custOnly:"Só clientes",pubRest:"Banheiro público",rest:"Banheiro",
- add_t:"Adicionar banheiro",name_l:"Nome do lugar",where_l:"Onde fica?",where_ph:"Endereço ou uma breve descrição",note_l:"Dica para os outros (opcional)",note_ph:"Limpo? Grátis? Precisa de código?",useloc:"Usar minha localização atual",send:"Enviar",thanks:"Obrigado! Vamos verificar e adicionar ao mapa.",fail:"Não foi possível enviar, tente de novo.",ad:"Tem um negócio por perto? Anuncie no Laloo",privacy:"Privacidade",priv_t:"Privacidade",priv_b:"O Laloo é grátis e não precisa de conta. Contamos as visitas de forma anônima com um ID aleatório salvo no seu aparelho, para saber o que ajuda. Nunca guardamos seu nome, e-mail ou localização. Sua localização fica no seu navegador; quando você pede uma rota, só o ponto de partida e o de chegada são enviados ao serviço de rotas do OpenStreetMap. Dúvidas: hello@laloo.org",close:"Fechar",toomany:"Você já enviou bastante hoje, obrigado! Tente amanhã."},
+ add_t:"Adicionar banheiro",name_l:"Nome do lugar",where_l:"Onde fica?",where_ph:"Endereço ou uma breve descrição",note_l:"Dica para os outros (opcional)",note_ph:"Limpo? Grátis? Precisa de código?",useloc:"Usar minha localização atual",send:"Enviar",thanks:"Obrigado! Vamos verificar e adicionar ao mapa.",fail:"Não foi possível enviar, tente de novo.",ad:"Tem um negócio por perto? Anuncie no Laloo",privacy:"Privacidade",priv_t:"Privacidade",priv_b:"O Laloo é grátis e não precisa de conta. Contamos as visitas de forma anônima com um ID aleatório salvo no seu aparelho, para saber o que ajuda. Nunca guardamos seu nome, e-mail ou localização. Sua localização fica no seu navegador; quando você pede uma rota, só o ponto de partida e o de chegada são enviados ao serviço de rotas do OpenStreetMap. Dúvidas: hello@laloo.org",close:"Fechar",toomany:"Você já enviou bastante hoje, obrigado! Tente amanhã.",
+ search_ph:"🔍 Buscar cidade ou lugar",noResults:"Nenhum resultado"},
 nl:{tag:"Vind overal een wc",near:"📍 In de buurt",all:"Alles",pub:"🚻 Openbaar",cafe:"☕ Cafés",tips:"⭐ Tips",contact:"➕ Wc toevoegen",
  inst_t:"Zet Laloo op je beginscherm",inst_s:"Met één tik naar de dichtstbijzijnde wc. Geen app store.",inst_add:"Toevoegen",inst_ios:"Tik op Deel en dan op \"Zet op beginscherm\".",
  loading:"Laden…",loadingB:"Wc's laden…",loadFail:"Kon wc's niet laden, tik om opnieuw te proberen",zoom:"Zoom in om wc's te zien",noTips:"Hier nog geen tips, zoom uit",noBath:"Geen wc's in dit gebied",
  allowRoute:"Sta locatie toe voor een route",allowLoc:"Sta locatie toe om wc's in de buurt te zien",noLoc:"Locatie niet beschikbaar",finding:"Route zoeken…",copied:"Code gekopieerd. Laat hem zien bij de kassa",min:"min",
  route:"🚶 Toon route",gmaps:"Google Maps",web:"Website",local:"Lokale zaak",code:"🎟️ Tik om de code te kopiëren:",
  Free:"Gratis",Paid:"Betaald",Customers:"Klanten",Ticket:"Met ticket",askInside:"Vraag binnen, meestal voor klanten",custOnly:"Alleen klanten",pubRest:"Openbare wc",rest:"Wc",
- add_t:"Wc toevoegen",name_l:"Naam van de plek",where_l:"Waar is het?",where_ph:"Adres of korte beschrijving",note_l:"Tip voor anderen (optioneel)",note_ph:"Schoon? Gratis? Code nodig?",useloc:"Gebruik mijn huidige locatie",send:"Versturen",thanks:"Bedankt! We controleren het en zetten het op de kaart.",fail:"Versturen mislukt, probeer het opnieuw.",ad:"Een zaak in de buurt? Adverteer op Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo is gratis en werkt zonder account. We tellen bezoeken anoniem met een willekeurige ID op je apparaat, zodat we zien wat helpt. We slaan nooit je naam, e-mail of locatie op. Je locatie blijft in je browser; als je een route vraagt, worden alleen begin- en eindpunt naar de routedienst van OpenStreetMap gestuurd. Vragen: hello@laloo.org",close:"Sluiten",toomany:"Je hebt vandaag al veel gestuurd, bedankt! Probeer het morgen opnieuw."},
+ add_t:"Wc toevoegen",name_l:"Naam van de plek",where_l:"Waar is het?",where_ph:"Adres of korte beschrijving",note_l:"Tip voor anderen (optioneel)",note_ph:"Schoon? Gratis? Code nodig?",useloc:"Gebruik mijn huidige locatie",send:"Versturen",thanks:"Bedankt! We controleren het en zetten het op de kaart.",fail:"Versturen mislukt, probeer het opnieuw.",ad:"Een zaak in de buurt? Adverteer op Laloo",privacy:"Privacy",priv_t:"Privacy",priv_b:"Laloo is gratis en werkt zonder account. We tellen bezoeken anoniem met een willekeurige ID op je apparaat, zodat we zien wat helpt. We slaan nooit je naam, e-mail of locatie op. Je locatie blijft in je browser; als je een route vraagt, worden alleen begin- en eindpunt naar de routedienst van OpenStreetMap gestuurd. Vragen: hello@laloo.org",close:"Sluiten",toomany:"Je hebt vandaag al veel gestuurd, bedankt! Probeer het morgen opnieuw.",
+ search_ph:"🔍 Zoek een stad of plek",noResults:"Geen resultaten"},
 pl:{tag:"Znajdź toaletę wszędzie",near:"📍 W pobliżu",all:"Wszystko",pub:"🚻 Publiczne",cafe:"☕ Kawiarnie",tips:"⭐ Polecane",contact:"➕ Dodaj toaletę",
  inst_t:"Dodaj Laloo do ekranu głównego",inst_s:"Najbliższa toaleta jednym dotknięciem. Bez sklepu z aplikacjami.",inst_add:"Dodaj",inst_ios:"Stuknij Udostępnij, a potem „Do ekranu początkowego”.",
  loading:"Ładowanie…",loadingB:"Ładowanie toalet…",loadFail:"Nie udało się wczytać toalet, stuknij, aby ponowić",zoom:"Przybliż, aby zobaczyć toalety",noTips:"Brak poleceń w tym miejscu, oddal mapę",noBath:"Brak toalet w tym obszarze",
  allowRoute:"Zezwól na lokalizację, aby wyznaczyć trasę",allowLoc:"Zezwól na lokalizację, aby zobaczyć pobliskie toalety",noLoc:"Lokalizacja niedostępna",finding:"Szukam drogi…",copied:"Kod skopiowany. Pokaż go przy kasie",min:"min",
  route:"🚶 Pokaż trasę",gmaps:"Mapy Google",web:"Strona www",local:"Lokalne miejsce",code:"🎟️ Stuknij, aby skopiować kod:",
  Free:"Bezpłatna",Paid:"Płatna",Customers:"Dla klientów",Ticket:"Z biletem",askInside:"Zapytaj w środku, zwykle dla klientów",custOnly:"Tylko dla klientów",pubRest:"Toaleta publiczna",rest:"Toaleta",
- add_t:"Dodaj toaletę",name_l:"Nazwa miejsca",where_l:"Gdzie to jest?",where_ph:"Adres lub krótki opis",note_l:"Wskazówka dla innych (opcjonalnie)",note_ph:"Czysto? Za darmo? Potrzebny kod?",useloc:"Użyj mojej obecnej lokalizacji",send:"Wyślij",thanks:"Dziękujemy! Sprawdzimy i dodamy na mapę.",fail:"Nie udało się wysłać, spróbuj ponownie.",ad:"Masz firmę w pobliżu? Reklamuj się w Laloo",privacy:"Prywatność",priv_t:"Prywatność",priv_b:"Laloo jest darmowe i nie wymaga konta. Liczymy wizyty anonimowo za pomocą losowego identyfikatora zapisanego na twoim urządzeniu, aby wiedzieć, co pomaga. Nigdy nie zapisujemy twojego imienia, e-maila ani lokalizacji. Twoja lokalizacja zostaje w przeglądarce; gdy prosisz o trasę, do serwisu tras OpenStreetMap wysyłane są tylko punkt startowy i końcowy. Pytania: hello@laloo.org",close:"Zamknij",toomany:"Wysłałeś dziś już sporo, dziękujemy! Spróbuj jutro."},
+ add_t:"Dodaj toaletę",name_l:"Nazwa miejsca",where_l:"Gdzie to jest?",where_ph:"Adres lub krótki opis",note_l:"Wskazówka dla innych (opcjonalnie)",note_ph:"Czysto? Za darmo? Potrzebny kod?",useloc:"Użyj mojej obecnej lokalizacji",send:"Wyślij",thanks:"Dziękujemy! Sprawdzimy i dodamy na mapę.",fail:"Nie udało się wysłać, spróbuj ponownie.",ad:"Masz firmę w pobliżu? Reklamuj się w Laloo",privacy:"Prywatność",priv_t:"Prywatność",priv_b:"Laloo jest darmowe i nie wymaga konta. Liczymy wizyty anonimowo za pomocą losowego identyfikatora zapisanego na twoim urządzeniu, aby wiedzieć, co pomaga. Nigdy nie zapisujemy twojego imienia, e-maila ani lokalizacji. Twoja lokalizacja zostaje w przeglądarce; gdy prosisz o trasę, do serwisu tras OpenStreetMap wysyłane są tylko punkt startowy i końcowy. Pytania: hello@laloo.org",close:"Zamknij",toomany:"Wysłałeś dziś już sporo, dziękujemy! Spróbuj jutro.",
+ search_ph:"🔍 Szukaj miasta lub miejsca",noResults:"Brak wyników"},
 ru:{tag:"Найдите туалет где угодно",near:"📍 Рядом",all:"Все",pub:"🚻 Общественные",cafe:"☕ Кафе",tips:"⭐ Советы",contact:"➕ Добавить туалет",
  inst_t:"Добавьте Laloo на главный экран",inst_s:"Ближайший туалет в одно касание. Без магазина приложений.",inst_add:"Добавить",inst_ios:"Нажмите «Поделиться», затем «На экран „Домой“».",
  loading:"Загрузка…",loadingB:"Загрузка туалетов…",loadFail:"Не удалось загрузить, нажмите, чтобы повторить",zoom:"Приблизьте карту, чтобы увидеть туалеты",noTips:"Здесь пока нет советов, отдалите карту",noBath:"В этом районе туалетов нет",
  allowRoute:"Разрешите геолокацию, чтобы построить маршрут",allowLoc:"Разрешите геолокацию, чтобы видеть туалеты рядом",noLoc:"Геолокация недоступна",finding:"Ищем путь…",copied:"Код скопирован. Покажите его на кассе",min:"мин",
  route:"🚶 Маршрут",gmaps:"Google Карты",web:"Сайт",local:"Местный бизнес",code:"🎟️ Нажмите, чтобы скопировать код:",
  Free:"Бесплатно",Paid:"Платно",Customers:"Для клиентов",Ticket:"По билету",askInside:"Спросите внутри, обычно для клиентов",custOnly:"Только для клиентов",pubRest:"Общественный туалет",rest:"Туалет",
- add_t:"Добавить туалет",name_l:"Название места",where_l:"Где это?",where_ph:"Адрес или краткое описание",note_l:"Совет для других (необязательно)",note_ph:"Чисто? Бесплатно? Нужен код?",useloc:"Использовать моё местоположение",send:"Отправить",thanks:"Спасибо! Мы проверим и добавим на карту.",fail:"Не удалось отправить, попробуйте ещё раз.",ad:"Есть бизнес рядом? Реклама на Laloo",privacy:"Конфиденциальность",priv_t:"Конфиденциальность",priv_b:"Laloo бесплатен и не требует аккаунта. Мы анонимно считаем посещения с помощью случайного ID, сохранённого на вашем устройстве, чтобы понимать, что полезно. Мы никогда не храним ваше имя, e-mail или местоположение. Ваше местоположение остаётся в браузере; когда вы запрашиваете маршрут, в сервис маршрутов OpenStreetMap передаются только начальная и конечная точки. Вопросы: hello@laloo.org",close:"Закрыть",toomany:"Сегодня вы уже много отправили, спасибо! Попробуйте завтра."},
+ add_t:"Добавить туалет",name_l:"Название места",where_l:"Где это?",where_ph:"Адрес или краткое описание",note_l:"Совет для других (необязательно)",note_ph:"Чисто? Бесплатно? Нужен код?",useloc:"Использовать моё местоположение",send:"Отправить",thanks:"Спасибо! Мы проверим и добавим на карту.",fail:"Не удалось отправить, попробуйте ещё раз.",ad:"Есть бизнес рядом? Реклама на Laloo",privacy:"Конфиденциальность",priv_t:"Конфиденциальность",priv_b:"Laloo бесплатен и не требует аккаунта. Мы анонимно считаем посещения с помощью случайного ID, сохранённого на вашем устройстве, чтобы понимать, что полезно. Мы никогда не храним ваше имя, e-mail или местоположение. Ваше местоположение остаётся в браузере; когда вы запрашиваете маршрут, в сервис маршрутов OpenStreetMap передаются только начальная и конечная точки. Вопросы: hello@laloo.org",close:"Закрыть",toomany:"Сегодня вы уже много отправили, спасибо! Попробуйте завтра.",
+ search_ph:"🔍 Найти город или место",noResults:"Ничего не найдено"},
 zh:{tag:"随时随地找厕所",near:"📍 附近",all:"全部",pub:"🚻 公共",cafe:"☕ 咖啡馆",tips:"⭐ 推荐",contact:"➕ 添加厕所",
  inst_t:"将 Laloo 添加到主屏幕",inst_s:"一键找到最近的厕所，无需下载应用。",inst_add:"添加",inst_ios:"点按“共享”，然后选择“添加到主屏幕”。",
  loading:"加载中…",loadingB:"正在加载厕所…",loadFail:"加载失败，点按重试",zoom:"放大地图查看厕所",noTips:"此区域暂无推荐，请缩小地图",noBath:"此区域没有厕所",
  allowRoute:"请允许定位以显示路线",allowLoc:"请允许定位以查看附近的厕所",noLoc:"无法获取位置",finding:"正在规划路线…",copied:"已复制优惠码，请在收银台出示",min:"分钟",
  route:"🚶 显示路线",gmaps:"谷歌地图",web:"网站",local:"本地商家",code:"🎟️ 点按复制优惠码：",
  Free:"免费",Paid:"收费",Customers:"限顾客",Ticket:"需门票",askInside:"请进店询问，通常限顾客",custOnly:"仅限顾客",pubRest:"公共厕所",rest:"厕所",
- add_t:"添加厕所",name_l:"地点名称",where_l:"在哪里？",where_ph:"地址或简短描述",note_l:"给其他人的提示（可选）",note_ph:"干净吗？免费吗？需要密码吗？",useloc:"使用我当前的位置",send:"发送",thanks:"谢谢！我们核实后会添加到地图上。",fail:"发送失败，请重试。",ad:"附近有店铺？在 Laloo 上做广告",privacy:"隐私",priv_t:"隐私",priv_b:"Laloo 免费使用，无需注册账号。我们通过保存在你设备上的随机 ID 匿名统计访问量，以了解哪些功能有用。我们绝不保存你的姓名、邮箱或位置。你的位置只保留在浏览器中；请求路线时，只有起点和终点会发送给 OpenStreetMap 路线服务。如有疑问：hello@laloo.org",close:"关闭",toomany:"你今天已经提交了很多，谢谢！请明天再试。"},
+ add_t:"添加厕所",name_l:"地点名称",where_l:"在哪里？",where_ph:"地址或简短描述",note_l:"给其他人的提示（可选）",note_ph:"干净吗？免费吗？需要密码吗？",useloc:"使用我当前的位置",send:"发送",thanks:"谢谢！我们核实后会添加到地图上。",fail:"发送失败，请重试。",ad:"附近有店铺？在 Laloo 上做广告",privacy:"隐私",priv_t:"隐私",priv_b:"Laloo 免费使用，无需注册账号。我们通过保存在你设备上的随机 ID 匿名统计访问量，以了解哪些功能有用。我们绝不保存你的姓名、邮箱或位置。你的位置只保留在浏览器中；请求路线时，只有起点和终点会发送给 OpenStreetMap 路线服务。如有疑问：hello@laloo.org",close:"关闭",toomany:"你今天已经提交了很多，谢谢！请明天再试。",
+ search_ph:"🔍 搜索城市或地点",noResults:"没有结果"},
 ja:{tag:"どこでもトイレが見つかる",near:"📍 現在地",all:"すべて",pub:"🚻 公衆",cafe:"☕ カフェ",tips:"⭐ おすすめ",contact:"➕ トイレを追加",
  inst_t:"Laloo をホーム画面に追加",inst_s:"最寄りのトイレへワンタップ。アプリストア不要。",inst_add:"追加",inst_ios:"共有ボタンをタップし、「ホーム画面に追加」を選んでください。",
  loading:"読み込み中…",loadingB:"トイレを読み込み中…",loadFail:"読み込めませんでした。タップして再試行",zoom:"拡大するとトイレが表示されます",noTips:"このエリアにはまだおすすめがありません。縮小してください",noBath:"このエリアにトイレはありません",
  allowRoute:"ルート表示には位置情報を許可してください",allowLoc:"近くのトイレを見るには位置情報を許可してください",noLoc:"位置情報を利用できません",finding:"ルートを検索中…",copied:"コードをコピーしました。レジで提示してください",min:"分",
  route:"🚶 ルートを表示",gmaps:"Google マップ",web:"ウェブサイト",local:"地元のお店",code:"🎟️ タップしてコードをコピー：",
  Free:"無料",Paid:"有料",Customers:"利用客のみ",Ticket:"要入場券",askInside:"店内で聞いてください。通常は利用客向け",custOnly:"利用客のみ",pubRest:"公衆トイレ",rest:"トイレ",
- add_t:"トイレを追加",name_l:"場所の名前",where_l:"どこにありますか？",where_ph:"住所または簡単な説明",note_l:"ほかの人へのヒント（任意）",note_ph:"きれい？無料？暗証番号は必要？",useloc:"現在地を使う",send:"送信",thanks:"ありがとうございます！確認して地図に追加します。",fail:"送信できませんでした。もう一度お試しください。",ad:"近くでお店をお持ちですか？Laloo に広告を掲載",privacy:"プライバシー",priv_t:"プライバシー",priv_b:"Laloo は無料で、アカウントは不要です。役立つ機能を知るため、端末に保存されたランダムな ID で訪問数を匿名で数えています。お名前、メールアドレス、位置情報は一切保存しません。位置情報はブラウザ内にとどまり、ルートを表示するときは出発地と目的地だけが OpenStreetMap のルート検索サービスに送られます。お問い合わせ：hello@laloo.org",close:"閉じる",toomany:"今日はたくさん送っていただきました。ありがとうございます！また明日お試しください。"},
+ add_t:"トイレを追加",name_l:"場所の名前",where_l:"どこにありますか？",where_ph:"住所または簡単な説明",note_l:"ほかの人へのヒント（任意）",note_ph:"きれい？無料？暗証番号は必要？",useloc:"現在地を使う",send:"送信",thanks:"ありがとうございます！確認して地図に追加します。",fail:"送信できませんでした。もう一度お試しください。",ad:"近くでお店をお持ちですか？Laloo に広告を掲載",privacy:"プライバシー",priv_t:"プライバシー",priv_b:"Laloo は無料で、アカウントは不要です。役立つ機能を知るため、端末に保存されたランダムな ID で訪問数を匿名で数えています。お名前、メールアドレス、位置情報は一切保存しません。位置情報はブラウザ内にとどまり、ルートを表示するときは出発地と目的地だけが OpenStreetMap のルート検索サービスに送られます。お問い合わせ：hello@laloo.org",close:"閉じる",toomany:"今日はたくさん送っていただきました。ありがとうございます！また明日お試しください。",
+ search_ph:"🔍 都市や場所を検索",noResults:"結果がありません"},
 };
 const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
   .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
@@ -245,9 +270,19 @@ function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; 
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
 const map = L.map("map").setView([33.9850, -118.4695], 15);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19, attribution: "© OpenStreetMap contributors"
-}).addTo(map);
+// Harita görünümü: OpenFreeMap vektör haritası (ücretsiz, anahtarsız). WebGL yoksa klasik OSM.
+const MAP_ATTR = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
+function hasWebGL(){ try{ const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); }catch(e){ return false; } }
+const rasterBase = () => L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap contributors" }).addTo(map);
+if (window.maplibregl && L.maplibreGL && hasWebGL()){
+  try{
+    const gl = L.maplibreGL({ style:"https://tiles.openfreemap.org/styles/liberty", attribution:MAP_ATTR }).addTo(map);
+    const mm = gl.getMaplibreMap();
+    let styled = false;
+    mm.once("styledata", () => { styled = true; });
+    mm.on("error", () => { if (!styled){ styled = true; map.removeLayer(gl); rasterBase(); } });   // stil yüklenemezse klasik harita
+  }catch(e){ rasterBase(); }
+} else rasterBase();
 const layer = L.layerGroup().addTo(map);
 
 let cities = [], tips = [], shops = [], toilets = [];
@@ -332,10 +367,11 @@ window.copyCode = (i) => {
 
 // ================= POPUP'LAR =================
 function tipPopup(t){
+  const loc = (t.i18n && t.i18n[LANG]) || {}, info = loc.info || t.info, hours = loc.hours || t.hours;
   const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
   return `<div class="tip"><b>⭐ ${esc(t.name)}</b>
-    ${t.fee ? `<span class="tag ${cls}">${esc(tx(t.fee))}</span>` : ""}${t.hours ? `<span class="tag">${esc(t.hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
-    <p>${esc(t.info)}</p>${actsHtml(t.lat, t.lng, t.id)}</div>`;
+    ${t.fee ? `<span class="tag ${cls}">${esc(tx(t.fee))}</span>` : ""}${hours ? `<span class="tag">${esc(hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
+    <p>${esc(info)}</p>${actsHtml(t.lat, t.lng, t.id)}</div>`;
 }
 function shopPopup(s, i){
   const web = /^https?:\/\//.test(s.website || "") ? s.website : "";
@@ -401,12 +437,35 @@ async function loadArea(){
       `places?select=id,kind,name,info,lat,lng&kind=neq.tip` +
       `&lat=gte.${(y*T).toFixed(2)}&lat=lt.${((y+1)*T).toFixed(2)}` +
       `&lng=gte.${(x*T).toFixed(2)}&lng=lt.${((x+1)*T).toFixed(2)}&limit=1000`)));
-    res.forEach(r => toilets.push(...r));
+    res.forEach((r, i) => { if (r.length) toilets.push(...r); else liveTile(...need[i]); });
     draw();
   }catch(e){
     need.forEach(([y, x]) => tiles.delete(y + ":" + x));
     say(tx("loadFail"));
   }
+}
+
+// Listede olmayan bir yer: o karenin tuvaletlerini anında OpenStreetMap'ten çek (dünyanın her yeri)
+async function liveTile(y, x){
+  const b = [(y*T).toFixed(2), (x*T).toFixed(2), ((y+1)*T).toFixed(2), ((x+1)*T).toFixed(2)].join(",");
+  const q = `[out:json][timeout:25];(nwr["amenity"="toilets"](${b});nwr["toilets"="yes"](${b}););out center tags 500;`;
+  try{
+    const r = await fetch("https://overpass-api.de/api/interpreter", { method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body:"data=" + encodeURIComponent(q) });
+    const d = await r.json();
+    d.elements.forEach(el => {
+      const t = el.tags || {}, lat = el.lat ?? (el.center && el.center.lat), lng = el.lon ?? (el.center && el.center.lon);
+      if (lat == null) return;
+      const pub = t.amenity === "toilets";
+      if (pub && (t.access === "private" || t.access === "no")) return;
+      if (!pub && (t.toilets === "no" || t["toilets:access"] === "private")) return;
+      const info = pub ? [t.fee === "no" ? "Free" : t.fee === "yes" ? "Paid" : "", t.access === "customers" ? "Customers only" : "", t.opening_hours || ""]
+                       : ["Ask inside, usually for customers", t.opening_hours || ""];
+      toilets.push({ id:"osm" + el.id, lat, lng, kind: pub ? "public" : "cafe",
+        name: t.name || t.brand || (pub ? "Public restroom" : "Restroom"), info: info.filter(Boolean).join(", ") });
+    });
+    draw();
+  }catch(e){}
 }
 
 // Yedek: Supabase'de henüz OSM verisi yoksa ya da ulaşılamazsa eski dosya
@@ -425,7 +484,7 @@ async function init(){
   try{
     const [c, t, s, osm] = await Promise.all([
       sb("cities?select=id,min_lat,min_lng,max_lat,max_lng"),
-      sb("places?select=id,name,info,area,fee,hours,lat,lng&kind=eq.tip"),
+      sb("places?select=id,name,info,area,fee,hours,lat,lng,i18n&kind=eq.tip"),
       sb("businesses_public?select=*"),
       sb("places?select=id&source=eq.osm&limit=1"),
     ]);
@@ -464,6 +523,40 @@ document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
 document.getElementById("locate").onclick = () => { track("near_me"); locate(); };
 map.on("moveend", () => { draw(); loadArea(); });
 msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) init(); };
+
+// ================= ARAMA =================
+const qi = document.getElementById("q"), qr = document.getElementById("qres");
+let qTimer = null, qAbort = null, qHits = [];
+function pickPlace(f){
+  const p = f.properties, [lng, lat] = f.geometry.coordinates;
+  qr.hidden = true; qi.value = p.name || ""; qi.blur(); centered = true;
+  if (p.extent){ map.fitBounds([[p.extent[1], p.extent[0]], [p.extent[3], p.extent[2]]]); if (map.getZoom() < 13) map.setZoom(13); }
+  else map.setView([lat, lng], ["city", "town", "village", "district"].includes(p.type) ? 13 : 16);
+  track("search", { target:(p.city || p.name || "").slice(0, 100) });
+}
+async function searchPlaces(v){
+  try{
+    if (qAbort) qAbort.abort();
+    qAbort = new AbortController();
+    const lang = ["en", "de", "fr", "it"].includes(LANG) ? LANG : "en", c = map.getCenter();
+    const r = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(v)}&limit=6&lang=${lang}&lat=${c.lat.toFixed(3)}&lon=${c.lng.toFixed(3)}`, { signal:qAbort.signal });
+    qHits = (await r.json()).features || [];
+    qr.innerHTML = qHits.length ? qHits.map((f, i) => {
+      const p = f.properties, sub = [p.city && p.city !== p.name ? p.city : "", p.state, p.country].filter(Boolean).join(", ");
+      return `<button type="button" data-k="${i}"><b>${esc(p.name || p.street || "")}</b><small>${esc(sub)}</small></button>`;
+    }).join("") : `<div class="none">${esc(tx("noResults"))}</div>`;
+    qr.hidden = false;
+    qr.querySelectorAll("button").forEach(b => b.onclick = () => pickPlace(qHits[+b.dataset.k]));
+  }catch(e){}
+}
+qi.oninput = () => {
+  clearTimeout(qTimer);
+  const v = qi.value.trim();
+  if (v.length < 3){ qr.hidden = true; return; }
+  qTimer = setTimeout(() => searchPlaces(v), 350);
+};
+qi.onkeydown = e => { if (e.key === "Enter" && qHits.length){ e.preventDefault(); pickPlace(qHits[0]); } };
+map.on("click", () => { qr.hidden = true; });
 
 // ================= ÖNERİ FORMU VE GİZLİLİK =================
 const addSheet = document.getElementById("addsheet"), privSheet = document.getElementById("privsheet"), sf = document.getElementById("sf");

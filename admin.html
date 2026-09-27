@@ -235,7 +235,7 @@ async function tips(edit){
     const lat = f.lat.value.trim() ? +f.lat.value : null, lng = f.lng.value.trim() ? +f.lng.value : null;
     const row = { kind:"tip", source:"manual", name:f.name.value.trim(), city:f.city.value, area:f.area.value.trim(),
       fee:f.fee.value, hours:f.hours.value.trim(), info:f.info.value.trim(), address:f.address.value.trim() || null,
-      lat, lng, active: lat != null && lng != null, updated_at: new Date().toISOString() };
+      lat, lng, active: lat != null && lng != null, i18n: null, updated_at: new Date().toISOString() };
     try{
       if (e.id) await db(`places?id=eq.${e.id}`, "PATCH", row); else await db("places", "POST", row);
       toast(row.active ? "Kaydedildi, haritada" : "Kaydedildi, koordinat yarın sabah bulunacak");
@@ -357,11 +357,13 @@ async function sugg(){
   const list = await db("suggestions?select=*&status=eq.pending&order=created_at.desc");
   $("#main").innerHTML = `
     <h2>Bekleyen öneriler</h2>
-    <p class="hint">Günlük tarayıcı ve sitedeki öneri formu buraya düşürecek. Onaylarsan yıldızlı yer formu dolu gelir, son kontrolü sen yaparsın.</p>
+    <p class="hint">Sitedeki formdan gelenler: Onayla'ya basarsan yıldızlı yer formu dolu gelir. Reddit'ten gelenler: gönderiyi aç, yardımcı bir cevap yaz (Laloo'yu kendi projen olarak belirt, spam yapma), sonra Cevapladım de.</p>
     <div class="tbl"><table><tr><th>Öneri</th><th>Kaynak</th><th></th></tr>
       ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}${s.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=18/${s.lat}/${s.lng}" target="_blank" rel="noopener">haritada gör</a>` : ""}</span><br>${esc(s.note)}<br><span class="hint">${s.created_at.slice(0, 10)}</span></td>
         <td>${esc(s.source)}${s.url ? `<br><a href="${esc(s.url)}" target="_blank" rel="noopener">bağlantı</a>` : ""}</td>
-        <td class="row"><button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="3">Bekleyen öneri yok</td></tr>`}
+        <td class="row">${s.source === "reddit"
+          ? `<a class="b p" href="${esc(s.url)}" target="_blank" rel="noopener">Reddit'te aç</a><button class="b" data-done="${s.id}">Cevapladım</button><button class="b r" data-rj="${s.id}">Geç</button>`
+          : `<button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button>`}</td></tr>`).join("") || `<tr><td colspan="3">Bekleyen öneri yok</td></tr>`}
     </table></div>`;
   document.querySelectorAll("[data-ap]").forEach(b => b.onclick = async () => {
     const s = list.find(x => x.id == b.dataset.ap);
@@ -370,6 +372,7 @@ async function sugg(){
     tips({ name:s.name, city:s.city || "la", address:s.address, info:s.note, lat:s.lat, lng:s.lng });
   });
   document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); sugg(); });
+  document.querySelectorAll("[data-done]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.done}`, "PATCH", { status:"approved" }); toast("Güzel, işaretlendi"); sugg(); });
 }
 
 // ---------- AYARLAR ----------
