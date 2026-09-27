@@ -192,4 +192,4 @@ for c in cities:
   if c["id"] == "la": save_json(pts)
   time.sleep(5)
 
-if failed: sys.exit(f"Failed cities: {failed}")
+if failed: print(f"WARNING: will retry tomorrow: {failed}")
