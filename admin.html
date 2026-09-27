@@ -68,6 +68,7 @@
     <button data-t="tips">⭐ Yıldızlı yerler</button>
     <button data-t="biz">📍 İşletmeler</button>
     <button data-t="sugg">📥 Öneriler</button>
+    <button data-t="reddit">🟠 Reddit</button>
     <button data-t="set">⚙️ Ayarlar</button>
   </nav>
   <main id="main"></main>
@@ -152,7 +153,7 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => tab(b.dat
 async function tab(t){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
   $("#main").innerHTML = "<p>Yükleniyor…</p>";
-  try{ await ({ stats, tips, biz, sugg, set })[t](); }
+  try{ await ({ stats, tips, biz, sugg, reddit, set })[t](); }
   catch(e){ $("#main").innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; }
 }
 
@@ -195,10 +196,11 @@ async function stats(){
 let tipCity = "";
 async function tips(edit){
   const list = await db(`places?select=id,name,area,fee,hours,info,address,lat,lng,active,city&kind=eq.tip${tipCity ? "&city=eq." + tipCity : ""}&order=city,name`);
-  const e = edit || {};
+  const show = edit !== undefined, e = edit || {};
   $("#main").innerHTML = `
-    <h2>${e.id ? "Yeri düzenle" : "Yeni yıldızlı yer"}</h2>
-    <form class="f" id="tf">
+    <div class="row" style="margin:14px 0 8px"><h2 style="margin:0;flex:1">⭐ Yıldızlı yerler</h2>${show ? "" : `<button class="b p" id="newt">+ Yeni yıldızlı yer</button>`}</div>
+    ${show ? `<form class="f" id="tf">
+      <b class="w">${e.id ? "Yeri düzenle" : "Yeni yıldızlı yer"}</b>
       <label>Ad<input name="name" required value="${esc(e.name)}"></label>
       <label>Şehir<select name="city">${cityOpts(e.city || tipCity || "la")}</select></label>
       <label>Semt<input name="area" value="${esc(e.area)}" placeholder="ör. Sultanahmet"></label>
@@ -212,36 +214,39 @@ async function tips(edit){
       <div class="row w">
         <button type="button" class="b" id="geo">📍 Koordinat bul</button>
         <button class="b p">${e.id ? "Kaydet" : "Ekle"}</button>
-        ${e.id ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
+        <button type="button" class="b" id="cancel">Vazgeç</button>
       </div>
-    </form>
+    </form>` : ""}
     <div class="row"><select id="cf" style="max-width:240px">${cityOpts(tipCity, true)}</select><span class="hint">${list.length} yer</span></div>
     <div class="tbl" style="margin-top:10px"><table><tr><th>Ad</th><th>Şehir</th><th>Ücret</th><th>Durum</th><th></th></tr>
       ${list.map(t => `<tr class="${t.active ? "" : "off"}"><td><b>${esc(t.name)}</b><br><span class="hint">${esc(t.area)}</span></td><td>${esc(t.city)}</td><td>${esc(t.fee)}</td>
         <td>${t.active ? `<span class="pill ok">Yayında</span>` : t.lat == null ? `<span class="pill">Koordinat bekliyor</span>` : `<span class="pill bad">Gizli</span>`}</td>
         <td class="row"><button class="b" data-ed="${t.id}">Düzenle</button>
           ${t.lat != null ? `<button class="b" data-tg="${t.id}">${t.active ? "Gizle" : "Yayına al"}</button>` : ""}
-          <button class="b r" data-del="${t.id}">Sil</button></td></tr>`).join("")}
+          <button class="b r" data-del="${t.id}">Sil</button></td></tr>`).join("") || `<tr><td colspan="5">Bu şehirde henüz yıldızlı yer yok</td></tr>`}
     </table></div>`;
-  const f = $("#tf");
   $("#cf").onchange = ev => { tipCity = ev.target.value; tips(); };
-  $("#geo").onclick = async () => {
-    try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
-    catch(err){ toast(err.message); }
-  };
-  if (e.id) $("#cancel").onclick = () => tips();
-  f.onsubmit = async ev => {
-    ev.preventDefault();
-    const lat = f.lat.value.trim() ? +f.lat.value : null, lng = f.lng.value.trim() ? +f.lng.value : null;
-    const row = { kind:"tip", source:"manual", name:f.name.value.trim(), city:f.city.value, area:f.area.value.trim(),
-      fee:f.fee.value, hours:f.hours.value.trim(), info:f.info.value.trim(), address:f.address.value.trim() || null,
-      lat, lng, active: lat != null && lng != null, i18n: null, updated_at: new Date().toISOString() };
-    try{
-      if (e.id) await db(`places?id=eq.${e.id}`, "PATCH", row); else await db("places", "POST", row);
-      toast(row.active ? "Kaydedildi, haritada" : "Kaydedildi, koordinat yarın sabah bulunacak");
-      tips();
-    }catch(err){ toast(err.message); }
-  };
+  if ($("#newt")) $("#newt").onclick = () => tips({});
+  const f = $("#tf");
+  if (f){
+    $("#cancel").onclick = () => tips();
+    $("#geo").onclick = async () => {
+      try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
+      catch(err){ toast(err.message); }
+    };
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const lat = f.lat.value.trim() ? +f.lat.value : null, lng = f.lng.value.trim() ? +f.lng.value : null;
+      const row = { kind:"tip", source:"manual", name:f.name.value.trim(), city:f.city.value, area:f.area.value.trim(),
+        fee:f.fee.value, hours:f.hours.value.trim(), info:f.info.value.trim(), address:f.address.value.trim() || null,
+        lat, lng, active: lat != null && lng != null, i18n: null, updated_at: new Date().toISOString() };
+      try{
+        if (e.id) await db(`places?id=eq.${e.id}`, "PATCH", row); else await db("places", "POST", row);
+        toast(row.active ? "Kaydedildi, haritada" : "Kaydedildi, koordinat yarın sabah bulunacak");
+        tips();
+      }catch(err){ toast(err.message); }
+    };
+  }
   document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { tips(list.find(t => t.id == b.dataset.ed)); scrollTo(0, 0); });
   document.querySelectorAll("[data-tg]").forEach(b => b.onclick = async () => {
     const t = list.find(x => x.id == b.dataset.tg);
@@ -261,21 +266,23 @@ function stickerInfo(b){
   const left = limit - Math.floor((Date.now() - base) / 864e5);
   return left > 14 ? `<span class="pill ok">${left} gün</span>` : left > 0 ? `<span class="pill">${left} gün kaldı</span>` : `<span class="pill bad">Haritadan düştü</span>`;
 }
+let showApps = false;
 async function biz(edit){
   const [list, apps] = await Promise.all([
     db("businesses?select=*&order=created_at.desc"),
     db("business_signups?select=*&status=eq.pending&order=created_at.desc"),
   ]);
-  const e = edit || { plan:"free", plan_price_usd:0 };
+  const show = edit !== undefined, e = Object.assign({ plan:"free", plan_price_usd:0 }, edit || {});
   $("#main").innerHTML = `
-    ${apps.length && !e.id && !e._signup ? `<h2>📨 Yeni başvurular (${apps.length})</h2>
-    <div class="tbl" style="margin-bottom:14px"><table><tr><th>Başvuru</th><th>İletişim</th><th></th></tr>
+    <div class="row" style="margin:14px 0 8px"><h2 style="margin:0;flex:1">📍 İşletmeler (${list.length})</h2>
+      ${show ? "" : `<button class="b ${apps.length ? "p" : ""}" id="apps">📨 Başvurular${apps.length ? ` (${apps.length})` : ""}</button><button class="b p" id="newb">+ Yeni işletme</button>`}</div>
+    ${showApps && !show ? `<div class="tbl" style="margin-bottom:14px"><table><tr><th>Başvuru</th><th>İletişim</th><th></th></tr>
       ${apps.map(a => `<tr><td><b>${esc(a.business_name)}</b> <span class="hint">${esc(a.category)} · ${esc(a.city || "diğer şehir")}</span><br><span class="hint">${esc(a.address)}</span><br>${esc(a.blurb)}${a.ref_code ? `<br><span class="pill">ref: ${esc(a.ref_code)}</span>` : ""}</td>
         <td>${esc(a.contact_name)}<br><a href="mailto:${esc(a.email)}">${esc(a.email)}</a>${a.phone ? `<br>${esc(a.phone)}` : ""}<br><span class="hint">${a.created_at.slice(0, 10)}</span></td>
-        <td class="row"><button class="b p" data-app="${a.id}">İncele ve onayla</button><button class="b r" data-rej="${a.id}">Reddet</button></td></tr>`).join("")}
+        <td class="row"><button class="b p" data-app="${a.id}">İncele ve onayla</button><button class="b r" data-rej="${a.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="3">Bekleyen başvuru yok</td></tr>`}
     </table></div>` : ""}
-    <h2>${e.id ? "İşletmeyi düzenle" : e._signup ? "Başvuruyu onayla: bilgileri kontrol et, Ekle'ye bas" : "Yeni işletme"}</h2>
-    <form class="f" id="bf">
+    ${show ? `<form class="f" id="bf">
+      <b class="w">${e.id ? "İşletmeyi düzenle" : e._signup ? "Başvuruyu onayla: bilgileri kontrol et, Ekle'ye bas" : "Yeni işletme"}</b>
       <label>Ad<input name="name" required value="${esc(e.name)}"></label>
       <label>Kategori<select name="category">${Object.entries(CATS).map(([k, v]) => `<option value="${k}" ${k === e.category ? "selected" : ""}>${v}</option>`).join("")}</select></label>
       <label>Şehir<select name="city">${cityOpts(e.city || "la")}</select></label>
@@ -293,10 +300,10 @@ async function biz(edit){
       <div class="row w">
         <button type="button" class="b" id="geo">📍 Adresten koordinat bul</button>
         <button class="b p">${e.id ? "Kaydet" : "Ekle"}</button>
-        ${e.id || e._signup ? `<button type="button" class="b" id="cancel">Vazgeç</button>` : ""}
+        <button type="button" class="b" id="cancel">Vazgeç</button>
       </div>
       <p class="hint w">Kurallar: bedava paket 60 günde, ücretli paket 180 günde bir sticker fotoğrafıyla onaylanmazsa haritadan kendiliğinden düşer. Fotoğraf gelince "Sticker onaylandı"ya bas.</p>
-    </form>
+    </form>` : ""}
     <div class="tbl"><table><tr><th>İşletme</th><th>Paket</th><th>Sticker</th><th></th></tr>
       ${list.map(b => `<tr class="${b.active ? "" : "off"}"><td><b>${CATS[b.category] ? CATS[b.category].split(" ")[0] : "🛍️"} ${esc(b.name)}</b><br><span class="hint">${esc(b.city)} · ${esc(b.address)}</span></td>
         <td>${esc(b.plan)}${b.plan_price_usd ? ` · $${b.plan_price_usd}` : ""}${b.paid_until ? `<br><span class="hint">bitiş ${b.paid_until}</span>` : ""}</td>
@@ -304,31 +311,35 @@ async function biz(edit){
         <td class="row"><button class="b" data-ok="${b.id}">✅ Sticker onaylandı</button><button class="b" data-ed="${b.id}">Düzenle</button>
           <button class="b" data-tg="${b.id}">${b.active ? "Gizle" : "Yayına al"}</button><button class="b r" data-del="${b.id}">Sil</button></td></tr>`).join("") || `<tr><td colspan="4">Henüz işletme yok</td></tr>`}
     </table></div>`;
+  if ($("#newb")) $("#newb").onclick = () => biz({});
+  if ($("#apps")) $("#apps").onclick = () => { showApps = !showApps; biz(); };
   const f = $("#bf");
-  $("#geo").onclick = async () => {
-    try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
-    catch(err){ toast(err.message); }
-  };
-  if (e.id || e._signup) { const c = $("#cancel"); if (c) c.onclick = () => biz(); }
-  f.onsubmit = async ev => {
-    ev.preventDefault();
-    const web = f.website.value.trim();
-    const row = { name:f.name.value.trim(), category:f.category.value, city:f.city.value, hours:f.hours.value.trim(),
-      blurb:f.blurb.value.trim(), address:f.address.value.trim(), lat:+f.lat.value, lng:+f.lng.value,
-      promo_code:f.promo_code.value.trim() || null, website: web ? (/^https?:\/\//.test(web) ? web : "https://" + web) : null,
-      plan:f.plan.value.trim() || "free", plan_price_usd:+f.plan_price_usd.value || 0,
-      paid_until:f.paid_until.value || null, contact_email:f.contact_email.value.trim() || null };
-    if (!e.id) row.last_verified = today();
-    if (e._partner) row.partner_id = e._partner;
-    try{
-      if (e.id) await db(`businesses?id=eq.${e.id}`, "PATCH", row);
-      else {
-        const made = await db("businesses", "POST", row, "return=representation");
-        if (e._signup) await db(`business_signups?id=eq.${e._signup}`, "PATCH", { status:"approved", business_id: made[0].id });
-      }
-      toast(e._signup ? "Onaylandı, haritada" : "Kaydedildi"); biz();
-    }catch(err){ toast(err.message); }
-  };
+  if (f){
+    $("#cancel").onclick = () => biz();
+    $("#geo").onclick = async () => {
+      try{ const g = await geocode(f.address.value || f.name.value); f.lat.value = g.lat; f.lng.value = g.lng; toast("Koordinat bulundu"); }
+      catch(err){ toast(err.message); }
+    };
+    f.onsubmit = async ev => {
+      ev.preventDefault();
+      const web = f.website.value.trim();
+      const row = { name:f.name.value.trim(), category:f.category.value, city:f.city.value, hours:f.hours.value.trim(),
+        blurb:f.blurb.value.trim(), address:f.address.value.trim(), lat:+f.lat.value, lng:+f.lng.value,
+        promo_code:f.promo_code.value.trim() || null, website: web ? (/^https?:\/\//.test(web) ? web : "https://" + web) : null,
+        plan:f.plan.value.trim() || "free", plan_price_usd:+f.plan_price_usd.value || 0,
+        paid_until:f.paid_until.value || null, contact_email:f.contact_email.value.trim() || null };
+      if (!e.id) row.last_verified = today();
+      if (e._partner) row.partner_id = e._partner;
+      try{
+        if (e.id) await db(`businesses?id=eq.${e.id}`, "PATCH", row);
+        else {
+          const made = await db("businesses", "POST", row, "return=representation");
+          if (e._signup) await db(`business_signups?id=eq.${e._signup}`, "PATCH", { status:"approved", business_id: made[0].id });
+        }
+        toast(e._signup ? "Onaylandı, haritada" : "Kaydedildi"); biz();
+      }catch(err){ toast(err.message); }
+    };
+  }
   const find = id => list.find(x => x.id === id);
   document.querySelectorAll("[data-app]").forEach(b => b.onclick = async () => {
     const a = apps.find(x => x.id == b.dataset.app);
@@ -352,18 +363,15 @@ async function biz(edit){
   });
 }
 
-// ---------- ÖNERİLER ----------
+// ---------- ÖNERİLER (sitedeki formdan) ----------
 async function sugg(){
-  const list = await db("suggestions?select=*&status=eq.pending&order=created_at.desc");
+  const list = await db("suggestions?select=*&status=eq.pending&source=neq.reddit&order=created_at.desc");
   $("#main").innerHTML = `
-    <h2>Bekleyen öneriler</h2>
-    <p class="hint">Sitedeki formdan gelenler: Onayla'ya basarsan yıldızlı yer formu dolu gelir. Reddit'ten gelenler: gönderiyi aç, yardımcı bir cevap yaz (Laloo'yu kendi projen olarak belirt, spam yapma), sonra Cevapladım de.</p>
-    <div class="tbl"><table><tr><th>Öneri</th><th>Kaynak</th><th></th></tr>
+    <h2>📥 Ziyaretçi önerileri</h2>
+    <p class="hint">Sitedeki "Tuvalet ekle" formundan gelenler. Onayla'ya basarsan yıldızlı yer formu dolu gelir, son kontrolü sen yaparsın.</p>
+    <div class="tbl"><table><tr><th>Öneri</th><th></th></tr>
       ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}${s.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=18/${s.lat}/${s.lng}" target="_blank" rel="noopener">haritada gör</a>` : ""}</span><br>${esc(s.note)}<br><span class="hint">${s.created_at.slice(0, 10)}</span></td>
-        <td>${esc(s.source)}${s.url ? `<br><a href="${esc(s.url)}" target="_blank" rel="noopener">bağlantı</a>` : ""}</td>
-        <td class="row">${s.source === "reddit"
-          ? `<a class="b p" href="${esc(s.url)}" target="_blank" rel="noopener">Reddit'te aç</a><button class="b" data-done="${s.id}">Cevapladım</button><button class="b r" data-rj="${s.id}">Geç</button>`
-          : `<button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button>`}</td></tr>`).join("") || `<tr><td colspan="3">Bekleyen öneri yok</td></tr>`}
+        <td class="row"><button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="2">Bekleyen öneri yok</td></tr>`}
     </table></div>`;
   document.querySelectorAll("[data-ap]").forEach(b => b.onclick = async () => {
     const s = list.find(x => x.id == b.dataset.ap);
@@ -372,7 +380,23 @@ async function sugg(){
     tips({ name:s.name, city:s.city || "la", address:s.address, info:s.note, lat:s.lat, lng:s.lng });
   });
   document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); sugg(); });
-  document.querySelectorAll("[data-done]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.done}`, "PATCH", { status:"approved" }); toast("Güzel, işaretlendi"); sugg(); });
+}
+
+// ---------- REDDIT ----------
+let redditCity = "";
+async function reddit(){
+  const list = await db(`suggestions?select=*&status=eq.pending&source=eq.reddit${redditCity ? "&city=eq." + redditCity : ""}&order=created_at.desc&limit=200`);
+  $("#main").innerHTML = `
+    <h2>🟠 Reddit'te tuvalet soruları</h2>
+    <p class="hint">Her sabah şehir subreddit'lerinden toplanır. Gönderiyi aç, gerçekten yardımcı bir cevap yaz, Laloo'yu "kendi yaptığım ücretsiz harita" diye açıkça belirt, reklam gibi durmasın. Sonra "Cevapladım" de.</p>
+    <div class="row"><select id="rc" style="max-width:240px">${cityOpts(redditCity, true)}</select><span class="hint">${list.length} gönderi</span></div>
+    <div class="tbl" style="margin-top:10px"><table><tr><th>Gönderi</th><th></th></tr>
+      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.note)} · ${esc(s.city)} · ${s.created_at.slice(0, 10)}</span></td>
+        <td class="row"><a class="b p" href="${esc(s.url)}" target="_blank" rel="noopener">Aç</a><button class="b" data-done="${s.id}">Cevapladım</button><button class="b r" data-rj="${s.id}">Geç</button></td></tr>`).join("") || `<tr><td colspan="2">Bekleyen gönderi yok</td></tr>`}
+    </table></div>`;
+  $("#rc").onchange = ev => { redditCity = ev.target.value; reddit(); };
+  document.querySelectorAll("[data-done]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.done}`, "PATCH", { status:"approved" }); toast("Güzel, işaretlendi"); reddit(); });
+  document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); reddit(); });
 }
 
 // ---------- AYARLAR ----------
