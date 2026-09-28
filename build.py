@@ -219,11 +219,13 @@ for c in cities:
   pts = parse(data)
   if len(pts) < 5:
     print(f"  Too few results ({len(pts)}), skipping"); sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run}); continue
-  rows = [dict(p, city=c["id"], source="osm", active=True, updated_at=run) for p in pts]
+  # Sahibi (belediye / işletme) düzenlediği yerler kilitli: OSM onların üzerine yazmaz
+  locked = {r["osm_id"] for r in sb("GET", f"places?select=osm_id&city=eq.{c['id']}&locked=is.true&osm_id=not.is.null", prefer="")}
+  rows = [dict(p, city=c["id"], source="osm", active=True, updated_at=run) for p in pts if p["osm_id"] not in locked]
   for i in range(0, len(rows), 500):
     sb("POST", "places?on_conflict=osm_id", rows[i:i+500], prefer="resolution=merge-duplicates,return=minimal")
   # OSM'den silinen noktaları gizle
-  sb("PATCH", f"places?source=eq.osm&city=eq.{c['id']}&updated_at=lt.{urllib.parse.quote(run)}", {"active": False})
+  sb("PATCH", f"places?source=eq.osm&city=eq.{c['id']}&locked=is.false&updated_at=lt.{urllib.parse.quote(run)}", {"active": False})
   sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run})
   print(f"  Upserted {len(rows)}")
   time.sleep(4)   # Overpass'a nefes aldır (429 Too Many Requests olmasın)

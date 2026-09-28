@@ -208,7 +208,7 @@ def page(lang, title, desc, canon, alts, body, slug_for_lang):
 <main>
 {body}
 </main>
-<footer><a href="/">laloo.org · {esc(T[lang]["home"])}</a> · <a href="{'/cities/' if lang == 'en' else f'/{lang}/cities/'}">{esc(T[lang]["all"])}</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>{esc(T[lang]["src"])}</footer>
+<footer><a href="/">laloo.org · {esc(T[lang]["home"])}</a> · <a href="{'/cities/' if lang == 'en' else f'/{lang}/cities/'}">{esc(T[lang]["all"])}</a> · <a href="/about/">About</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>{esc(T[lang]["src"])}</footer>
 </body>
 </html>
 """
@@ -377,6 +377,14 @@ def generate(cities, places_for, root=".", now=None):
     d = os.path.dirname(p)
     while d and d != root and os.path.isdir(d) and not os.listdir(d):
       os.rmdir(d); d = os.path.dirname(d)
+  # Tanıtım sayfası (laloo.org/about/): canlı rakamlarla
+  try:
+    import about_page
+    write(os.path.join(root, "about/index.html"), about_page.build(listed, routes, len(made) + 1, lambda c: cname(c, "en"),
+                                                                  lambda slug: f"/{slug}/", now, SITE))
+    made.append("about/index.html")
+  except Exception as ex:
+    print("about page failed:", ex)
   json.dump(sorted(made), open(os.path.join(root, MANIFEST), "w"), indent=0)
   # sitemap.xml ve robots.txt
   urls = [f"{SITE}/"] + [SITE + "/" + rel[:-len("index.html")] for rel in sorted(made)]

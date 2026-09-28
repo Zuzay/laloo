@@ -85,6 +85,7 @@
     <button data-t="stats" class="on">📊 Rakamlar</button>
     <button data-t="tips">⭐ Yıldızlı yerler</button>
     <button data-t="biz">📍 İşletmeler</button>
+    <button data-t="muni">🏛️ Belediyeler</button>
     <button data-t="sugg">📥 Öneriler</button>
     <button data-t="reddit">🟠 Reddit</button>
     <button data-t="set">⚙️ Ayarlar</button>
@@ -184,7 +185,7 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => tab(b.dat
 async function tab(t){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
   $("#main").innerHTML = "<p>Yükleniyor…</p>";
-  try{ await ({ stats, tips, biz, sugg, reddit, set })[t](); }
+  try{ await ({ stats, tips, biz, muni, sugg, reddit, set })[t](); }
   catch(e){ $("#main").innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; }
 }
 
@@ -428,6 +429,59 @@ async function reddit(){
   $("#rc").onchange = ev => { redditCity = ev.target.value; reddit(); };
   document.querySelectorAll("[data-done]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.done}`, "PATCH", { status:"approved" }); toast("Güzel, işaretlendi"); reddit(); });
   document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); reddit(); });
+}
+
+// ---------- BELEDİYELER ----------
+async function muni(){
+  const [list, counts] = await Promise.all([
+    db("muni_profiles?select=*&order=created_at.desc"),
+    db("places?select=muni_id&muni_id=not.is.null&limit=20000"),
+  ]);
+  const n = {}; counts.forEach(r => n[r.muni_id] = (n[r.muni_id] || 0) + 1);
+  const link = id => `https://laloo.org/account.html?claim=${id}`;
+  $("#main").innerHTML = `
+    <h2>🏛️ Belediye profilleri</h2>
+    <p class="hint">Profil hazırla, tuvaletleri bağla, sahiplenme linkini belediyeye e-postayla gönder. Sadece o alan adındaki e-postayla (ör. @amsterdam.nl) sahiplenilebilir.</p>
+    <form class="f" id="mf">
+      <b class="w">Yeni profil</b>
+      <label>Şehir<select name="city">${cityOpts("amsterdam")}</select></label>
+      <label>Ad (İngilizce)<input name="name" required placeholder="City of Amsterdam"></label>
+      <label>Resmi e-posta alan adı<input name="email_domain" required placeholder="amsterdam.nl"></label>
+      <label>Web sitesi<input name="website" placeholder="https://www.amsterdam.nl"></label>
+      <div class="row w"><button class="b p">Profil oluştur</button></div>
+    </form>
+    <div class="tbl"><table><tr><th>Profil</th><th>Tuvalet</th><th>Durum</th><th></th></tr>
+      ${list.map(m => `<tr><td><b>${esc(m.name)}</b><br><span class="hint">${esc(m.city)} · @${esc(m.email_domain)}</span></td>
+        <td>${n[m.id] || 0}</td>
+        <td>${m.status === "claimed" ? `<span class="pill ok">Sahiplenildi</span><br><span class="hint">${(m.claimed_at || "").slice(0, 10)}</span>` : m.status === "closed" ? `<span class="pill bad">Kapalı</span>` : `<span class="pill">Bekliyor</span>`}</td>
+        <td><div class="row">
+          <input data-op="${m.id}" placeholder="işleten (ör. Gemeente Amsterdam)" style="max-width:220px">
+          <button class="b" data-as="${m.id}" data-city="${esc(m.city)}">Tuvaletleri bağla</button>
+          <button class="b" data-cp="${m.id}">Linki kopyala</button>
+          <a class="b" href="${link(m.id)}" target="_blank" rel="noopener">Önizle</a>
+        </div></td></tr>`).join("") || `<tr><td colspan="4">Henüz profil yok</td></tr>`}
+    </table></div>
+    <p class="hint">"Tuvaletleri bağla": o şehirde OSM işleten (operator) bilgisinde bu kelime geçen bütün umumi tuvaletleri profile bağlar. Birkaç kez farklı kelimelerle çalıştırabilirsin (ör. "Gemeente", "Stadsdeel").</p>`;
+  $("#mf").onsubmit = async ev => {
+    ev.preventDefault(); const f = ev.target;
+    const dom = f.email_domain.value.trim().toLowerCase().replace(/^@/, "").replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+    try{
+      await db("muni_profiles", "POST", { city:f.city.value, name:f.name.value.trim(), email_domain:dom, website:f.website.value.trim() || null });
+      toast("Profil oluşturuldu"); muni();
+    }catch(err){ toast(err.message); }
+  };
+  document.querySelectorAll("[data-as]").forEach(b => b.onclick = async () => {
+    const q = document.querySelector(`[data-op="${b.dataset.as}"]`).value.trim();
+    if (q.length < 3){ toast("En az 3 harf yaz"); return; }
+    try{
+      const r = await db(`places?city=eq.${encodeURIComponent(b.dataset.city)}&kind=eq.public&operator=ilike.*${encodeURIComponent(q)}*&select=id`,
+                         "PATCH", { muni_id:+b.dataset.as }, "return=representation");
+      toast(`${r.length} tuvalet bağlandı`); muni();
+    }catch(err){ toast(err.message); }
+  });
+  document.querySelectorAll("[data-cp]").forEach(b => b.onclick = () => {
+    try{ navigator.clipboard.writeText(link(b.dataset.cp)); toast("Link kopyalandı"); }catch(e){ prompt("Link:", link(b.dataset.cp)); }
+  });
 }
 
 // ---------- AYARLAR ----------

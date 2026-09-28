@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laloo for places · Manage your listing</title>
+<meta name="description" content="Businesses and cities: manage your places on Laloo, update hours, mark a toilet as closed and see how many people found you.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#fefef8">
+<style>
+:root{--navy:#10223d;--blue:#1c4fa0;--line:#e6e1d4;--bg:#fefef8;--muted:#5f6b7d;--card:#fff;--green:#1b7a3a;--greenbg:#e3f6e8;--red:#b3261e;--redbg:#fde8e8;--tag:#e8f0fb;--field:#fff}
+@media (prefers-color-scheme:dark){:root{--navy:#e9eef6;--blue:#8fb4ff;--line:#2a3445;--bg:#111722;--muted:#9aa6b8;--card:#172030;--green:#7fd79a;--greenbg:#1d3326;--red:#ff8a80;--redbg:#3a1d1d;--tag:#1f2e48;--field:#0f1622}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--navy);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--blue)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
+header img{height:34px;display:block;border-radius:8px}
+@media (prefers-color-scheme:dark){header img{background:#fefef8;padding:2px 6px;height:38px}}
+main{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:26px;line-height:1.2;margin:8px 0 8px}h2{font-size:19px;margin:26px 0 8px}
+.lead{margin:0 0 14px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 10px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--navy);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+textarea{min-height:70px;resize:vertical}
+label.ck{flex-direction:row;align-items:flex-start;gap:8px;font-weight:500;color:var(--navy);font-size:15px}
+label.ck input{width:auto;margin-top:4px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;cursor:pointer;background:#1c4fa0;color:#fff}
+button.ghost{background:transparent;color:var(--blue);border:1px solid var(--line);font-weight:600}
+button.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+button:disabled{opacity:.6;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.msg{font-size:14px;margin:8px 0 0}.msg.ok{color:var(--green)}.msg.err{color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:10px 0}
+.stat{background:var(--tag);border-radius:10px;padding:8px 10px}.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--muted)}
+.t{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;background:var(--tag);color:var(--blue);margin:0 4px 4px 0}
+.t.ok{background:var(--greenbg);color:var(--green)}.t.off{background:var(--redbg);color:var(--red)}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 10px}
+details>summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details>summary::-webkit-details-marker{display:none}
+details>summary b{overflow-wrap:anywhere}details>summary small{color:var(--muted);white-space:nowrap}
+details .in{padding:0 14px 14px}
+.muted{color:var(--muted);font-size:14px}
+ul.sample{margin:6px 0 0;padding-left:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><button class="ghost" id="out" hidden>Sign out</button></header>
+<main>
+  <!-- Claim preview (city profile) -->
+  <section id="claimPre" hidden></section>
+
+  <!-- Signed out -->
+  <section id="login" hidden>
+    <h1 id="loginH">Manage your place on Laloo</h1>
+    <p class="lead" id="loginP">Update your hours, mark a toilet as temporarily closed and see how many travelers found you. No password: we email you a sign-in link.</p>
+    <div class="card">
+      <form id="lf">
+        <label>Your email<input id="em" type="email" autocomplete="email" required placeholder="you@yourbusiness.com"></label>
+        <button id="send">Email me a sign-in link</button>
+        <p class="msg" id="lmsg"></p>
+      </form>
+    </div>
+    <p class="muted" id="bizHint">Use the email you registered your business with. Not on Laloo yet? <a href="/business.html">Add your business</a>, it's free.</p>
+  </section>
+
+  <!-- Signed in -->
+  <section id="app" hidden>
+    <p class="muted" id="who"></p>
+    <div id="claimBox"></div>
+    <div id="summary"></div>
+    <div id="bizList"></div>
+    <div id="placeList"></div>
+    <div id="empty" hidden class="card">
+      <b>No places are linked to this email yet.</b>
+      <p class="muted">If you registered your business with another email, sign in with that one. New here? <a href="/business.html">Add your business</a>. Questions: <a href="mailto:hello@laloo.org">hello@laloo.org</a></p>
+    </div>
+    <div id="muniOff"></div>
+  </section>
+
+  <p id="loading" class="muted">Loading…</p>
+</main>
+<footer><a href="/">laloo.org</a> · <a href="/terms.html">Terms</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a></footer>
+
+<script>
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
+const TERMS_VERSION = "2026-09";
+const HERE = location.origin + location.pathname;
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const params = new URLSearchParams(location.search);
+const CLAIM = /^\d+$/.test(params.get("claim") || "") ? +params.get("claim") : null;
+const show = id => ["claimPre", "login", "app", "loading"].forEach(x => $("#" + x).hidden = !(Array.isArray(id) ? id : [id]).includes(x));
+
+// ================= SESSION =================
+class NetErr extends Error{}
+let S = null;
+try{ S = JSON.parse(localStorage.getItem("laloo_acc") || "null"); }catch(e){}
+function jwtEmail(t){ try{ return JSON.parse(atob(t.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).email || ""; }catch(e){ return ""; } }
+function save(d){
+  S = { access_token:d.access_token, refresh_token:d.refresh_token,
+        expires_at: +d.expires_at || Math.floor(Date.now()/1000) + (+d.expires_in || 3600) };
+  S.email = jwtEmail(S.access_token);
+  try{ localStorage.setItem("laloo_acc", JSON.stringify(S)); }catch(e){}
+}
+function signOut(){ S = null; try{ localStorage.removeItem("laloo_acc"); }catch(e){} start(); }
+// Magic link lands here with #access_token=...&refresh_token=...
+(() => {
+  if (!location.hash.includes("access_token") && !location.hash.includes("error")) return;
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get("access_token")) save(Object.fromEntries(h));
+  else window._linkErr = h.get("error_description") || "This link has expired. Please ask for a new one.";
+  history.replaceState(null, "", location.pathname + location.search);
+})();
+async function refresh(){
+  if (S && Date.now()/1000 > S.expires_at - 60){
+    let r;
+    try{ r = await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`, { method:"POST",
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify({ refresh_token:S.refresh_token }) }); }
+    catch(e){ throw new NetErr("No internet connection"); }
+    if (!r.ok){ signOut(); throw new Error("Your session ended, please sign in again."); }
+    save(await r.json());
+  }
+}
+async function rpc(name, body = {}, anon = false){
+  if (!anon) await refresh();
+  let r;
+  try{ r = await fetch(`${SB_URL}/rest/v1/rpc/${name}`, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json", ...(anon || !S ? {} : { Authorization:"Bearer " + S.access_token }) },
+    body:JSON.stringify(body) }); }
+  catch(e){ throw new NetErr("No internet connection"); }
+  const t = await r.text();
+  if (r.status === 401 && !anon){ signOut(); throw new Error("Please sign in again."); }
+  if (!r.ok){ let m = t; try{ m = JSON.parse(t).message; }catch(e){} throw new Error(m); }
+  return t ? JSON.parse(t) : null;
+}
+
+// ================= SIGN IN =================
+$("#lf").onsubmit = async e => {
+  e.preventDefault();
+  const em = $("#em").value.trim(), m = $("#lmsg");
+  m.className = "msg"; m.textContent = "";
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ m.className = "msg err"; m.textContent = "Please enter a valid email."; return; }
+  $("#send").disabled = true;
+  try{
+    const back = HERE + (CLAIM ? "?claim=" + CLAIM : "");
+    const r = await fetch(`${SB_URL}/auth/v1/otp?redirect_to=${encodeURIComponent(back)}`, { method:"POST",
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify({ email:em, create_user:true }) });
+    if (r.status === 429) throw new Error("Too many requests. Please wait a minute and try again.");
+    if (!r.ok) throw new Error("We couldn't send the email. Please try again or write to hello@laloo.org.");
+    m.className = "msg ok"; m.textContent = `Check your inbox: we sent a sign-in link to ${em}. It works once and expires in 1 hour.`;
+  }catch(err){ m.className = "msg err"; m.textContent = err.message; }
+  $("#send").disabled = false;
+};
+$("#out").onclick = signOut;
+
+// ================= CLAIM PREVIEW (city profiles) =================
+let PRE = null;
+async function claimPreview(){
+  if (!CLAIM) return;
+  try{ PRE = await rpc("muni_preview", { p_id:CLAIM }, true); }catch(e){ PRE = null; }
+  if (!PRE){ $("#claimPre").innerHTML = `<div class="card"><b>This profile link isn't valid.</b><p class="muted">Please write to <a href="mailto:hello@laloo.org">hello@laloo.org</a>.</p></div>`; return; }
+  $("#claimPre").innerHTML = `
+    <h1>${esc(PRE.name)}: your public toilets on Laloo</h1>
+    <p class="lead">Laloo is a free map that helps travelers find a bathroom in seconds. We've prepared a profile with <b>${PRE.places}</b> public toilets operated by ${esc(PRE.name)}, compiled from open data.</p>
+    ${PRE.sample.length ? `<div class="card"><b>Some of them</b><ul class="sample">${PRE.sample.map(s => `<li>${esc(s.name)}${s.area ? ` · ${esc(s.area)}` : ""}</li>`).join("")}</ul></div>` : ""}
+    <div class="card"><b>Claim it for free</b><p class="muted" style="margin:4px 0 0">Sign in with an email address ending in <b>@${esc(PRE.email_domain)}</b>. You can then mark toilets as closed, correct opening hours and fees, and your toilets get a “Verified by the city” badge. No fees, no extra work, and you can switch the profile off at any time.</p></div>`;
+  if (PRE.status === "claimed") $("#claimPre").insertAdjacentHTML("beforeend", `<p class="muted">This profile has already been claimed. Team members can sign in with their city email.</p>`);
+  $("#loginH").textContent = "Sign in to claim";
+  $("#loginP").textContent = `Use your @${PRE.email_domain} email. We'll send you a sign-in link, no password needed.`;
+  $("#em").placeholder = "name@" + PRE.email_domain;
+  $("#bizHint").hidden = true;
+}
+
+// ================= APP =================
+let DATA = null, STATS = { businesses:[], places:[] }, DAYS = 30;
+const statOf = (arr, id) => arr.find(x => String(x.id) === String(id)) || {};
+const pct = (a, b) => b ? Math.round(100 * a / b) + "%" : "–";
+
+async function load(){
+  [DATA, STATS] = await Promise.all([rpc("my_account"), rpc("my_stats", { days:DAYS })]);
+  render();
+}
+function render(){
+  const acc = DATA.account, biz = DATA.businesses, pl = DATA.places, muni = DATA.muni;
+  $("#who").textContent = `Signed in as ${acc.email}${muni ? " · " + muni.name : ""}`;
+  // claim box
+  if (CLAIM && PRE && !(muni && muni.id === CLAIM)){
+    $("#claimBox").innerHTML = `<div class="card"><h2 style="margin-top:0">Claim ${esc(PRE.name)}</h2>
+      <p class="muted">${PRE.places} public toilets will be linked to this account and get the “Verified by the city” badge.</p>
+      <label class="ck"><input type="checkbox" id="terms"> <span>I work for ${esc(PRE.name)} and I accept the <a href="/terms.html#cities" target="_blank" rel="noopener">Laloo terms for cities</a>.</span></label>
+      <button id="claimBtn">Claim profile</button><p class="msg" id="cmsg"></p></div>`;
+    $("#claimBtn").onclick = async () => {
+      const m = $("#cmsg");
+      if (!$("#terms").checked){ m.className = "msg err"; m.textContent = "Please tick the box to accept the terms."; return; }
+      $("#claimBtn").disabled = true;
+      try{ DATA = await rpc("claim_muni", { p_id:CLAIM, p_terms:TERMS_VERSION }); STATS = await rpc("my_stats", { days:DAYS });
+           history.replaceState(null, "", location.pathname); $("#claimPre").hidden = true; render(); scrollTo(0, 0); }
+      catch(err){ m.className = "msg err"; m.textContent = err.message; $("#claimBtn").disabled = false; }
+    };
+  } else $("#claimBox").innerHTML = "";
+  // summary
+  const tv = STATS.businesses.reduce((a, b) => a + b.views, 0), tc = STATS.businesses.reduce((a, b) => a + b.clicks, 0) + STATS.places.reduce((a, b) => a + b.clicks, 0);
+  const tr = STATS.businesses.reduce((a, b) => a + b.routes, 0) + STATS.places.reduce((a, b) => a + b.routes, 0);
+  $("#summary").innerHTML = (biz.length || pl.length) ? `
+    <div class="row" style="justify-content:space-between"><h2 style="margin:10px 0 0">Last ${DAYS} days</h2>
+      <select id="days" style="width:auto">${[7, 30, 90].map(d => `<option value="${d}" ${d === DAYS ? "selected" : ""}>${d} days</option>`).join("")}</select></div>
+    <div class="stats">
+      ${biz.length ? `<div class="stat"><b>${tv}</b><span>saw your pin</span></div>` : ""}
+      <div class="stat"><b>${tc}</b><span>opened your place</span></div>
+      <div class="stat"><b>${tr}</b><span>asked for directions</span></div>
+    </div>` : "";
+  if ($("#days")) $("#days").onchange = async e => { DAYS = +e.target.value; STATS = await rpc("my_stats", { days:DAYS }); render(); };
+  // businesses
+  $("#bizList").innerHTML = biz.length ? `<h2>Your business${biz.length > 1 ? "es" : ""}</h2>` + biz.map(b => {
+    const s = statOf(STATS.businesses, b.id);
+    return `<div class="card" data-b="${esc(b.id)}">
+      <div class="row" style="justify-content:space-between"><b style="font-size:18px">${esc(b.name)}</b>
+        <span>${b.active ? `<span class="t ok">On the map</span>` : `<span class="t off">Hidden</span>`}<span class="t">${esc(b.plan || "free")}</span></span></div>
+      <div class="muted">${esc(b.address || "")}</div>
+      <div class="stats">
+        <div class="stat"><b>${s.views || 0}</b><span>saw your pin</span></div>
+        <div class="stat"><b>${s.clicks || 0}</b><span>opened it (${pct(s.clicks || 0, s.views || 0)})</span></div>
+        <div class="stat"><b>${s.routes || 0}</b><span>directions</span></div>
+        <div class="stat"><b>${s.codes || 0}</b><span>copied your code</span></div>
+        <div class="stat"><b>${s.websites || 0}</b><span>visited your website</span></div>
+      </div>
+      <details><summary><b>Edit listing</b><small>hours, text, code</small></summary><div class="in">
+        <div class="grid2">
+          <label>Opening hours<input name="hours" maxlength="120" value="${esc(b.hours)}" placeholder="e.g. 10am to 8pm, closed Mon"></label>
+          <label>Discount code<input name="promo_code" maxlength="40" value="${esc(b.promo_code)}" placeholder="e.g. LALOO10"></label>
+        </div>
+        <label>Short description (English, 1 or 2 sentences)<textarea name="blurb" maxlength="400">${esc(b.blurb)}</textarea></label>
+        <label>Website<input name="website" maxlength="300" value="${esc(b.website)}" placeholder="https://"></label>
+        <label class="ck"><input type="checkbox" name="active" ${b.active ? "checked" : ""}> <span>Show on the map</span></label>
+        <button data-saveb>Save</button><p class="msg"></p>
+      </div></details></div>`;
+  }).join("") : "";
+  // places
+  const many = pl.length > 8;
+  $("#placeList").innerHTML = pl.length ? `<h2>${muni ? "Toilets operated by " + esc(muni.name) : "Your places"} (${pl.length})</h2>
+    ${many ? `<input id="q" placeholder="Search by name or area" style="margin:0 0 10px">` : ""}
+    <div id="pl">${pl.map(p => placeHtml(p)).join("")}</div>` : "";
+  if ($("#q")) $("#q").oninput = e => { const q = e.target.value.toLowerCase();
+    document.querySelectorAll("#pl details").forEach(d => d.hidden = q && !d.dataset.q.includes(q)); };
+  $("#empty").hidden = !!(biz.length || pl.length || (CLAIM && PRE));
+  $("#muniOff").innerHTML = muni ? `<div class="card" style="margin-top:24px"><b>Switch off your profile</b>
+    <p class="muted">Your toilets stay on the map as public information, but the badge is removed and this account loses access. You can claim again later.</p>
+    <button class="danger" id="closeMuni">Switch off profile</button></div>` : "";
+  if ($("#closeMuni")) $("#closeMuni").onclick = async () => {
+    if (!confirm("Switch off the city profile?")) return;
+    try{ await rpc("close_muni"); await load(); }catch(err){ alert(err.message); }
+  };
+  wire();
+}
+function placeHtml(p){
+  const s = statOf(STATS.places, p.id);
+  return `<details data-p="${p.id}" data-q="${esc((p.name + " " + (p.area || "")).toLowerCase())}">
+    <summary><span><b>${esc(p.name)}</b> ${p.status === "closed" ? `<span class="t off">Closed</span>` : ""}${p.verified ? `<span class="t ok">✓ Verified</span>` : ""}</span>
+      <small>${s.clicks || 0} opened · ${s.routes || 0} directions</small></summary>
+    <div class="in">
+      <p class="muted" style="margin-top:0">${esc(p.area || "")} <a href="/?at=${p.lat},${p.lng},17" target="_blank" rel="noopener">See on the map</a></p>
+      <label>Name<input name="name" maxlength="120" value="${esc(p.name)}"></label>
+      <div class="grid2">
+        <label>Opening hours<input name="hours" maxlength="120" value="${esc(p.hours)}" placeholder="e.g. 7am to 10pm"></label>
+        <label>Fee<select name="fee">${["", "Free", "Paid", "Customers", "Ticket"].map(f => `<option value="${f}" ${f === (p.fee || "") ? "selected" : ""}>${f || "Not set"}</option>`).join("")}</select></label>
+      </div>
+      <label>Note for travelers (English)<textarea name="info" maxlength="400">${esc(p.info)}</textarea></label>
+      <label class="ck"><input type="checkbox" name="closed" ${p.status === "closed" ? "checked" : ""}> <span>Temporarily closed</span></label>
+      <label>Closure note (optional)<input name="status_note" maxlength="200" value="${esc(p.status_note)}" placeholder="e.g. Renovation until November"></label>
+      <button data-savep>Save</button><p class="msg"></p>
+    </div></details>`;
+}
+function wire(){
+  document.querySelectorAll("[data-saveb]").forEach(btn => btn.onclick = async () => {
+    const c = btn.closest("[data-b]"), m = btn.nextElementSibling, v = n => c.querySelector(`[name=${n}]`);
+    btn.disabled = true; m.className = "msg"; m.textContent = "";
+    try{
+      await rpc("update_business", { p_id:c.dataset.b, p:{ hours:v("hours").value.trim(), promo_code:v("promo_code").value.trim(),
+        blurb:v("blurb").value.trim(), website:v("website").value.trim(), active:v("active").checked } });
+      m.className = "msg ok"; m.textContent = "Saved. Changes appear on the map right away.";
+      const b = DATA.businesses.find(x => String(x.id) === c.dataset.b); if (b) b.active = v("active").checked;
+    }catch(err){ m.className = "msg err"; m.textContent = err.message; }
+    btn.disabled = false;
+  });
+  document.querySelectorAll("[data-savep]").forEach(btn => btn.onclick = async () => {
+    const c = btn.closest("[data-p]"), m = btn.nextElementSibling, v = n => c.querySelector(`[name=${n}]`);
+    btn.disabled = true; m.className = "msg"; m.textContent = "";
+    const p = { name:v("name").value.trim(), hours:v("hours").value.trim(), info:v("info").value.trim(),
+      status: v("closed").checked ? "closed" : "", status_note: v("closed").checked ? v("status_note").value.trim() : "" };
+    if (v("fee").value) p.fee = v("fee").value;
+    try{
+      await rpc("update_place", { p_id:+c.dataset.p, p });
+      m.className = "msg ok"; m.textContent = "Saved. Changes appear on the map right away.";
+      const x = DATA.places.find(y => y.id === +c.dataset.p); if (x) Object.assign(x, p);
+      const sum = c.querySelector("summary span");
+      sum.innerHTML = `<b>${esc(p.name)}</b> ${p.status === "closed" ? `<span class="t off">Closed</span>` : ""}${x && x.verified ? `<span class="t ok">✓ Verified</span>` : ""}`;
+    }catch(err){ m.className = "msg err"; m.textContent = err.message; }
+    btn.disabled = false;
+  });
+}
+
+// ================= START =================
+async function start(){
+  $("#out").hidden = !S;
+  await claimPreview();
+  if (!S){
+    show(CLAIM ? ["claimPre", "login"] : "login");
+    if (window._linkErr){ $("#lmsg").className = "msg err"; $("#lmsg").textContent = window._linkErr; window._linkErr = null; }
+    return;
+  }
+  show("loading");
+  try{ await load(); show(CLAIM && PRE && !(DATA.muni && DATA.muni.id === CLAIM) ? ["claimPre", "app"] : "app"); }
+  catch(err){
+    if (!S){ return; }
+    $("#loading").textContent = err instanceof NetErr ? "No internet connection. Pull to refresh when you're back online." : err.message;
+  }
+}
+start();
+</script>
+</body>
+</html>
