@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+// Giriş linki yanlışlıkla ana sayfaya düşerse (Supabase yönlendirme ayarı) hesap sayfasına aktar
+if (/access_token=|error_description=/.test(location.hash)) location.replace("/account.html" + location.search + location.hash);
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LALOO · Find a bathroom anywhere</title>
 <meta name="description" content="Find the nearest bathroom anywhere: public restrooms, cafés and local tips on one map. No app to download.">
