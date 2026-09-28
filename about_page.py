@@ -227,6 +227,9 @@ def build(listed, routes, n_pages, names, city_url, now, site, lang="en", month=
    <div class="feat"><div class="i">🏙️</div><h3>{_("City pages")}</h3><p>{_("{n} pages in 5 languages, updated every night.").format(n=fmt(n_pages))}</p></div>
    <div class="feat"><div class="i">📝</div><h3>Loo Routes</h3><p>{_("Walking guides with every bathroom stop on the way.")}</p></div>
    <div class="feat"><div class="i">📊</div><h3>{_("Real numbers")}</h3><p>{_("We measure returning visitors and taps on business pins.")}</p></div>
+   <div class="feat"><div class="i">💧</div><h3>{_("Drinking water")}</h3><p>{_("Fountains and bottle refill spots, always on the map.")}</p></div>
+   <div class="feat"><div class="i">📖</div><h3>{_("Laloo Stories")}</h3><p>{_("Travelers write about places only they know, with photos we pick by hand.")}</p></div>
+   <div class="feat"><div class="i">🔒</div><h3>{_("Private by design")}</h3><p>{_("No account. We never store names or locations.")}</p></div>
   </div>
  </div>
 </section>
@@ -281,12 +284,21 @@ def build(listed, routes, n_pages, names, city_url, now, site, lang="en", month=
 
 {f'<section class="alt"><div class="wrap"><p class="eyebrow">Loo Routes</p><h2>{_("Walks with every bathroom stop.")}</h2><p class="lead">{_("Travel guides centered on the walk, not on generic top-10 lists. Paying businesses appear as clearly labeled partner stops.")}</p><div class="cities">{route_list}</div></div></section>' if route_list else ""}
 
+<section id="stories" style="border-top:1px solid var(--line)">
+ <div class="wrap">
+  <p class="eyebrow">{_("Laloo Stories")}</p>
+  <h2>{_("Not AI. Real people, real experiences.")}</h2>
+  <p class="lead">{_("Tired of travel tips that sound human but were written by a machine? On Laloo Stories, travelers and locals write about their neighborhood, the corners nobody knows and where to find a bathroom on the way. We share them in other languages, so one person's story can help someone on the other side of the world.")}</p>
+  <div class="cta"><a class="btn" href="/stories/#write">{_("Share your story")}</a><a class="btn o" href="/stories/">{_("Read stories")}</a></div>
+ </div>
+</section>
+
 <section>
  <div class="wrap">
   <p class="eyebrow">{_("Where we are going")}</p>
   <h2>{_("From one boardwalk to 150 tourist cities.")}</h2>
   <div class="road">
-   <div><b class="l">{_("LIVE")}</b><ul><li>{_("Map, filters, routes, 12 languages")}</li><li>{_("{c} cities, {t} hand-picked spots").format(c=fmt(n_cities), t=fmt(n_tips))}</li><li>{_("City pages and Loo Routes in 5 languages")}</li><li>{_("Business pins, codes and sign-up")}</li><li>{_("Account panel for businesses and cities")}</li></ul></div>
+   <div><b class="l">{_("LIVE")}</b><ul><li>{_("Map, filters, routes, 12 languages")}</li><li>{_("{c} cities, {t} hand-picked spots").format(c=fmt(n_cities), t=fmt(n_tips))}</li><li>{_("City pages and Loo Routes in 5 languages")}</li><li>{_("Business pins, codes and sign-up")}</li><li>{_("Account panel for businesses and cities")}</li><li>{_("Laloo Stories, with photos")}</li><li>{_("Drinking water on the map")}</li></ul></div>
    <div><b class="n">{_("NEXT")}</b><ul><li>{_("City profiles claimed by municipalities")}</li><li>{_("Hostel and host QR packs")}</li><li>{_("“Was this helpful?” reviews")}</li><li>{_("Weekly Loo Routes")}</li></ul></div>
    <div><b class="t">{_("LATER")}</b><ul><li>{_("Moderated bathroom reviews")}</li><li>{_("Ambassador program at scale")}</li><li>{_("Bathroom access codes shared by businesses")}</li></ul></div>
   </div>

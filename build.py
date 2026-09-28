@@ -23,6 +23,7 @@ def overpass(bbox):
 (
   nwr["amenity"="toilets"]({b});
   nwr["toilets"="yes"]({b});
+  nwr["amenity"="drinking_water"]({b});
   nwr["brand"~"^({BRANDS})$"]({b});
 );
 out center tags;'''
@@ -62,6 +63,16 @@ def parse(data):
     if lat is None: continue
     key = (round(lat, 5), round(lng, 5))
     if key in seen: continue
+    # İçme suyu: haritada her zaman görünen ayrı katman
+    if t.get("amenity") == "drinking_water":
+      if t.get("access") in ("private", "no") or t.get("drinking_water") == "no": continue
+      seen.add(key)
+      info = ["Paid" if t.get("fee") == "yes" else "Free", "Bottle refill" if t.get("bottle") == "yes" else "",
+              "Seasonal" if t.get("seasonal") not in (None, "no") else "", t.get("opening_hours", "")]
+      out.append({"osm_id": f'{e["type"]}/{e["id"]}', "lat": round(lat, 6), "lng": round(lng, 6), "kind": "water",
+                  "name": t.get("name") or "Drinking water", "info": ", ".join(x for x in info if x),
+                  "operator": (t.get("operator") or "")[:120] or None, "charge": None})
+      continue
     pub = t.get("amenity") == "toilets"
     if pub and t.get("access") in ("private", "no"): continue
     if not pub and (t.get("toilets") == "no" or t.get("toilets:access") == "private"): continue
@@ -102,7 +113,7 @@ if not SB_SECRET:
   print("No SUPABASE_SECRET, only toilets.json for LA")
   data = overpass(LA_BBOX)
   if not data: sys.exit("All servers failed")
-  pts = parse(data)
+  pts = [p for p in parse(data) if p["kind"] != "water"]
   if len(pts) < 50: sys.exit(f"Too few results ({len(pts)}), not saving")
   save_json(pts); sys.exit(0)
 
@@ -217,7 +228,7 @@ for c in cities:
   data = overpass((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
   if not data: failed.append(c["id"]); continue
   pts = parse(data)
-  if len(pts) < 5:
+  if len([p for p in pts if p["kind"] != "water"]) < 5:
     print(f"  Too few results ({len(pts)}), skipping"); sb("PATCH", f"cities?id=eq.{c['id']}", {"osm_updated": run}); continue
   # Sahibi (belediye / işletme) düzenlediği yerler kilitli: OSM onların üzerine yazmaz
   locked = {r["osm_id"] for r in sb("GET", f"places?select=osm_id&city=eq.{c['id']}&locked=is.true&osm_id=not.is.null", prefer="")}
@@ -231,7 +242,7 @@ for c in cities:
   time.sleep(4)   # Overpass'a nefes aldır (429 Too Many Requests olmasın)
   ar = areas((c["min_lat"], c["min_lng"], c["max_lat"], c["max_lng"]))
   if ar: sb("PATCH", f"cities?id=eq.{c['id']}", {"areas": ar}); print(f"  Areas {len(ar)}")
-  if c["id"] == "la": save_json(pts)
+  if c["id"] == "la": save_json([p for p in pts if p["kind"] != "water"])
   time.sleep(5)
 
 if failed: print(f"WARNING: will retry tomorrow: {failed}")

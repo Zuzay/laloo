@@ -134,7 +134,19 @@
   "Made on the Venice Beach boardwalk": "Hecho en el paseo de Venice Beach",
   "Terms": "Condiciones",
   "Numbers updated automatically every night.": "Las cifras se actualizan solas cada noche.",
-  "Map data © OpenStreetMap contributors.": "Datos del mapa © colaboradores de OpenStreetMap."
+  "Map data © OpenStreetMap contributors.": "Datos del mapa © colaboradores de OpenStreetMap.",
+  "Drinking water": "Agua potable",
+  "Fountains and bottle refill spots, always on the map.": "Fuentes y puntos para rellenar la botella, siempre en el mapa.",
+  "Laloo Stories": "Historias de Laloo",
+  "Travelers write about places only they know, with photos we pick by hand.": "Viajeros que escriben sobre sitios que solo ellos conocen, con fotos que elegimos a mano.",
+  "Private by design": "Privado desde el principio",
+  "No account. We never store names or locations.": "Sin cuenta. Nunca guardamos nombres ni ubicaciones.",
+  "Tired of travel tips that sound human but were written by a machine? On Laloo Stories, travelers and locals write about their neighborhood, the corners nobody knows and where to find a bathroom on the way. We share them in other languages, so one person's story can help someone on the other side of the world.": "¿Harto de consejos de viaje que parecen escritos por una persona pero los escribió una máquina? En las Historias de Laloo, viajeros y vecinos cuentan su barrio, los rincones que nadie conoce y dónde hay un baño por el camino. Las compartimos en otros idiomas, para que la historia de alguien ayude a otra persona al otro lado del mundo.",
+  "Share your story": "Comparte tu historia",
+  "Read stories": "Leer historias",
+  "Laloo Stories, with photos": "Historias de Laloo, con fotos",
+  "Drinking water on the map": "Agua potable en el mapa",
+  "Not AI. Real people, real experiences.": "Nada de IA. Gente real, experiencias reales."
  },
  "de": {
   "{p} public restrooms · {t} hand-picked spots": "{p} öffentliche Toiletten · {t} handverlesene Orte",
@@ -271,7 +283,19 @@
   "Made on the Venice Beach boardwalk": "Gemacht an der Promenade von Venice Beach",
   "Terms": "Bedingungen",
   "Numbers updated automatically every night.": "Die Zahlen aktualisieren sich jede Nacht von selbst.",
-  "Map data © OpenStreetMap contributors.": "Kartendaten © OpenStreetMap-Mitwirkende."
+  "Map data © OpenStreetMap contributors.": "Kartendaten © OpenStreetMap-Mitwirkende.",
+  "Drinking water": "Trinkwasser",
+  "Fountains and bottle refill spots, always on the map.": "Trinkbrunnen und Stellen zum Flaschenauffüllen, immer auf der Karte.",
+  "Laloo Stories": "Laloo Geschichten",
+  "Travelers write about places only they know, with photos we pick by hand.": "Reisende schreiben über Orte, die nur sie kennen, mit Fotos, die wir von Hand auswählen.",
+  "Private by design": "Privat von Anfang an",
+  "No account. We never store names or locations.": "Kein Konto. Wir speichern nie Namen oder Standorte.",
+  "Tired of travel tips that sound human but were written by a machine? On Laloo Stories, travelers and locals write about their neighborhood, the corners nobody knows and where to find a bathroom on the way. We share them in other languages, so one person's story can help someone on the other side of the world.": "Genug von Reisetipps, die menschlich klingen, aber von einer Maschine stammen? Bei Laloo Geschichten schreiben Reisende und Einheimische über ihr Viertel, über Ecken, die keiner kennt, und wo es unterwegs eine Toilette gibt. Wir teilen sie in anderen Sprachen, damit die Geschichte eines Menschen jemandem am anderen Ende der Welt hilft.",
+  "Share your story": "Erzähl deine Geschichte",
+  "Read stories": "Geschichten lesen",
+  "Laloo Stories, with photos": "Laloo Geschichten, mit Fotos",
+  "Drinking water on the map": "Trinkwasser auf der Karte",
+  "Not AI. Real people, real experiences.": "Keine KI. Echte Menschen, echte Erlebnisse."
  },
  "fr": {
   "{p} public restrooms · {t} hand-picked spots": "{p} toilettes publiques · {t} adresses choisies",
@@ -408,7 +432,19 @@
   "Made on the Venice Beach boardwalk": "Fait sur la promenade de Venice Beach",
   "Terms": "Conditions",
   "Numbers updated automatically every night.": "Les chiffres se mettent à jour tout seuls chaque nuit.",
-  "Map data © OpenStreetMap contributors.": "Données cartographiques © contributeurs OpenStreetMap."
+  "Map data © OpenStreetMap contributors.": "Données cartographiques © contributeurs OpenStreetMap.",
+  "Drinking water": "Eau potable",
+  "Fountains and bottle refill spots, always on the map.": "Fontaines et points pour remplir sa gourde, toujours sur la carte.",
+  "Laloo Stories": "Histoires Laloo",
+  "Travelers write about places only they know, with photos we pick by hand.": "Des voyageurs racontent des lieux qu'eux seuls connaissent, avec des photos choisies à la main.",
+  "Private by design": "Privé par principe",
+  "No account. We never store names or locations.": "Pas de compte. On n'enregistre jamais ni nom ni position.",
+  "Tired of travel tips that sound human but were written by a machine? On Laloo Stories, travelers and locals write about their neighborhood, the corners nobody knows and where to find a bathroom on the way. We share them in other languages, so one person's story can help someone on the other side of the world.": "Marre des conseils de voyage qui ont l'air humains mais sortent d'une machine ? Dans les Histoires Laloo, voyageurs et habitants racontent leur quartier, les coins que personne ne connaît et où trouver des toilettes en chemin. Nous les partageons dans d'autres langues, pour que l'histoire de l'un aide quelqu'un à l'autre bout du monde.",
+  "Share your story": "Racontez votre histoire",
+  "Read stories": "Lire les histoires",
+  "Laloo Stories, with photos": "Histoires Laloo, avec photos",
+  "Drinking water on the map": "Eau potable sur la carte",
+  "Not AI. Real people, real experiences.": "Pas d'IA. De vraies personnes, de vraies expériences."
  },
  "tr": {
   "{p} public restrooms · {t} hand-picked spots": "{p} umumi tuvalet · {t} bizzat seçtiğimiz yer",
@@ -545,6 +581,18 @@
   "Made on the Venice Beach boardwalk": "Venice Beach sahilinde yapıldı",
   "Terms": "Şartlar",
   "Numbers updated automatically every night.": "Rakamlar her gece kendiliğinden güncellenir.",
-  "Map data © OpenStreetMap contributors.": "Harita verisi © OpenStreetMap katkıcıları."
+  "Map data © OpenStreetMap contributors.": "Harita verisi © OpenStreetMap katkıcıları.",
+  "Drinking water": "İçme suyu",
+  "Fountains and bottle refill spots, always on the map.": "Çeşmeler ve şişe doldurma noktaları, haritada hep açık.",
+  "Laloo Stories": "Laloo Hikayeleri",
+  "Travelers write about places only they know, with photos we pick by hand.": "Gezginler sadece kendilerinin bildiği yerleri yazıyor, fotoğrafları biz tek tek seçiyoruz.",
+  "Private by design": "Gizlilik baştan",
+  "No account. We never store names or locations.": "Hesap yok. İsim ya da konum hiç kaydetmiyoruz.",
+  "Tired of travel tips that sound human but were written by a machine? On Laloo Stories, travelers and locals write about their neighborhood, the corners nobody knows and where to find a bathroom on the way. We share them in other languages, so one person's story can help someone on the other side of the world.": "İnsan yazmış gibi duran ama makinenin yazdığı gezi önerilerinden sıkılmadın mı? Laloo Hikayeleri'nde gezginler ve yerliler kendi mahallelerini, kimsenin bilmediği köşeleri ve yol üstünde tuvaletin nerede olduğunu anlatıyor. Biz de bunları başka dillerde paylaşıyoruz; birinin hikayesi dünyanın öbür ucundaki birinin işine yarıyor.",
+  "Share your story": "Hikayeni paylaş",
+  "Read stories": "Hikayeleri oku",
+  "Laloo Stories, with photos": "Fotoğraflı Laloo Hikayeleri",
+  "Drinking water on the map": "Haritada içme suyu",
+  "Not AI. Real people, real experiences.": "Yapay zeka değil. Gerçek insanlar, gerçek deneyimler."
  }
 }
