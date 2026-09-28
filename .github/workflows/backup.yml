@@ -1,0 +1,31 @@
+name: Weekly backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 10 * * 0"
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 backup.py
+        env:
+          SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET }}
+      - name: Encrypt
+        env:
+          BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
+        run: |
+          test -n "$BACKUP_PASSWORD" || { echo "BACKUP_PASSWORD secret missing"; exit 1; }
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in backup.tar.gz -out backup.tar.gz.enc -pass env:BACKUP_PASSWORD
+          rm -rf backup backup.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: laloo-backup-${{ github.run_number }}
+          path: backup.tar.gz.enc
+          retention-days: 90
