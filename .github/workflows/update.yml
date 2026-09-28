@@ -7,7 +7,8 @@ on:
       - build.py
       - pages.py
   schedule:
-    - cron: "0 10 * * *"
+    # Gece 20:00, 22:00, 00:00, 02:00, 04:00 (Los Angeles yaz saati; UTC olarak yazılır)
+    - cron: "0 3,5,7,9,11 * * *"
 
 permissions:
   contents: write
@@ -19,12 +20,15 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
       - run: python3 build.py
         env:
           SUPABASE_SECRET: ${{ secrets.SUPABASE_SECRET }}
           PYTHONUNBUFFERED: "1"
+          OSM_MINUTES: ${{ github.event_name == 'schedule' && '100' || '35' }}
+          CITIES_PER_RUN: ${{ github.event_name == 'schedule' && '60' || '30' }}
       - if: always()
         run: |
           git config user.name "laloo-bot"
