@@ -88,6 +88,7 @@
     <button data-t="muni">🏛️ Belediyeler</button>
     <button data-t="sugg">📥 Öneriler</button>
     <button data-t="reddit">🟠 Reddit</button>
+    <button data-t="stories">📖 Hikayeler</button>
     <button data-t="set">⚙️ Ayarlar</button>
   </nav>
   <main id="main"></main>
@@ -185,7 +186,7 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => tab(b.dat
 async function tab(t){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
   $("#main").innerHTML = "<p>Yükleniyor…</p>";
-  try{ await ({ stats, tips, biz, muni, sugg, reddit, set })[t](); }
+  try{ await ({ stats, tips, biz, muni, sugg, reddit, stories, set })[t](); }
   catch(e){ $("#main").innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; }
 }
 
@@ -429,6 +430,126 @@ async function reddit(){
   $("#rc").onchange = ev => { redditCity = ev.target.value; reddit(); };
   document.querySelectorAll("[data-done]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.done}`, "PATCH", { status:"approved" }); toast("Güzel, işaretlendi"); reddit(); });
   document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); reddit(); });
+}
+
+// ---------- HİKAYELER (laloo.org/stories) ----------
+let storyTab = "pending", storyOpen = null;
+const PL = { wc:{yes:"🚻 tuvalet var",no:"tuvalet yok",unsure:"hatırlamıyor"}, code:{yes:"şifreli",no:"şifresiz"}, who:{all:"herkese açık",cust:"sadece müşteri",ask:"sor"},
+  clean:{3:"temiz",2:"idare eder",1:"kötü"}, queue:{none:"sıra yok",short:"kısa sıra",long:"uzun sıra"}, baby:{yes:"bebek masası",no:"bebek masası yok"}, parking:{yes:"otopark",street:"sokakta park",no:"otopark yok"} };
+function storyMail(s, kind){
+  const link = `https://laloo.org/stories/?s=${s.id}`;
+  const tr = (s.lang || "").startsWith("tr");
+  const sub = kind === "live" ? (tr ? "Hikayen Laloo'da yayında" : "Your story is live on Laloo")
+                              : (tr ? `Hikayen ${s.reads} kez okundu` : `Your story has been read ${s.reads} times`);
+  const body = kind === "live"
+    ? (tr ? `Merhaba ${s.nickname},\n\n"${s.title}" artık Laloo'da yayında:\n${link}\n\nPaylaştığın için teşekkürler. Linki arkadaşlarınla paylaşabilirsin.\n\nLaloo`
+          : `Hi ${s.nickname},\n\n"${s.title}" is now live on Laloo:\n${link}\n\nThank you for sharing it. Feel free to pass the link on.\n\nLaloo`)
+    : (tr ? `Merhaba ${s.nickname},\n\n"${s.title}" şu ana kadar ${s.reads} kez okundu:\n${link}\n\nBaşka bir yerin hikayesi varsa bekliyoruz: https://laloo.org/stories/#write\n\nLaloo`
+          : `Hi ${s.nickname},\n\n"${s.title}" has been read ${s.reads} times so far:\n${link}\n\nIf you have another place to write about, we'd love it: https://laloo.org/stories/#write\n\nLaloo`);
+  return `mailto:${encodeURIComponent(s.email)}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
+}
+async function stories(){
+  const order = storyTab === "published" ? "published_at.desc" : "created_at.desc";
+  const list = await db(`stories?select=*&status=eq.${storyTab}&order=${order}&limit=200`);
+  const words = t => (String(t || "").trim().match(/\S+/g) || []).length;
+  const cl = s => (s.cities || []).map(c => c.city + (c.country ? ", " + c.country : "")).join(" · ");
+  $("#main").innerHTML = `
+    <h2>📖 Hikayeler</h2>
+    <p class="hint">laloo.org/stories formundan gelir. Kontrol listesi: kumarhane adı yok, kesin gün/saat yok, hatırlanmayan mekan tahmin edilmemiş, kişisel bilgi/küfür yok. Hafif düzenleyebilirsin. Yayınla dediğinde yerler haritaya otomatik yerleştirilir. İki hafta içinde yayınla.</p>
+    <div class="row">${["pending","published","rejected"].map(t => `<button class="b ${t === storyTab ? "p" : ""}" data-st="${t}">${{pending:"Bekleyen",published:"Yayında",rejected:"Reddedilen"}[t]}</button>`).join("")}
+      <a class="b" href="https://laloo.org/stories/" target="_blank" rel="noopener">Sayfayı aç</a><span class="hint">${list.length} hikaye</span></div>
+    <div class="tbl" style="margin-top:10px"><table><tr><th>Hikaye</th><th></th></tr>
+      ${list.map(s => {
+        const age = Math.floor((Date.now() - new Date(s.created_at)) / 864e5);
+        return `<tr><td><b>${esc(s.title)}</b><br><span class="hint">${esc(s.nickname)}${s.email ? " · " + esc(s.email) : ""} · ${esc(cl(s))} · ${words(s.body)} kelime · ${esc(s.lang || "")} · ${s.created_at.slice(0, 10)}</span>
+          ${storyTab === "pending" ? `<br><span class="pill ${age >= 10 ? "bad" : ""}">${age} gün önce geldi${age >= 10 ? ", süre doluyor" : ""}</span>` : ""}
+          ${storyTab === "published" ? `<br><span class="pill ok">${s.reads} okunma</span> ${s.mailed_at ? `<span class="pill">son mail ${s.mailed_at.slice(0, 10)}</span>` : ""}` : ""}</td>
+          <td class="row"><button class="b" data-so="${s.id}">${storyOpen === s.id ? "Kapat" : "Aç"}</button>
+          ${storyTab === "published" ? `<a class="b" href="https://laloo.org/stories/?s=${s.id}" target="_blank" rel="noopener">Gör</a>${s.email ? `<a class="b" data-ml="${s.id}" href="${storyMail(s, "reads")}">Okunma maili</a>` : ""}` : ""}</td></tr>
+          ${storyOpen === s.id ? `<tr><td colspan="2">
+            <form class="f" data-sf="${s.id}">
+              <label class="w">Başlık<input name="title" value="${esc(s.title)}"></label>
+              <label class="w">Metin (hafif düzenleme)<textarea name="body" style="min-height:320px">${esc(s.body)}</textarea></label>
+              <label>Kapak fotoğrafı URL (Unsplash, Pexels, Wikimedia; isteğe bağlı)<input name="cover_url" value="${esc(s.cover_url || "")}" placeholder="https://images.unsplash.com/...?w=1200"></label>
+              <label>Fotoğraf kaynağı<input name="cover_credit" value="${esc(s.cover_credit || "")}" placeholder="Photo: Ad Soyad / Unsplash"></label>
+              <label class="w">Çeviriler (JSON, isteğe bağlı) <span class="hint">ör. {"en":{"title":"...","body":"..."}}</span><textarea name="i18n">${esc(JSON.stringify(s.i18n || {}) === "{}" ? "" : JSON.stringify(s.i18n, null, 1))}</textarea></label>
+              <div class="w"><b style="font-size:13px">Fotoğraflar (${(s.photos || []).length})</b> <span class="hint">Yayınlanacakları işaretle. Yayınla dediğinde işaretsizler depodan silinir, reddedince hepsi silinir.</span>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:6px">
+                ${(s.photos || []).map((p, i) => `<label style="font-weight:400;color:var(--navy)"><a href="${SB_URL}/storage/v1/object/public/story-photos/${esc(p.path)}" target="_blank" rel="noopener"><img src="${SB_URL}/storage/v1/object/public/story-photos/${esc(p.path)}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;display:block" loading="lazy"></a>
+                  <span class="row"><input type="checkbox" data-ph="${i}" ${p.pub ? "checked" : ""} style="width:auto"> ${esc(p.city || "")}</span></label>`).join("") || `<p class="hint">Fotoğraf yok</p>`}
+                </div></div>
+              <div class="w"><b style="font-size:13px">Yerler (${(s.places || []).length})</b>
+                ${(s.places || []).map((p, i) => `<div class="note" style="margin-top:6px"><b>${esc(p.name)}</b> ${esc([p.hood, p.city].filter(Boolean).join(", "))}
+                  ${p.lat != null ? `· <a href="https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lng}#map=18/${p.lat}/${p.lng}" target="_blank" rel="noopener">konum ✓</a>` : "· konum yok"}<br>
+                  ${Object.keys(PL).filter(k => p[k] && PL[k][p[k]]).map(k => PL[k][p[k]]).join(", ")}${p.wc_where ? " · " + esc(p.wc_where) : ""}${p.price ? " · " + "$".repeat(+p.price) : ""}${p.visited ? " · " + esc(p.visited) : ""}${p.ig ? " · " + esc(p.ig) : ""}
+                  <div class="row" style="margin-top:6px"><input data-pq="${i}" placeholder="Konum bulunamazsa adres yaz" style="max-width:300px"><button type="button" class="b" data-pg="${i}">Konum bul</button><button type="button" class="b r" data-pd="${i}">Yeri sil</button></div></div>`).join("") || `<p class="hint">Yer eklenmemiş</p>`}
+              </div>
+              <div class="w row">
+                ${storyTab !== "published" ? `<button type="button" class="b p" data-pub>Yayınla</button>` : `<button type="button" class="b p" data-save>Kaydet</button><button type="button" class="b" data-unpub>Yayından kaldır</button>`}
+                ${storyTab === "pending" ? `<button type="button" class="b" data-save>Sadece kaydet</button>` : ""}
+                ${storyTab !== "rejected" ? `<button type="button" class="b r" data-rej>Reddet</button>` : ""}
+              </div>
+            </form></td></tr>` : ""}`;
+      }).join("") || `<tr><td colspan="2">Burada hikaye yok</td></tr>`}
+    </table></div>`;
+  document.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { storyTab = b.dataset.st; storyOpen = null; stories(); });
+  document.querySelectorAll("[data-so]").forEach(b => b.onclick = () => { storyOpen = storyOpen === b.dataset.so ? null : b.dataset.so; stories(); });
+  document.querySelectorAll("[data-ml]").forEach(a => a.addEventListener("click", () => db(`stories?id=eq.${a.dataset.ml}`, "PATCH", { mailed_at:new Date().toISOString() }).catch(() => {})));
+  const f = document.querySelector("[data-sf]");
+  if (!f) return;
+  const s = list.find(x => x.id === f.dataset.sf);
+  const places = JSON.parse(JSON.stringify(s.places || []));
+  const cityOf = p => p.city || (s.cities && s.cities[0] ? s.cities[0].city + (s.cities[0].country ? ", " + s.cities[0].country : "") : "");
+  async function locate(i, q){
+    const p = places[i];
+    try{ Object.assign(p, await geocode(q || [p.name, p.hood, cityOf(p)].filter(Boolean).join(", "))); return true; }
+    catch(e){ try{ Object.assign(p, await geocode([p.name, cityOf(p)].filter(Boolean).join(", "))); return true; }catch(e2){ return false; } }
+  }
+  const photos = (s.photos || []).map(p => ({ ...p }));
+  f.querySelectorAll("[data-ph]").forEach(c => c.onchange = () => { photos[+c.dataset.ph].pub = c.checked; });
+  async function dropPhotos(all){
+    const gone = photos.filter(p => all || !p.pub).map(p => p.path);
+    if (!gone.length) return;
+    try{
+      await fresh();
+      await fetch(`${SB_URL}/storage/v1/object/story-photos`, { method:"DELETE",
+        headers:{ apikey:SB_KEY, Authorization:"Bearer " + S.access_token, "Content-Type":"application/json" }, body:JSON.stringify({ prefixes:gone }) });
+      for (let i = photos.length - 1; i >= 0; i--) if (all || !photos[i].pub) photos.splice(i, 1);
+    }catch(e){ toast("Fotoğraflar silinemedi"); }
+  }
+  function fields(){
+    const o = { title:f.title.value.trim(), body:f.body.value.trim(), places, photos,
+      cover_url: /^https:\/\//.test(f.cover_url.value.trim()) ? f.cover_url.value.trim() : null, cover_credit:f.cover_credit.value.trim() || null };
+    const t = f.i18n.value.trim();
+    try{ o.i18n = t ? JSON.parse(t) : {}; }catch(e){ throw new Error("Çeviri JSON'u bozuk"); }
+    return o;
+  }
+  const save = async (extra = {}, msg = "Kaydedildi") => {
+    try{ await db(`stories?id=eq.${s.id}`, "PATCH", { ...fields(), ...extra }); toast(msg); storyOpen = null; stories(); }
+    catch(e){ toast(e.message); }
+  };
+  f.querySelectorAll("[data-pg]").forEach(b => b.onclick = async () => {
+    const i = +b.dataset.pg; b.disabled = true;
+    const ok = await locate(i, f.querySelector(`[data-pq="${i}"]`).value.trim());
+    toast(ok ? `Bulundu: ${places[i].lat}, ${places[i].lng}` : "Bulunamadı, adres yaz"); b.disabled = false;
+    if (ok) await db(`stories?id=eq.${s.id}`, "PATCH", { places }).catch(() => {});
+  });
+  f.querySelectorAll("[data-pd]").forEach(b => b.onclick = () => { if (confirmDel(b)){ places.splice(+b.dataset.pd, 1); b.closest(".note").remove(); } });
+  function confirmDel(b){ if (b.dataset.sure) return true; b.dataset.sure = 1; b.textContent = "Emin misin?"; return false; }
+  const pub = f.querySelector("[data-pub]");
+  if (pub) pub.onclick = async () => {
+    pub.disabled = true; pub.textContent = "Yerler haritaya yerleştiriliyor…";
+    for (let i = 0; i < places.length; i++) if (places[i].lat == null){ await locate(i); await new Promise(r => setTimeout(r, 1100)); }   // Nominatim: saniyede 1 istek
+    await dropPhotos(false);
+    await save({ status:"published", published_at: s.published_at || new Date().toISOString() }, "Yayında");
+    if (s.email && confirm(`${s.nickname} kişisine "yayında" maili açılsın mı?`)){
+      location.href = storyMail({ ...s, title:f.title.value.trim() }, "live");
+      db(`stories?id=eq.${s.id}`, "PATCH", { mailed_at:new Date().toISOString() }).catch(() => {});
+    }
+  };
+  f.querySelectorAll("[data-save]").forEach(b => b.onclick = () => save());
+  const un = f.querySelector("[data-unpub]"); if (un) un.onclick = () => save({ status:"pending" }, "Yayından kaldırıldı");
+  const rj = f.querySelector("[data-rej]"); if (rj) rj.onclick = () => { if (confirmDel(rj)) dropPhotos(true).then(() => save({ status:"rejected" }, "Reddedildi")); };
 }
 
 // ---------- BELEDİYELER ----------

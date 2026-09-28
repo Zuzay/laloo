@@ -393,7 +393,7 @@ def generate(cities, places_for, root=".", now=None):
   json.dump(sorted(made), open(os.path.join(root, MANIFEST), "w"), indent=0)
   # sitemap.xml ve robots.txt
   urls = [f"{SITE}/"] + [SITE + "/" + rel[:-len("index.html")] for rel in sorted(made)]
-  for extra in ("hosts/index.html",):          # elle yüklenen sabit sayfalar
+  for extra in ("hosts/index.html", "stories/index.html"):          # elle yüklenen sabit sayfalar
     if os.path.exists(os.path.join(root, extra)): urls.append(SITE + "/" + extra[:-len("index.html")])
   sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
   sm += [f"  <url><loc>{esc(u)}</loc></url>" for u in urls]

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laloo Stories · Real places, told by real people</title>
+<meta name="description" content="Travel stories written by real people, not robots. Share your neighborhood, the places nobody knows, and where to find a bathroom on the way.">
+<link rel="canonical" href="https://laloo.org/stories/">
+<meta property="og:title" content="Laloo Stories · Real places, told by real people">
+<meta property="og:description" content="Tired of travel tips that sound human but aren't? Share what only someone who went there can tell.">
+<meta property="og:url" content="https://laloo.org/stories/">
+<meta name="theme-color" content="#fefef8">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--navy:#10223d;--blue:#1c4fa0;--red:#e0453a;--line:#e6e1d4;--bg:#fefef8;--muted:#5f6b7d;--card:#fff;--tag:#e8f0fb;--green:#1b7a3a;--greenbg:#e3f6e8;--sand:#f6f1e4;--field:#fff}
+@media (prefers-color-scheme:dark){:root{--navy:#e9eef6;--blue:#8fb4ff;--line:#2a3445;--bg:#111722;--muted:#9aa6b8;--card:#172030;--tag:#1f2e48;--green:#7fd79a;--greenbg:#1d3326;--sand:#161e2b;--field:#0f1520}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--navy);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--blue)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:1000}
+header img{height:34px;display:block;border-radius:8px}
+@media (prefers-color-scheme:dark){header img{background:#fefef8;padding:2px 6px;height:38px}}
+header nav{display:flex;gap:6px}
+.pill{display:inline-block;text-decoration:none;font:inherit;font-weight:700;font-size:14px;padding:8px 13px;border-radius:999px;border:1px solid var(--line);color:var(--navy);background:none;cursor:pointer}
+.pill.p{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.pill.big{font-size:16px;padding:12px 18px}
+section{padding:48px 16px}section.alt{background:var(--sand)}
+.wrap{max-width:760px;margin:0 auto}.wide{max-width:1040px;margin:0 auto}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
+h1{font-size:clamp(36px,8vw,64px);line-height:1;letter-spacing:-.02em;margin:0 0 20px}
+h2{font-size:clamp(26px,5vw,38px);line-height:1.1;letter-spacing:-.01em;margin:0 0 14px}
+.lead{font-size:clamp(18px,2.6vw,21px);margin:0 0 16px}
+.manifesto p{font-size:clamp(17px,2.3vw,19px);color:var(--muted);margin:0 0 14px}
+.manifesto p.lead{color:var(--navy)}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.muted{color:var(--muted)}.small{font-size:14px}
+/* hikaye listesi */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:18px}
+.sc{display:block;text-decoration:none;color:var(--navy);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer}
+.sc:hover{border-color:var(--blue)}
+.sc b{display:block;font-size:19px;line-height:1.25;margin-bottom:6px}
+.sc p{margin:8px 0 0;color:var(--muted);font-size:15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--tag);color:var(--blue);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
+.chip button{border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:0 0 0 2px}
+.meta{font-size:13px;color:var(--muted);margin-top:10px}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:22px;color:var(--muted)}
+/* tek hikaye */
+#story article h1{font-size:clamp(32px,6vw,52px)}
+.body p{margin:0 0 18px;font-size:clamp(18px,2.3vw,20px);line-height:1.7}
+.cover{margin:18px 0 22px}
+.cover img{width:100%;max-height:420px;object-fit:cover;border-radius:16px;display:block}
+.cover figcaption{font-size:12px;color:var(--muted);margin-top:6px}
+#smap{height:300px;border-radius:16px;border:1px solid var(--line);margin:22px 0 10px}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px}
+.pc b{font-size:17px}
+.pc .tags{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.pc .tags span{font-size:12px;font-weight:700;background:var(--tag);color:var(--blue);border-radius:8px;padding:2px 7px}
+.pc .tags span.g{background:var(--greenbg);color:var(--green)}
+.tr{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:26px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+/* form */
+form{margin-top:10px}
+.fb{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px}
+.fb h3{margin:0 0 4px;font-size:18px}
+label{display:block;font-size:14px;font-weight:700;margin:12px 0 0}
+label .opt{font-weight:500;color:var(--muted)}
+input[type=text],input[type=email],input[type=month],textarea,select{display:block;width:100%;margin-top:5px;font:inherit;font-size:16px;color:var(--navy);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(28,79,160,.15)}
+textarea#body{min-height:280px;resize:vertical;line-height:1.6}
+.row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.row > *{flex:1 1 150px}
+.row .pill{flex:0 0 auto}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.seg label{margin:0;font-weight:600;font-size:14px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:var(--field)}
+.seg input:checked + span{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.seg input:focus-visible + span{box-shadow:0 0 0 3px rgba(28,79,160,.3)}
+.place{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;background:var(--bg)}
+.place .top{display:flex;justify-content:space-between;align-items:center}
+.place .top b{font-size:15px}
+.more{margin-top:10px}
+.more summary{cursor:pointer;color:var(--blue);font-weight:700;font-size:14px}
+.sub{border-left:3px solid var(--tag);padding-left:12px;margin-top:6px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.check input{margin-top:5px;width:18px;height:18px;flex:none}
+.rules{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:15px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ex{background:var(--sand);border-radius:14px;padding:4px 16px;margin-top:10px}
+.ex summary{cursor:pointer;font-weight:700;padding:10px 0}
+.ex .body p{font-size:16px}
+.wc{font-size:13px;color:var(--muted);text-align:right;margin-top:4px}
+#fmsg{font-weight:700;margin-top:14px}
+#fmsg.ok{color:var(--green)}#fmsg.err{color:var(--red)}
+.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin-top:8px}
+.ph div{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--sand)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(16,34,61,.75);color:#fff;cursor:pointer;font-size:13px}
+.pcity{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.pcity:first-child{border-top:0;padding-top:0}
+.pcity .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pcity input[type=file]{display:none}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:22px 0}
+.gal figure{margin:0}.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block;cursor:zoom-in}
+.gal figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.thanks{background:var(--greenbg);color:var(--green);border-radius:16px;padding:22px;font-size:18px;font-weight:600}
+footer{max-width:1040px;margin:0 auto;padding:22px 16px 44px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+@media(max-width:560px){header nav .hide-s{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <a href="/"><img src="/logo-header.png" alt="LALOO"></a>
+  <nav><a class="pill hide-s" href="/" data-i="map">Open the map</a><a class="pill p" href="#write" data-i="share">Share your story</a></nav>
+</header>
+
+<!-- Tanıtım + liste -->
+<div id="home">
+  <section>
+    <div class="wrap manifesto">
+      <p class="eyebrow" data-i="eyebrow">Laloo Stories</p>
+      <h1 data-i="h1">Real places. Real people. No robots.</h1>
+      <p class="lead" data-i="p1"></p>
+      <p data-i="p2"></p>
+      <p data-i="p3"></p>
+      <div class="ctas"><a class="pill p big" href="#write" data-i="share">Share your story</a><a class="pill big" href="#read" data-i="readall">Read stories</a></div>
+    </div>
+  </section>
+  <section class="alt" id="read">
+    <div class="wide">
+      <h2 data-i="latest">Latest stories</h2>
+      <div class="list" id="list"><div class="empty" data-i="loading">Loading…</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- Tek hikaye -->
+<section id="story" hidden><div class="wrap"><article id="art"></article></div></section>
+
+<!-- Form -->
+<section id="write">
+  <div class="wrap">
+    <p class="eyebrow" data-i="share">Share your story</p>
+    <h2 data-i="w_h">Tell us what only you can tell.</h2>
+    <p class="muted" data-i="w_p">Your neighborhood, a street you love, a trip you still think about. Write it the way you'd tell a friend. No word limit.</p>
+    <details class="ex" id="exbox" hidden><summary data-i="ex_t">Read an example first</summary><div class="body" id="exbody"></div></details>
+
+    <form id="sf" novalidate>
+      <div class="fb">
+        <h3 data-i="f_story">Your story</h3>
+        <label><span data-i="f_title">Title</span><input type="text" name="title" maxlength="160" required></label>
+        <label><span data-i="f_body">Your story</span><textarea id="body" name="body" required></textarea></label>
+        <div class="wc" id="wc"></div>
+        <ul class="rules">
+          <li data-i="r1">Write what you saw and felt yourself.</li>
+          <li data-i="r2">No exact days or times, and no names of casinos.</li>
+          <li data-i="r3">If you don't remember a place's name, just describe it. We won't guess.</li>
+        </ul>
+      </div>
+
+      <div class="fb">
+        <h3 data-i="f_where">Where did it happen?</h3>
+        <p class="muted small" data-i="f_where_s">Add every city. A story can cross countries.</p>
+        <div class="row">
+          <label><span data-i="f_city">City</span><input type="text" id="cin" maxlength="80"></label>
+          <label><span data-i="f_country">Country</span><input type="text" id="coin" maxlength="60"></label>
+          <button type="button" class="pill" id="cadd" data-i="add">Add</button>
+        </div>
+        <div class="chips" id="cchips" style="margin-top:10px"></div>
+        <label class="check" style="margin-top:14px"><input type="checkbox" name="is_route"> <span data-i="f_route">This is a route: I went from place to place</span></label>
+      </div>
+
+      <div class="fb">
+        <h3 data-i="f_places">Places in your story <span class="opt" data-i="optional">(optional)</span></h3>
+        <p class="muted small" data-i="f_places_s">Cafés, bars, a park, a hidden corner. Tell others if there's a bathroom.</p>
+        <div id="places"></div>
+        <button type="button" class="pill" id="padd" style="margin-top:12px" data-i="p_add">+ Add a place</button>
+      </div>
+
+      <div class="fb">
+        <h3 data-i="f_photos">Photos <span class="opt" data-i="optional">(optional)</span></h3>
+        <p class="muted small" data-i="f_photos_s">Up to 5 photos for each city. We choose which ones to publish: some, or none, may go live. The door, the sign or the street helps others most. Please no faces of people who didn't agree.</p>
+        <div id="phs"><p class="muted small" data-i="ph_first">Add a city above first.</p></div>
+      </div>
+
+      <div class="fb">
+        <h3 data-i="f_you">About you</h3>
+        <div class="row">
+          <label><span data-i="f_nick">Nickname</span> <span class="opt" data-i="f_nick_s">(shown with your story)</span><input type="text" name="nickname" maxlength="40" required></label>
+          <label><span data-i="f_email">Email</span> <span class="opt" data-i="optional">(optional)</span><input type="email" name="email" maxlength="200" autocomplete="email"></label>
+        </div>
+        <p class="muted small" data-i="f_email_s">Leave your email and we'll tell you when your story is live and how many people read it. We never show it.</p>
+        <label class="check" style="margin-top:14px"><input type="checkbox" name="consent" required> <span data-i="consent">I wrote this myself. Laloo may publish it, lightly edit it and translate it into other languages. Stories go live within two weeks.</span></label>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="ctas"><button class="pill p big" id="send" data-i="send">Send my story</button></div>
+        <p id="fmsg" hidden></p>
+      </div>
+    </form>
+    <div class="thanks" id="thanks" hidden data-i="thanks"></div>
+  </div>
+</section>
+
+<footer><a href="/" data-i="map">Open the map</a> · <a href="/about/">About Laloo</a> · hello@laloo.org</footer>
+
+<template id="ptpl">
+  <div class="place">
+    <div class="top"><b data-i="p_t">Place</b><button type="button" class="pill small" data-rm data-i="remove">Remove</button></div>
+    <div class="row">
+      <label><span data-i="p_name">Name</span><input type="text" data-k="name" maxlength="120"></label>
+      <label><span data-i="p_hood">Neighborhood</span><input type="text" data-k="hood" maxlength="80"></label>
+    </div>
+    <label><span data-i="p_city">City</span><select data-k="city"></select></label>
+    <label><span data-i="p_wc">Is there a bathroom?</span></label>
+    <div class="seg" data-g="wc">
+      <label><input type="radio" value="yes"><span data-i="yes">Yes</span></label>
+      <label><input type="radio" value="no"><span data-i="no">No</span></label>
+      <label><input type="radio" value="unsure"><span data-i="unsure">Don't remember</span></label>
+    </div>
+    <div class="sub" data-wcx hidden>
+      <label><span data-i="p_code">Needs a code or key?</span></label>
+      <div class="seg" data-g="code"><label><input type="radio" value="yes"><span data-i="yes">Yes</span></label><label><input type="radio" value="no"><span data-i="no">No</span></label></div>
+      <label><span data-i="p_who">Who can use it?</span></label>
+      <div class="seg" data-g="who"><label><input type="radio" value="all"><span data-i="who_all">Anyone</span></label><label><input type="radio" value="cust"><span data-i="who_cust">Customers only</span></label><label><input type="radio" value="ask"><span data-i="who_ask">Just ask</span></label></div>
+      <details class="more"><summary data-i="more">+ Add details</summary>
+        <label><span data-i="p_clean">How clean?</span></label>
+        <div class="seg" data-g="clean"><label><input type="radio" value="3"><span data-i="c3">Clean</span></label><label><input type="radio" value="2"><span data-i="c2">OK</span></label><label><input type="radio" value="1"><span data-i="c1">Not great</span></label></div>
+        <label><span data-i="p_loc">Where is it inside?</span><input type="text" data-k="wc_where" maxlength="120" data-ph="p_loc_ph"></label>
+        <label><span data-i="p_queue">Queue?</span></label>
+        <div class="seg" data-g="queue"><label><input type="radio" value="none"><span data-i="q0">None</span></label><label><input type="radio" value="short"><span data-i="q1">Short</span></label><label><input type="radio" value="long"><span data-i="q2">Long</span></label></div>
+        <label><span data-i="p_baby">Baby changing table?</span></label>
+        <div class="seg" data-g="baby"><label><input type="radio" value="yes"><span data-i="yes">Yes</span></label><label><input type="radio" value="no"><span data-i="no">No</span></label></div>
+      </details>
+    </div>
+    <details class="more"><summary data-i="more2">+ More about this place</summary>
+      <label><span data-i="p_park">Parking?</span></label>
+      <div class="seg" data-g="parking"><label><input type="radio" value="yes"><span data-i="yes">Yes</span></label><label><input type="radio" value="street"><span data-i="street">Street only</span></label><label><input type="radio" value="no"><span data-i="no">No</span></label></div>
+      <label><span data-i="p_price">Price level</span></label>
+      <div class="seg" data-g="price"><label><input type="radio" value="1"><span>$</span></label><label><input type="radio" value="2"><span>$$</span></label><label><input type="radio" value="3"><span>$$$</span></label><label><input type="radio" value="4"><span>$$$$</span></label></div>
+      <div class="row">
+        <label><span data-i="p_when">When did you go?</span> <span class="opt" data-i="month">(month)</span><input type="month" data-k="visited"></label>
+        <label><span>Instagram</span><input type="text" data-k="ig" maxlength="60" placeholder="@place"></label>
+      </div>
+    </details>
+  </div>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ================= AYARLAR =================
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";   // herkese açık anahtar
+// ================= DİLLER =================
+const TXT = {
+en:{ map:"Open the map", share:"Share your story", eyebrow:"Laloo Stories", h1:"Real places. Real people. No robots.",
+  p1:"Tired of travel posts that sound human but were written by a machine? Robot tips are fine, they work. But nothing replaces an experience told with real feeling. So come and share your story.",
+  p2:"Write about your neighborhood, your street, the corner of the world you know. The things nobody else knows. The things only someone who went there can tell.",
+  p3:"We'll share your experience with people in other languages. Your story might lead someone on the other side of the world to something they would never have found.",
+  readall:"Read stories", latest:"Latest stories", loading:"Loading…", none:"No stories yet. Be the first.", err:"Couldn't load stories. Please try again.",
+  w_h:"Tell us what only you can tell.", w_p:"Your neighborhood, a street you love, a trip you still think about. Write it the way you'd tell a friend. No word limit.",
+  ex_t:"Read an example first", f_story:"Your story", f_title:"Title", f_body:"Your story", words:"words",
+  r1:"Write what you saw and felt yourself.", r2:"No exact days or times, and no names of casinos.", r3:"If you don't remember a place's name, just describe it. We won't guess.",
+  f_where:"Where did it happen?", f_where_s:"Add every city. A story can cross countries.", f_city:"City", f_country:"Country", add:"Add",
+  f_route:"This is a route: I went from place to place", f_places:"Places in your story", optional:"(optional)",
+  f_places_s:"Cafés, bars, a park, a hidden corner. Tell others if there's a bathroom.", p_add:"+ Add a place",
+  f_you:"About you", f_nick:"Nickname", f_nick_s:"(shown with your story)", f_email:"Email",
+  f_email_s:"Leave your email and we'll tell you when your story is live and how many people read it. We never show it.",
+  consent:"I wrote this myself. Laloo may publish it, lightly edit it and translate it into other languages. Stories go live within two weeks.",
+  send:"Send my story", sending:"Sending…",
+  thanks:"Thank you! We'll read your story and publish it within two weeks. If you left your email, we'll let you know when it's live.",
+  fail:"Couldn't send. Please try again.", need:"Please add a title, your story, a nickname and at least one city, and tick the box.",
+  short:"Your story is a bit short. Tell us a little more.", toomany:"You've sent a lot today, thank you! Try again tomorrow.",
+  f_photos:"Photos", f_photos_s:"Up to 5 photos for each city. We choose which ones to publish: some, or none, may go live. The door, the sign or the street helps others most. Please no faces of people who didn't agree.", ph_first:"Add a city above first.", ph_add:"+ Add photos", ph_max:"Max 5 photos for this city.", uploading:"Uploading photos…", photos_t:"Photos",
+  p_t:"Place", remove:"Remove", p_name:"Name", p_hood:"Neighborhood", p_city:"City", p_wc:"Is there a bathroom?", yes:"Yes", no:"No", unsure:"Don't remember",
+  p_code:"Needs a code or key?", p_who:"Who can use it?", who_all:"Anyone", who_cust:"Customers only", who_ask:"Just ask", more:"+ Add details",
+  p_clean:"How clean?", c3:"Clean", c2:"OK", c1:"Not great", p_loc:"Where is it inside?", p_loc_ph:"Downstairs, behind the bar…", p_queue:"Queue?", q0:"None", q1:"Short", q2:"Long",
+  p_baby:"Baby changing table?", more2:"+ More about this place", p_park:"Parking?", street:"Street only", p_price:"Price level", p_when:"When did you go?", month:"(month)",
+  by:"by", reads:"reads", back:"← All stories", places:"Places in this story", wc_yes:"🚻 Bathroom", wc_no:"No bathroom", code:"Code needed", nocode:"No code",
+  who_all_t:"Open to anyone", who_cust_t:"Customers only", who_ask_t:"Ask inside", clean3:"Clean", clean2:"OK", clean1:"Not great", queue_none:"No queue", queue_short:"Short queue", queue_long:"Long queue",
+  baby_t:"Baby changing", park_yes:"Parking", park_street:"Street parking", park_no:"No parking", visited:"Visited",
+  readin:"Read in", copy:"Copy link", copied:"Link copied", route:"Route", write_own:"Write your own story", notfound:"This story isn't available." },
+tr:{ map:"Haritayı aç", share:"Hikayeni paylaş", eyebrow:"Laloo Hikayeleri", h1:"Gerçek yerler. Gerçek insanlar. Robot yok.",
+  p1:"İnsan gibi görünen ama bir makinenin yazdığı gezi yazılarından sıkılmadınız mı? Robotların önerileri tamam, işe yarar. Ama gerçek bir hissiyatla anlatılan deneyimin yerini kim tutabilir? O yüzden gelin, hikayenizi paylaşın.",
+  p2:"Mahallenizi yazın, sokağınızı, çevrenizi. Kimsenin bilmediği şeyleri. Gidip görmeyenin anlatamayacağı şeyleri.",
+  p3:"Biz de deneyiminizi başka dillerde insanlarla paylaşalım. Sizin hikayeniz, dünyanın öbür ucundaki birini belki de asla bulamayacağı bir bilgiye ulaştıracak.",
+  readall:"Hikayeleri oku", latest:"Son hikayeler", loading:"Yükleniyor…", none:"Henüz hikaye yok. İlk sen yaz.", err:"Hikayeler yüklenemedi. Tekrar dene.",
+  w_h:"Sadece senin anlatabileceğini anlat.", w_p:"Mahallen, sevdiğin bir sokak, hâlâ aklından çıkmayan bir yolculuk. Bir arkadaşına anlatır gibi yaz. Kelime sınırı yok.",
+  ex_t:"Önce bir örnek oku", f_story:"Hikayen", f_title:"Başlık", f_body:"Hikayen", words:"kelime",
+  r1:"Kendi gördüğünü ve hissettiğini yaz.", r2:"Kesin gün ve saat yazma, kumarhane adı verme.", r3:"Bir yerin adını hatırlamıyorsan tarif et, biz tahmin etmeyiz.",
+  f_where:"Nerede geçti?", f_where_s:"Her şehri ekle. Bir hikaye ülkeler arası olabilir.", f_city:"Şehir", f_country:"Ülke", add:"Ekle",
+  f_route:"Bu bir rota: yerden yere gezdim", f_places:"Hikayendeki yerler", optional:"(isteğe bağlı)",
+  f_places_s:"Kafeler, barlar, bir park, gizli bir köşe. Tuvalet varsa başkalarına söyle.", p_add:"+ Yer ekle",
+  f_you:"Senin hakkında", f_nick:"Rumuz", f_nick_s:"(hikayenle görünür)", f_email:"E-posta",
+  f_email_s:"E-postanı bırakırsan hikayen yayına girince ve kaç kişi okuduğunu sana haber veririz. Hiçbir yerde görünmez.",
+  consent:"Bunu kendim yazdım. Laloo yayınlayabilir, hafifçe düzenleyebilir ve başka dillere çevirebilir. Hikayeler iki hafta içinde yayına girer.",
+  send:"Hikayemi gönder", sending:"Gönderiliyor…",
+  thanks:"Teşekkürler! Hikayeni okuyup iki hafta içinde yayınlayacağız. E-posta bıraktıysan yayına girince haber vereceğiz.",
+  fail:"Gönderilemedi. Tekrar dene.", need:"Başlık, hikaye, rumuz ve en az bir şehir ekle, kutucuğu işaretle.",
+  short:"Hikayen biraz kısa. Biraz daha anlat.", toomany:"Bugün çok gönderdin, teşekkürler! Yarın tekrar dene.",
+  f_photos:"Fotoğraflar", f_photos_s:"Her şehir için en fazla 5 fotoğraf. Hangilerinin yayınlanacağını biz seçeriz: bazıları ya da hiçbiri yayına girmeyebilir. Kapı, tabela ya da sokak fotoğrafı başkalarına en çok yardım eder. İzni olmayan insanların yüzü olmasın lütfen.", ph_first:"Önce yukarıdan şehir ekle.", ph_add:"+ Fotoğraf ekle", ph_max:"Bu şehir için en fazla 5 fotoğraf.", uploading:"Fotoğraflar yükleniyor…", photos_t:"Fotoğraflar",
+  p_t:"Yer", remove:"Kaldır", p_name:"Adı", p_hood:"Mahalle", p_city:"Şehir", p_wc:"Tuvalet var mı?", yes:"Var", no:"Yok", unsure:"Hatırlamıyorum",
+  p_code:"Şifre ya da anahtar gerekiyor mu?", p_who:"Kim kullanabilir?", who_all:"Herkes", who_cust:"Sadece müşteri", who_ask:"Sorman yeter", more:"+ Detay ekle",
+  p_clean:"Ne kadar temiz?", c3:"Temiz", c2:"İdare eder", c1:"Pek değil", p_loc:"İçeride nerede?", p_loc_ph:"Alt katta, barın arkasında…", p_queue:"Sıra var mı?", q0:"Yok", q1:"Kısa", q2:"Uzun",
+  p_baby:"Bebek bakım masası var mı?", more2:"+ Bu yer hakkında daha fazla", p_park:"Otopark?", street:"Sadece sokak", p_price:"Fiyat seviyesi", p_when:"Ne zaman gittin?", month:"(ay)",
+  by:"yazan", reads:"okunma", back:"← Tüm hikayeler", places:"Bu hikayedeki yerler", wc_yes:"🚻 Tuvalet var", wc_no:"Tuvalet yok", code:"Şifreli", nocode:"Şifresiz",
+  who_all_t:"Herkese açık", who_cust_t:"Sadece müşteri", who_ask_t:"İçeride sor", clean3:"Temiz", clean2:"İdare eder", clean1:"Pek temiz değil", queue_none:"Sıra yok", queue_short:"Kısa sıra", queue_long:"Uzun sıra",
+  baby_t:"Bebek masası", park_yes:"Otopark var", park_street:"Sokakta park", park_no:"Otopark yok", visited:"Ziyaret",
+  readin:"Şu dilde oku", copy:"Linki kopyala", copied:"Link kopyalandı", route:"Rota", write_own:"Kendi hikayeni yaz", notfound:"Bu hikaye bulunamadı." },
+es:{ map:"Abrir el mapa", share:"Comparte tu historia", eyebrow:"Historias de Laloo", h1:"Lugares reales. Gente real. Sin robots.",
+  p1:"¿Cansado de relatos de viaje que parecen humanos pero los escribió una máquina? Los consejos de los robots están bien, funcionan. Pero nada reemplaza una experiencia contada con sentimiento real. Así que ven y comparte tu historia.",
+  p2:"Escribe sobre tu barrio, tu calle, tu rincón del mundo. Lo que nadie más sabe. Lo que solo puede contar quien estuvo allí.",
+  p3:"Compartiremos tu experiencia con personas en otros idiomas. Tu historia puede llevar a alguien al otro lado del mundo a algo que nunca habría encontrado.",
+  readall:"Leer historias", latest:"Últimas historias", none:"Aún no hay historias. Sé el primero.", w_h:"Cuéntanos lo que solo tú puedes contar.",
+  w_p:"Tu barrio, una calle que amas, un viaje que no olvidas. Escríbelo como se lo contarías a un amigo. Sin límite de palabras.", send:"Enviar mi historia",
+  thanks:"¡Gracias! Leeremos tu historia y la publicaremos en dos semanas. Si dejaste tu email, te avisaremos.", write_own:"Escribe tu historia", back:"← Todas las historias" },
+de:{ map:"Karte öffnen", share:"Teile deine Geschichte", eyebrow:"Laloo Geschichten", h1:"Echte Orte. Echte Menschen. Keine Roboter.",
+  p1:"Genug von Reiseberichten, die menschlich klingen, aber von einer Maschine stammen? Roboter-Tipps sind okay, sie funktionieren. Aber nichts ersetzt ein Erlebnis, das mit echtem Gefühl erzählt wird. Also teile deine Geschichte.",
+  p2:"Schreib über dein Viertel, deine Straße, deine Ecke der Welt. Was sonst niemand weiß. Was nur erzählen kann, wer dort war.",
+  p3:"Wir teilen dein Erlebnis mit Menschen in anderen Sprachen. Deine Geschichte bringt vielleicht jemanden am anderen Ende der Welt zu etwas, das er nie gefunden hätte.",
+  readall:"Geschichten lesen", latest:"Neueste Geschichten", none:"Noch keine Geschichten. Sei die erste Person.", w_h:"Erzähl, was nur du erzählen kannst.",
+  w_p:"Dein Viertel, eine Straße, die du liebst, eine Reise, an die du noch denkst. Schreib es, wie du es einem Freund erzählen würdest. Keine Wortgrenze.", send:"Geschichte senden",
+  thanks:"Danke! Wir lesen deine Geschichte und veröffentlichen sie innerhalb von zwei Wochen. Mit E-Mail sagen wir dir Bescheid.", write_own:"Schreib deine Geschichte", back:"← Alle Geschichten" },
+fr:{ map:"Ouvrir la carte", share:"Partagez votre histoire", eyebrow:"Histoires Laloo", h1:"De vrais lieux. De vraies personnes. Pas de robots.",
+  p1:"Lassé des récits de voyage qui ont l'air humains mais sont écrits par une machine ? Les conseils des robots, ça marche. Mais rien ne remplace une expérience racontée avec un vrai ressenti. Alors venez partager votre histoire.",
+  p2:"Écrivez sur votre quartier, votre rue, votre coin du monde. Ce que personne ne sait. Ce que seul quelqu'un qui y est allé peut raconter.",
+  p3:"Nous partagerons votre expérience avec des gens dans d'autres langues. Votre histoire mènera peut-être quelqu'un à l'autre bout du monde vers ce qu'il n'aurait jamais trouvé.",
+  readall:"Lire les histoires", latest:"Dernières histoires", none:"Pas encore d'histoires. Soyez le premier.", w_h:"Racontez ce que vous seul pouvez raconter.",
+  w_p:"Votre quartier, une rue que vous aimez, un voyage auquel vous pensez encore. Écrivez-le comme à un ami. Pas de limite de mots.", send:"Envoyer mon histoire",
+  thanks:"Merci ! Nous lirons votre histoire et la publierons sous deux semaines. Avec votre e-mail, nous vous préviendrons.", write_own:"Écrivez votre histoire", back:"← Toutes les histoires" }
+};
+const LANG = ((navigator.languages || [navigator.language || "en"]).map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
+const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
+// Formun başındaki örnek hikaye (Tiflis). Metni buraya yapıştır; boş kalırsa kutu görünmez.
+const EXAMPLE = LANG === "tr"
+  ? { title: "Tiflis, Gürcistan", by: "Ahmet", text: `Tiflis'e gitmiştik. Şehrin çok bilinen bir meydanı var, o meydana bakan bir Gürcü restoranı buldum, milli yemekler yapıyor. Kapısında zaten otantik bir hava var, içeri girip masaya oturuyorsun. Hingel söyle, haçapuri söyle, şarap söyle. Mezelerin fotoğrafları menüde var, gözüne güzel görünenleri söyle, çünkü zaten her şey çok güzel. Biraz daha açsan kremalı tavuk var, onu da fotoğrafından anlarsın, sipariş edersen tamamdır. Mezelerde erimiş peynirin üstünde mantar vardı, o ayrı güzel.
+
+Hepsine toplamda, iki kişi normalde iyi bir akşam yemeği yediğinde ne ödüyorsan, onun yarısını ödüyorsun. Yediğin yemek de hayatında yediğin en iyilerden farksız geliyor.
+
+Oradan çıkıp biraz yürü, Old Town'a doğru git. Eski şehir, antik taşlar. Uzaktan diskodan dıptıs dıptıs bir ses gelecek, o tarafa bak. Ortam güzel geliyorsa gir, bir biranı iç. Sonra taksiye atla, güzel bir kumarhaneye git, kumarını oyna, içkini iç. Sonra yine taksiye atla, Airbnb'de kalıyorsan Airbnb'ne, oteldeysen oteline dön.
+
+Mevzu bu kadar.` }
+  : { title: "Tbilisi, Georgia", by: "Ahmet (translated from Turkish)", text: `We went to Tbilisi. The city has a very well-known square, and I found a Georgian restaurant looking onto it that makes the national dishes. The door already has an authentic feel; you go in and sit down. Order khinkali, order khachapuri, order wine. The menu has photos of the starters, so order the ones that look good to you, because honestly everything is good. If you're a bit hungrier there's a creamy chicken, you'll recognize it from the photo, order it and you're set. Among the starters there were mushrooms on melted cheese, those were something else.
+
+For all of it, you pay about half of what two people normally pay for a good dinner. And the food feels no different from the best you've ever had.
+
+Walk out and stroll a little toward the Old Town. Old city, ancient stones. From a distance you'll hear the thump-thump of a disco; look that way. If the vibe feels right, go in and have a beer. Then jump in a taxi, go to a nice casino, play a little, have your drink. Then jump in a taxi again and head back to your Airbnb or your hotel.
+
+That's all there is to it.` };
+
+document.documentElement.lang = LANG;
+function applyI18n(root = document){
+  root.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
+  root.querySelectorAll("[data-ph]").forEach(el => el.placeholder = tx(el.dataset.ph));
+}
+applyI18n();
+
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+// Metni paragraflara böl; HTML hiç çalıştırılmaz (her şey esc'den geçer)
+const paras = t => String(t || "").replace(/\r/g, "").split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
+  .map(p => `<p>${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
+const words = t => (String(t || "").trim().match(/\S+/g) || []).length;
+const cityLabel = c => c.city + (c.country ? ", " + c.country : "");
+
+async function sb(path){
+  const r = await fetch(SB_URL + "/rest/v1/" + path, { headers:{ apikey:SB_KEY } });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ================= ÖRNEK HİKAYE =================
+if (EXAMPLE.text.trim()){
+  $("#exbox").hidden = false;
+  $("#exbody").innerHTML = (EXAMPLE.title ? `<h3>${esc(EXAMPLE.title)}</h3>` : "") + paras(EXAMPLE.text) +
+    `<p class="muted small">${esc(tx("by"))} ${esc(EXAMPLE.by)}</p>`;
+}
+
+// ================= LİSTE =================
+function card(s){
+  const cs = (s.cities || []).map(c => `<span class="chip">${esc(cityLabel(c))}</span>`).join("");
+  const ex = String(s.body || "").replace(/\s+/g, " ").slice(0, 260);
+  return `<a class="sc" href="?s=${esc(s.id)}"><b>${esc(s.title)}</b><div class="chips">${cs}${s.is_route ? `<span class="chip">🧭 ${esc(tx("route"))}</span>` : ""}</div>
+    <p>${esc(ex)}</p><div class="meta">${esc(tx("by"))} ${esc(s.nickname)} · ${s.reads || 0} ${esc(tx("reads"))}</div></a>`;
+}
+async function loadList(){
+  try{
+    const list = await sb("stories_public?select=id,title,body,nickname,cities,is_route,reads,published_at&order=published_at.desc&limit=60");
+    $("#list").innerHTML = list.length ? list.map(card).join("") : `<div class="empty">${esc(tx("none"))}</div>`;
+  }catch(e){ $("#list").innerHTML = `<div class="empty">${esc(tx("err"))}</div>`; }
+}
+
+// ================= TEK HİKAYE =================
+const PT = {
+  wc:{ yes:"wc_yes", no:"wc_no" }, code:{ yes:"code", no:"nocode" }, who:{ all:"who_all_t", cust:"who_cust_t", ask:"who_ask_t" },
+  clean:{ 3:"clean3", 2:"clean2", 1:"clean1" }, queue:{ none:"queue_none", short:"queue_short", long:"queue_long" },
+  baby:{ yes:"baby_t" }, parking:{ yes:"park_yes", street:"park_street", no:"park_no" }
+};
+function placeHtml(p){
+  const t = [];
+  for (const k of ["wc", "code", "who", "clean", "queue", "baby", "parking"]){
+    if (k !== "wc" && k !== "parking" && p.wc !== "yes") continue;
+    const key = PT[k][p[k]]; if (key) t.push(`<span class="${k === "wc" && p.wc === "yes" ? "g" : ""}">${esc(tx(key))}</span>`);
+  }
+  if (p.price) t.push(`<span>${"$".repeat(+p.price)}</span>`);
+  if (p.visited) t.push(`<span>${esc(tx("visited"))} ${esc(p.visited)}</span>`);
+  const ig = String(p.ig || "").replace(/^@/, "").replace(/[^\w.]/g, "");
+  return `<div class="pc"><b>${esc(p.name)}</b>${p.hood || p.city ? `<div class="muted small">${esc([p.hood, p.city].filter(Boolean).join(", "))}</div>` : ""}
+    ${p.wc === "yes" && p.wc_where ? `<div class="small">🚻 ${esc(p.wc_where)}</div>` : ""}
+    <div class="tags">${t.join("")}</div>
+    ${ig ? `<div class="small" style="margin-top:6px"><a href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener nofollow">@${esc(ig)}</a></div>` : ""}</div>`;
+}
+async function openStory(id){
+  $("#home").hidden = true; $("#story").hidden = false; window.scrollTo(0, 0);
+  const art = $("#art");
+  art.innerHTML = `<p class="muted">${esc(tx("loading"))}</p>`;
+  let s;
+  try{ s = (await sb(`stories_public?select=*&id=eq.${encodeURIComponent(id)}`))[0]; }catch(e){}
+  if (!s){ art.innerHTML = `<p><a href="./">${esc(tx("back"))}</a></p><p>${esc(tx("notfound"))}</p>`; return; }
+  // Çeviri varsa telefonun dilinde göster
+  const loc = (s.i18n && s.i18n[LANG]) || null;
+  const title = (loc && loc.title) || s.title, body = (loc && loc.body) || s.body;
+  document.title = title + " · Laloo Stories";
+  const cs = (s.cities || []).map(c => `<span class="chip">${esc(cityLabel(c))}</span>`).join("");
+  const places = (s.places || []).filter(p => p && p.name);
+  const pinned = places.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
+  const cover = /^https:\/\//.test(s.cover_url || "") ? `<figure class="cover"><img src="${esc(s.cover_url)}" alt="" loading="lazy">${s.cover_credit ? `<figcaption>${esc(s.cover_credit)}</figcaption>` : ""}</figure>` : "";
+  const pubPh = (s.photos || []).filter(p => p && /^[\w\/.-]+$/.test(p.path || ""));
+  const gal = pubPh.length ? `<div class="gal">${pubPh.map(p => `<figure><a href="${photoUrl(p.path)}" target="_blank" rel="noopener"><img src="${photoUrl(p.path)}" alt="${esc(p.city || "")}" loading="lazy"></a>${p.city ? `<figcaption>${esc(p.city)}</figcaption>` : ""}</figure>`).join("")}</div>` : "";
+  const here = location.origin + location.pathname + "?s=" + encodeURIComponent(s.id);
+  const trLangs = ["en", "tr", "es", "de", "fr", "it", "pt", "nl", "pl", "ja", "zh-CN", "ar"].filter(l => l !== (s.lang || "").split("-")[0]);
+  const trUrl = l => `https://translate.google.com/translate?sl=auto&tl=${l}&u=${encodeURIComponent(here)}`;
+  art.innerHTML = `<p><a href="./">${esc(tx("back"))}</a></p>
+    <h1>${esc(title)}</h1>
+    <div class="chips">${cs}${s.is_route ? `<span class="chip">🧭 ${esc(tx("route"))}</span>` : ""}</div>
+    <p class="meta">${esc(tx("by"))} <b>${esc(s.nickname)}</b> · ${(s.reads || 0) + 1} ${esc(tx("reads"))}</p>
+    ${cover}
+    <div class="body">${paras(body)}</div>
+    ${gal}
+    ${pinned.length ? `<div id="smap"></div>` : ""}
+    ${places.length ? `<h2 style="font-size:24px;margin-top:26px">${esc(tx("places"))}</h2>${places.map(placeHtml).join("")}` : ""}
+    <div class="tr"><span class="small muted">${esc(tx("readin"))}:</span>${trLangs.map(l => `<a class="pill small" href="${trUrl(l)}" target="_blank" rel="noopener">${l.split("-")[0].toUpperCase()}</a>`).join("")}</div>
+    <div class="ctas"><button class="pill" id="cpy">${esc(tx("copy"))}</button><a class="pill p" href="#write" id="own">${esc(tx("write_own"))}</a><a class="pill" href="/">${esc(tx("map"))}</a></div>`;
+  $("#cpy").onclick = () => { try{ navigator.clipboard.writeText(here); }catch(e){} $("#cpy").textContent = tx("copied"); };
+  if (pinned.length && window.L){
+    const m = L.map("smap", { scrollWheelZoom:false });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:"© OpenStreetMap" }).addTo(m);
+    const pts = pinned.map(p => [p.lat, p.lng]);
+    pinned.forEach(p => L.marker([p.lat, p.lng], { icon:L.divIcon({ html: p.wc === "yes" ? "🚻" : "📍", className:"", iconSize:[26,26] }) })
+      .addTo(m).bindPopup(esc(p.name)));
+    if (s.is_route && pts.length > 1) L.polyline(pts, { color:"#1c4fa0", weight:4, dashArray:"1 9", lineCap:"round" }).addTo(m);
+    pts.length > 1 ? m.fitBounds(pts, { padding:[30, 30] }) : m.setView(pts[0], 15);
+  }
+  // Okunma sayısı: aynı cihazdan bir kez
+  try{
+    const k = "laloo_read_" + s.id;
+    if (!localStorage.getItem(k)){
+      localStorage.setItem(k, "1");
+      fetch(SB_URL + "/rest/v1/rpc/story_read", { method:"POST", keepalive:true,
+        headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify({ sid:s.id }) }).catch(() => {});
+    }
+  }catch(e){}
+}
+
+const sid = new URLSearchParams(location.search).get("s");
+if (sid) openStory(sid); else loadList();
+
+// ================= FORM =================
+const sf = $("#sf");
+const cities = [];
+function drawCities(){
+  $("#cchips").innerHTML = cities.map((c, i) => `<span class="chip">${esc(cityLabel(c))}<button type="button" data-ci="${i}" aria-label="remove">✕</button></span>`).join("");
+  $("#cchips").querySelectorAll("[data-ci]").forEach(b => b.onclick = () => { cities.splice(+b.dataset.ci, 1); drawCities(); });
+  document.querySelectorAll('#places select[data-k="city"]').forEach(fillCitySel);
+  drawPhotos();
+}
+// ================= FOTOĞRAFLAR =================
+// Şehir başına en fazla 5. Yüklemeden önce telefonda küçültülür (konum bilgisi de silinmiş olur).
+const PH_MAX = 5, BUCKET = "story-photos";
+const photos = {};                    // şehir etiketi -> [{ blob, url }]
+function drawPhotos(){
+  const box = $("#phs"); if (!box) return;
+  Object.keys(photos).forEach(k => { if (!cities.some(c => cityLabel(c) === k)){ photos[k].forEach(p => URL.revokeObjectURL(p.url)); delete photos[k]; } });
+  if (!cities.length){ box.innerHTML = `<p class="muted small">${esc(tx("ph_first"))}</p>`; return; }
+  box.innerHTML = cities.map((c, ci) => {
+    const k = cityLabel(c), list = photos[k] || [];
+    return `<div class="pcity"><div class="top"><b class="small">${esc(k)} · ${list.length}/${PH_MAX}</b>
+      ${list.length < PH_MAX ? `<label class="pill small" style="margin:0">${esc(tx("ph_add"))}<input type="file" accept="image/*" multiple data-pc="${ci}"></label>` : ""}</div>
+      <div class="ph">${list.map((p, i) => `<div><img src="${p.url}" alt=""><button type="button" data-px="${ci}:${i}" aria-label="remove">✕</button></div>`).join("")}</div></div>`;
+  }).join("");
+  box.querySelectorAll("[data-pc]").forEach(inp => inp.onchange = async () => {
+    const k = cityLabel(cities[+inp.dataset.pc]); photos[k] = photos[k] || [];
+    const files = [...inp.files].filter(f => /^image\//.test(f.type));
+    if (photos[k].length + files.length > PH_MAX) fmsg(tx("ph_max"));
+    for (const f of files.slice(0, PH_MAX - photos[k].length)){
+      try{ const blob = await shrink(f); photos[k].push({ blob, url: URL.createObjectURL(blob) }); }catch(e){}
+    }
+    drawPhotos();
+  });
+  box.querySelectorAll("[data-px]").forEach(b => b.onclick = () => {
+    const [ci, i] = b.dataset.px.split(":").map(Number), k = cityLabel(cities[ci]);
+    URL.revokeObjectURL(photos[k][i].url); photos[k].splice(i, 1); drawPhotos();
+  });
+}
+async function shrink(file, max = 1600){
+  const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = URL.createObjectURL(file); });
+  const r = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * r); c.height = Math.round(img.naturalHeight * r);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(img.src);
+  return await new Promise((ok, no) => c.toBlob(b => b ? ok(b) : no(), "image/jpeg", 0.82));
+}
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+async function uploadPhotos(){
+  const out = [];
+  for (const [city, list] of Object.entries(photos)){
+    for (const p of list){
+      const path = `pending/${uid()}.jpg`;
+      const r = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, { method:"POST",
+        headers:{ apikey:SB_KEY, "Content-Type":"image/jpeg", "x-upsert":"false" }, body:p.blob });
+      if (!r.ok) throw new Error("photo " + r.status);
+      out.push({ path, city, pub:false });
+    }
+  }
+  return out;
+}
+const photoUrl = path => `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+function addCity(){
+  const city = $("#cin").value.trim(), country = $("#coin").value.trim();
+  if (!city) return;
+  if (!cities.some(c => c.city.toLowerCase() === city.toLowerCase() && c.country.toLowerCase() === country.toLowerCase()) && cities.length < 30)
+    cities.push({ city: city.slice(0, 80), country: country.slice(0, 60) });
+  $("#cin").value = ""; $("#cin").focus(); drawCities();
+}
+$("#cadd").onclick = addCity;
+[$("#cin"), $("#coin")].forEach(el => el.onkeydown = e => { if (e.key === "Enter"){ e.preventDefault(); addCity(); } });
+function fillCitySel(sel){
+  const v = sel.value;
+  sel.innerHTML = `<option value=""></option>` + cities.map(c => `<option>${esc(cityLabel(c))}</option>`).join("");
+  sel.value = cities.some(c => cityLabel(c) === v) ? v : (cities.length === 1 ? cityLabel(cities[0]) : "");
+}
+let pn = 0;
+function addPlace(){
+  if (document.querySelectorAll("#places .place").length >= 30) return;
+  const node = $("#ptpl").content.firstElementChild.cloneNode(true);
+  pn++;
+  node.querySelectorAll(".seg").forEach(g => g.querySelectorAll("input").forEach(i => i.name = `p${pn}_${g.dataset.g}`));
+  applyI18n(node);
+  fillCitySel(node.querySelector('select[data-k="city"]'));
+  node.querySelector("[data-rm]").onclick = () => node.remove();
+  node.querySelectorAll('[data-g="wc"] input').forEach(i => i.onchange = () => node.querySelector("[data-wcx]").hidden = i.value !== "yes" || !i.checked);
+  $("#places").appendChild(node);
+  node.querySelector('[data-k="name"]').focus();
+}
+$("#padd").onclick = addPlace;
+function readPlaces(){
+  return [...document.querySelectorAll("#places .place")].map(n => {
+    const p = {};
+    n.querySelectorAll("[data-k]").forEach(el => { const v = el.value.trim(); if (v) p[el.dataset.k] = v.slice(0, 120); });
+    n.querySelectorAll(".seg").forEach(g => { const c = g.querySelector("input:checked"); if (c) p[g.dataset.g] = c.value; });
+    if (p.wc !== "yes") ["code", "who", "clean", "wc_where", "queue", "baby"].forEach(k => delete p[k]);
+    return p;
+  }).filter(p => p.name);
+}
+const body = $("#body");
+const upd = () => { const n = words(body.value); $("#wc").textContent = n ? `${n} ${tx("words")}` : ""; };
+body.addEventListener("input", upd);
+
+function fmsg(t, ok){ const m = $("#fmsg"); m.hidden = false; m.textContent = t; m.className = ok ? "ok" : "err"; }
+// Yazarken sayfa kapanırsa taslak kaybolmasın (sadece bu cihazda)
+const DRAFT = "laloo_story_draft";
+try{
+  const d = JSON.parse(localStorage.getItem(DRAFT) || "null");
+  if (d){ sf.title.value = d.title || ""; body.value = d.body || ""; sf.nickname.value = d.nickname || ""; (d.cities || []).forEach(c => cities.push(c)); drawCities(); upd(); }
+}catch(e){}
+setInterval(() => {
+  try{ localStorage.setItem(DRAFT, JSON.stringify({ title:sf.title.value, body:body.value, nickname:sf.nickname.value, cities })); }catch(e){}
+}, 4000);
+
+sf.onsubmit = async e => {
+  e.preventDefault();
+  if (sf.website.value) return;                       // bot tuzağı
+  if ($("#cin").value.trim()) addCity();              // yazılıp eklenmemiş şehir
+  const title = sf.title.value.trim(), text = body.value.trim(), nick = sf.nickname.value.trim(), email = sf.email.value.trim();
+  if (!title || !text || nick.length < 2 || !cities.length || !sf.consent.checked){ fmsg(tx("need")); return; }
+  if (words(text) < 30){ fmsg(tx("short")); return; }
+  const day = new Date().toISOString().slice(0, 10);
+  let cnt = { d:day, n:0 };
+  try{ const c = JSON.parse(localStorage.getItem("laloo_story_n") || "null"); if (c && c.d === day) cnt = c; }catch(err){}
+  if (cnt.n >= 3){ fmsg(tx("toomany")); return; }
+  let device = null; try{ device = localStorage.getItem("laloo_device"); }catch(err){}
+  const payload = { title:title.slice(0, 160), body:text.slice(0, 60000), nickname:nick.slice(0, 40), email: email ? email.slice(0, 200) : null,
+    cities, is_route: sf.is_route.checked, places: readPlaces(), lang: LANG, consent:true, device };
+  const btn = $("#send"); btn.disabled = true; btn.textContent = tx("sending");
+  try{
+    if (Object.values(photos).some(l => l.length)){ btn.textContent = tx("uploading"); payload.photos = await uploadPhotos(); btn.textContent = tx("sending"); }
+    const r = await fetch(SB_URL + "/rest/v1/stories", { method:"POST",
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" }, body:JSON.stringify(payload) });
+    if (!r.ok) throw new Error(await r.text());
+    cnt.n++; try{ localStorage.setItem("laloo_story_n", JSON.stringify(cnt)); localStorage.removeItem(DRAFT); }catch(err){}
+    try{ window.fetch(SB_URL + "/rest/v1/events", { method:"POST", keepalive:true, headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
+      body: JSON.stringify({ device: device || "anon", type:"story_sent", ref:"stories" }) }).catch(() => {}); }catch(err){}
+    sf.hidden = true; $("#thanks").hidden = false; $("#thanks").scrollIntoView({ behavior:"smooth", block:"center" });
+  }catch(err){
+    fmsg(/too_many/.test(String(err.message)) ? tx("toomany") : tx("fail"));
+    btn.disabled = false; btn.textContent = tx("send");
+  }
+};
+</script>
+</body>
+</html>
