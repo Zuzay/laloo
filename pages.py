@@ -14,6 +14,7 @@ PER_AREA = 25            # semt başına en fazla umumi tuvalet
 MAX_MUNI = 20            # belediye grubunda en fazla
 MAX_PUBLIC = 400         # sayfa başına en fazla umumi tuvalet
 MANIFEST = "pages-manifest.json"
+ABOUT = {"en": "About", "es": "Acerca de", "de": "Über uns", "fr": "À propos", "tr": "Hakkında"}
 ROUTES_FILE = "routes.json"   # Loo Routes yazıları (Claude yazar, Uzay yükler)
 
 # Hedef şehirlerin dillere göre adları (yoksa veritabanındaki ad kullanılır)
@@ -208,7 +209,7 @@ def page(lang, title, desc, canon, alts, body, slug_for_lang):
 <main>
 {body}
 </main>
-<footer><a href="/">laloo.org · {esc(T[lang]["home"])}</a> · <a href="{'/cities/' if lang == 'en' else f'/{lang}/cities/'}">{esc(T[lang]["all"])}</a> · <a href="/about/">About</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>{esc(T[lang]["src"])}</footer>
+<footer><a href="/">laloo.org · {esc(T[lang]["home"])}</a> · <a href="{'/cities/' if lang == 'en' else f'/{lang}/cities/'}">{esc(T[lang]["all"])}</a> · <a href="{'/about/' if lang == 'en' else f'/{lang}/about/'}">{esc(ABOUT[lang])}</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>{esc(T[lang]["src"])}</footer>
 </body>
 </html>
 """
@@ -377,17 +378,23 @@ def generate(cities, places_for, root=".", now=None):
     d = os.path.dirname(p)
     while d and d != root and os.path.isdir(d) and not os.listdir(d):
       os.rmdir(d); d = os.path.dirname(d)
-  # Tanıtım sayfası (laloo.org/about/): canlı rakamlarla
+  # Tanıtım sayfası (laloo.org/about/ + /<dil>/about/): canlı rakamlarla, 5 dilde
   try:
     import about_page
-    write(os.path.join(root, "about/index.html"), about_page.build(listed, routes, len(made) + 1, lambda c: cname(c, "en"),
-                                                                  lambda slug: f"/{slug}/", now, SITE))
-    made.append("about/index.html")
+    n_pages = len(made) + len(LANGS)
+    for lang in LANGS:
+      rel = "about/index.html" if lang == "en" else f"{lang}/about/index.html"
+      write(os.path.join(root, rel), about_page.build(listed, routes, n_pages, lambda c, l: cname(c, l),
+                                                      lambda slug, l: url(l, slug).replace(SITE, ""), now, SITE, lang,
+                                                      month(lang, now)))
+      made.append(rel)
   except Exception as ex:
     print("about page failed:", ex)
   json.dump(sorted(made), open(os.path.join(root, MANIFEST), "w"), indent=0)
   # sitemap.xml ve robots.txt
   urls = [f"{SITE}/"] + [SITE + "/" + rel[:-len("index.html")] for rel in sorted(made)]
+  for extra in ("hosts/index.html",):          # elle yüklenen sabit sayfalar
+    if os.path.exists(os.path.join(root, extra)): urls.append(SITE + "/" + extra[:-len("index.html")])
   sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
   sm += [f"  <url><loc>{esc(u)}</loc></url>" for u in urls]
   sm.append("</urlset>")

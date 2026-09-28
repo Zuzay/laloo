@@ -1,7 +1,7 @@
 # Laloo tanıtım sayfası (laloo.org/about/)
 # pages.py her gece çağırır; rakamlar (şehir, tuvalet, yıldızlı yer, sayfa) canlı veriden gelir.
 # Ekran görüntüleri gerçek sitenin canlı önizlemeleri (telefon çerçevesinde iframe), hep güncel kalır.
-import html
+import html, json, os
 esc = lambda s: html.escape(str(s if s is not None else ""), quote=True)
 
 FOCUS = ["istanbul", "izmir", "amsterdam", "rotterdam", "warsaw", "brussels", "paris", "la", "bay", "nyc", "miami"]
@@ -67,6 +67,7 @@ h3{font-size:20px;margin:0 0 6px}
 .walk svg{position:absolute;inset:0;width:100%;height:100%}
 .walk .lbl{position:absolute;font-size:13px;font-weight:800;background:#fff;color:#10223d;border-radius:10px;padding:5px 8px;box-shadow:0 3px 10px rgba(16,34,61,.15)}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}@media(max-width:980px){.grid4{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.grid4{grid-template-columns:1fr}}
 @media(max-width:820px){.grid3{grid-template-columns:1fr}}
 .feat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
 .feat .i{font-size:26px}.feat p{margin:4px 0 0;color:var(--muted);font-size:15px}
@@ -85,76 +86,101 @@ h3{font-size:20px;margin:0 0 6px}
 .road b{font-size:13px;letter-spacing:.12em;font-weight:900}.road .l{color:var(--green)}.road .n{color:var(--blue)}.road .t{color:var(--red)}
 .road ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
 .price{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}@media(max-width:620px){.price{grid-template-columns:1fr}}
+.langs{display:flex;gap:2px}.langs a{font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;padding:6px 7px;border-radius:8px}.langs a.on{background:var(--tag);color:var(--blue)}
+@media(max-width:560px){header nav .pill{display:none}}
 footer{max-width:1040px;margin:0 auto;padding:22px 16px 44px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
 """
 
-def fmt(n):
-  return f"{n:,}"
+LANGS = ["en", "es", "de", "fr", "tr"]
+try:
+  TR = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "about_i18n.json"), encoding="utf-8"))
+except Exception:
+  TR = {}
 
-def build(listed, routes, n_pages, names, city_url, now, site):
-  """listed: [(city_row, slug, n_tips, n_public)], routes: routes.json list."""
+# İngilizce sayfada: telefon dili es/de/fr/tr ise o dile geçer (kullanıcı dil seçtiyse dokunmaz)
+AUTO = """<script>try{if(!localStorage.laloo_about_lang){var l=(navigator.language||"").slice(0,2).toLowerCase();if(["es","de","fr","tr"].indexOf(l)>-1)location.replace("/"+l+"/about/"+location.hash)}}catch(e){}</script>"""
+
+def fmt(n, lang="en"):
+  s = f"{n:,}"
+  return s if lang == "en" else s.replace(",", "\u202f" if lang == "fr" else ".")
+
+def lpath(lang, p):
+  """/about/ -> /es/about/ ; / stays /"""
+  return p if lang == "en" or p == "/" else f"/{lang}{p}"
+
+def build(listed, routes, n_pages, names, city_url, now, site, lang="en", month=None):
+  """listed: [(city_row, slug, n_tips, n_public)], routes: routes.json list.
+  names(c, lang), city_url(slug, lang). Texts come from about_i18n.json (English is the key)."""
+  D = TR.get(lang, {}) if lang != "en" else {}
+  _ = lambda s: D.get(s) or s
+  fm = lambda n: fmt(n, lang)
   n_cities = len(listed)
   n_pub = sum(x[3] for x in listed)
   n_tips = sum(x[2] for x in listed)
   total = n_pub + n_tips
   focus = [x for x in listed if x[0]["id"] in FOCUS]
-  # Dots on the world map
+  cu = lambda slug: city_url(slug, lang)
+  route_url = lambda slug: lpath(lang, f"/routes/{slug}/")
+  cities_url = lpath(lang, "/cities/")
   dots = []
   for c, slug, nt, npub in listed:
     lat = (c["min_lat"] + c["max_lat"]) / 2; lng = (c["min_lng"] + c["max_lng"]) / 2
     x = (lng + 180) / 360 * 100; y = (85 - max(-60, min(85, lat))) / 145 * 100
     f = c["id"] in FOCUS
-    dots.append(f'<a class="d{" f" if f else ""}" href="{city_url(slug)}" style="left:{x:.2f}%;top:{y:.2f}%" title="{esc(names(c))}" aria-label="{esc(names(c))}"></a>')
+    dots.append(f'<a class="d{" f" if f else ""}" href="{cu(slug)}" style="left:{x:.2f}%;top:{y:.2f}%" title="{esc(names(c, lang))}" aria-label="{esc(names(c, lang))}"></a>')
+  line = _("{p} public restrooms · {t} hand-picked spots")
   focus_cards = "".join(
-    f'<a href="{city_url(slug)}"><b>{esc(names(c))}</b><span>{fmt(npub)} public restrooms · {fmt(nt)} hand-picked spots</span></a>'
+    f'<a href="{cu(slug)}"><b>{esc(names(c, lang))}</b><span>{esc(line.format(p=fm(npub), t=fm(nt)))}</span></a>'
     for c, slug, nt, npub in sorted(focus, key=lambda x: -(x[2] + x[3])))
-  first_route = routes[0]["slug"] if routes else None
+  mine = [r for r in routes if lang in r["i18n"]]
+  first_route = mine[0]["slug"] if mine else None
   route_list = "".join(
-    f'<a href="/routes/{esc(r["slug"])}/"><b>{esc(r["i18n"]["en"]["h1"])}</b><span>{esc(r["i18n"]["en"]["desc"])}</span></a>'
-    for r in routes if "en" in r["i18n"])
+    f'<a href="{route_url(r["slug"])}"><b>{esc(r["i18n"][lang]["h1"])}</b><span>{esc(r["i18n"][lang]["desc"])}</span></a>'
+    for r in mine)
   city_example = next((slug for c, slug, nt, npub in listed if c["id"] == "paris"), listed[0][1] if listed else "")
-  month = now.strftime("%B %Y")
+  month = month or now.strftime("%B %Y")
+  city_url_ = cu
 
   body = f"""
 <section>
  <div class="wrap hero">
   <div>
-   <p class="live"><i></i>LIVE NOW · {esc(month.upper())}</p>
-   <h1>Find a bathroom.<br>Anywhere.</h1>
-   <p class="lead">The free map travelers open at the most urgent moment of their day. No app, no sign-up, one tap. Built on the Venice Beach boardwalk, now live in {fmt(n_cities)} cities.</p>
-   <div class="cta"><a class="btn" href="/?ref=about">📍 Try it now</a><a class="btn o" href="#business">For businesses</a><a class="btn o" href="#cities">For cities</a></div>
+   <p class="live"><i></i>{_("LIVE NOW")} · {esc(month.upper())}</p>
+   <h1>{_("Find a bathroom.")}<br>{_("Anywhere.")}</h1>
+   <p class="lead">{_("The free map travelers open at the most urgent moment of their day. No app, no sign-up, one tap. Built on the Venice Beach boardwalk, now live in {n} cities.").format(n=fmt(n_cities))}</p>
+   <div class="cta"><a class="btn" href="/?ref=about">📍 {_("Try it now")}</a><a class="btn o" href="#business">{_("For businesses")}</a><a class="btn o" href="#cities">{_("For cities")}</a><a class="btn o" href="/hosts/">{_("For hosts")}</a></div>
   </div>
   <div>
-   <div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=34.0006,-118.4846,15" title="Laloo live map" loading="lazy"></iframe></div></div>
-   <p class="cap">The real map, live<small>Santa Monica and Venice Beach</small></p>
+   <div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=34.0006,-118.4846,15" title="{_("Laloo live map")}" loading="lazy"></iframe></div></div>
+   <p class="cap">{_("The real map, live")}<small>{_("Santa Monica and Venice Beach")}</small></p>
   </div>
  </div>
  <div class="wrap nums">
-  <div><b>{fmt(n_cities)}</b><span>cities live</span></div>
-  <div><b>{fmt(total)}</b><span>places to go, mapped</span></div>
-  <div><b>{fmt(n_tips)}</b><span>hand-picked spots</span></div>
-  <div><b>12</b><span>languages, set by the phone</span></div>
-  <div><b>$0</b><span>for every traveler, always</span></div>
+  <div><b>{fm(n_cities)}</b><span>{_("cities live")}</span></div>
+  <div><b>{fm(total)}</b><span>{_("places to go, mapped")}</span></div>
+  <div><b>{fm(n_tips)}</b><span>{_("hand-picked spots")}</span></div>
+  <div><b>12</b><span>{_("languages, set by the phone")}</span></div>
+  <div><b>$0</b><span>{_("for every traveler, always")}</span></div>
  </div>
 </section>
 
 <section class="alt">
  <div class="wrap">
-  <p class="eyebrow">See it work</p>
-  <h2>Zero apps. Three taps. Relief.</h2>
+  <p class="eyebrow">{_("See it work")}</p>
+  <h2>{_("Zero apps. Three taps. Relief.")}</h2>
   <div class="steps">
-   <div class="card"><span class="num">1</span><h3>Pick what you need</h3><p>Public restrooms, cafés, or hand-picked spots we checked.</p>
-    <div class="mock"><div class="chips"><span class="on">All</span><span>🚻 Public</span><span>☕ Cafés</span><span>⭐ Tips</span></div></div></div>
-   <div class="card"><span class="num">2</span><h3>Tap the closest pin</h3><p>Free or paid, customers only or not, opening hours.</p>
-    <div class="mock"><b>⭐ Santa Monica Pier restrooms</b><br><span class="t f">Free</span><span class="t">Daytime</span><span class="t v">✓ Verified by the city</span></div></div>
-   <div class="card"><span class="num">3</span><h3>Walk there</h3><p>The route is drawn right on the map, with a one-tap handoff to Google Maps.</p>
-    <div class="mock"><b>🚶 7 min · 525 m</b><br><span class="go">🚶 Show route</span></div></div>
+   <div class="card"><span class="num">1</span><h3>{_("Pick what you need")}</h3><p>{_("Public restrooms, cafés, or hand-picked spots we checked.")}</p>
+    <div class="mock"><div class="chips"><span class="on">{_("All")}</span><span>🚻 {_("Public")}</span><span>☕ {_("Cafés")}</span><span>⭐ {_("Tips")}</span></div></div></div>
+   <div class="card"><span class="num">2</span><h3>{_("Tap the closest pin")}</h3><p>{_("Free or paid, customers only or not, opening hours.")}</p>
+    <div class="mock"><b>⭐ {_("Santa Monica Pier restrooms")}</b><br><span class="t f">{_("Free")}</span><span class="t">{_("Daytime")}</span><span class="t v">✓ {_("Verified by the city")}</span></div></div>
+   <div class="card"><span class="num">3</span><h3>{_("Walk there")}</h3><p>{_("The route is drawn right on the map, with a one-tap handoff to Google Maps.")}</p>
+    <div class="mock"><b>🚶 7 min · 525 m</b><br><span class="go">🚶 {_("Show route")}</span></div></div>
   </div>
   <div class="shots">
-   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=48.8606,2.3376,15" title="Map in Paris" loading="lazy"></iframe></div></div><p class="cap">Map<small>Paris, around the Louvre</small></p></div>
-   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/{esc(city_example)}/" title="City page" loading="lazy"></iframe></div></div><p class="cap">City pages<small>{fmt(n_cities)} cities, 5 languages</small></p></div>
-   {f'<div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/routes/{esc(first_route)}/" title="Loo Routes article" loading="lazy"></iframe></div></div><p class="cap">Loo Routes<small>Walks with every bathroom stop</small></p></div>' if first_route else ""}
-   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=41.0086,28.9760,15" title="Map in Istanbul" loading="lazy"></iframe></div></div><p class="cap">Map<small>Istanbul, Sultanahmet</small></p></div>
+   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=48.8606,2.3376,15" title="{_("Map in Paris")}" loading="lazy"></iframe></div></div><p class="cap">{_("Map")}<small>{_("Paris, around the Louvre")}</small></p></div>
+   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="{cu(city_example)}" title="{_("City pages")}" loading="lazy"></iframe></div></div><p class="cap">{_("City pages")}<small>{_("{n} cities, 5 languages").format(n=fmt(n_cities))}</small></p></div>
+   {f'<div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="{route_url(first_route)}" title="Loo Routes" loading="lazy"></iframe></div></div><p class="cap">Loo Routes<small>{_("Walks with every bathroom stop")}</small></p></div>' if first_route else ""}
+   <div><div class="phone"><div class="notch"></div><div class="scr"><iframe src="/?embed=1&amp;at=41.0086,28.9760,15" title="{_("Map in Istanbul")}" loading="lazy"></iframe></div></div><p class="cap">{_("Map")}<small>{_("Istanbul, Sultanahmet")}</small></p></div>
   </div>
  </div>
 </section>
@@ -162,45 +188,45 @@ def build(listed, routes, n_pages, names, city_url, now, site):
 <section>
  <div class="wrap two">
   <div>
-   <p class="eyebrow">The idea</p>
-   <p class="big">We don't sell bathrooms.<br><em>We sell the walk.</em></p>
-   <p class="lead">Every walk to a bathroom passes shops, cafés and restaurants. Laloo lights up the right ones at the exact moment a traveler is looking at the map. Tourists, not locals: locals already know where to go.</p>
+   <p class="eyebrow">{_("The idea")}</p>
+   <p class="big">{_("We don't sell bathrooms.")}<br><em>{_("We sell the walk.")}</em></p>
+   <p class="lead">{_("Every walk to a bathroom passes shops, cafés and restaurants. Laloo lights up the right ones at the exact moment a traveler is looking at the map. Tourists, not locals: locals already know where to go.")}</p>
   </div>
   <div class="walk">
    <svg viewBox="0 0 400 260" aria-hidden="true"><path d="M40 210 C 120 200, 150 120, 220 120 S 330 60, 360 50" fill="none" stroke="#1c4fa0" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 14"/></svg>
-   <span class="lbl" style="left:14px;bottom:18px">📍 You are here</span>
-   <span class="lbl" style="left:44%;top:34%;background:#e0453a;color:#fff">👗 Red pin on the way · 10% off</span>
-   <span class="lbl" style="right:12px;top:10px">🚻 Bathroom · 7 min</span>
+   <span class="lbl" style="left:14px;bottom:18px">📍 {_("You are here")}</span>
+   <span class="lbl" style="left:44%;top:34%;background:#e0453a;color:#fff">👗 {_("Red pin on the way")} · {_("10% off")}</span>
+   <span class="lbl" style="right:12px;top:10px">🚻 {_("Bathroom")} · 7 min</span>
   </div>
  </div>
 </section>
 
 <section class="alt">
  <div class="wrap">
-  <p class="eyebrow">Where we are</p>
-  <h2>{fmt(n_cities)} cities. {fmt(total)} places.</h2>
-  <p class="lead">Every dot is a city with its own page in five languages. The red ones are our focus cities, each with 100 hand-picked spots in the busiest tourist areas.</p>
+  <p class="eyebrow">{_("Where we are")}</p>
+  <h2>{_("{c} cities. {p} places.").format(c=fmt(n_cities), p=fmt(total))}</h2>
+  <p class="lead">{_("Every dot is a city with its own page in five languages. The red ones are our focus cities, each with 100 hand-picked spots in the busiest tourist areas.")}</p>
   <div class="world"><div class="m">{"".join(dots)}</div>
-   <div class="legend"><span><i style="background:#e0453a"></i>Focus city</span><span><i style="background:#1c4fa0"></i>Live city</span></div></div>
+   <div class="legend"><span><i style="background:#e0453a"></i>{_("Focus city")}</span><span><i style="background:#1c4fa0"></i>{_("Live city")}</span></div></div>
   <div class="cities">{focus_cards}</div>
-  <p style="margin-top:14px"><a href="/cities/">See all {fmt(n_cities)} cities →</a></p>
+  <p style="margin-top:14px"><a href="{cities_url}">{_("See all {n} cities").format(n=fmt(n_cities))} →</a></p>
  </div>
 </section>
 
 <section>
  <div class="wrap">
-  <p class="eyebrow">Built and live</p>
-  <h2>A working product, on the street today.</h2>
+  <p class="eyebrow">{_("Built and live")}</p>
+  <h2>{_("A working product, on the street today.")}</h2>
   <div class="grid3">
-   <div class="feat"><div class="i">📍</div><h3>Near me</h3><p>One tap finds the traveler and shows the closest options.</p></div>
-   <div class="feat"><div class="i">🚶</div><h3>Route on the map</h3><p>Walking time and distance in the page, plus Google Maps.</p></div>
-   <div class="feat"><div class="i">⭐</div><h3>Honest details</h3><p>Free or customers only, hours, and what to expect inside.</p></div>
-   <div class="feat"><div class="i">🌍</div><h3>Speaks their language</h3><p>12 languages, picked automatically from the phone.</p></div>
-   <div class="feat"><div class="i">📱</div><h3>Feels like an app</h3><p>Add it to the home screen. No store, no account.</p></div>
-   <div class="feat"><div class="i">➕</div><h3>Anyone can add a place</h3><p>Every suggestion is reviewed before it goes live.</p></div>
-   <div class="feat"><div class="i">🏙️</div><h3>City pages</h3><p>{fmt(n_pages)} pages in 5 languages, updated every night.</p></div>
-   <div class="feat"><div class="i">📝</div><h3>Loo Routes</h3><p>Walking guides with every bathroom stop on the way.</p></div>
-   <div class="feat"><div class="i">📊</div><h3>Real numbers</h3><p>We measure returning visitors and taps on business pins.</p></div>
+   <div class="feat"><div class="i">📍</div><h3>{_("Near me")}</h3><p>{_("One tap finds the traveler and shows the closest options.")}</p></div>
+   <div class="feat"><div class="i">🚶</div><h3>{_("Route on the map")}</h3><p>{_("Walking time and distance in the page, plus Google Maps.")}</p></div>
+   <div class="feat"><div class="i">⭐</div><h3>{_("Honest details")}</h3><p>{_("Free or customers only, hours, and what to expect inside.")}</p></div>
+   <div class="feat"><div class="i">🌍</div><h3>{_("Speaks their language")}</h3><p>{_("12 languages, picked automatically from the phone.")}</p></div>
+   <div class="feat"><div class="i">📱</div><h3>{_("Feels like an app")}</h3><p>{_("Add it to the home screen. No store, no account.")}</p></div>
+   <div class="feat"><div class="i">➕</div><h3>{_("Anyone can add a place")}</h3><p>{_("Every suggestion is reviewed before it goes live.")}</p></div>
+   <div class="feat"><div class="i">🏙️</div><h3>{_("City pages")}</h3><p>{_("{n} pages in 5 languages, updated every night.").format(n=fmt(n_pages))}</p></div>
+   <div class="feat"><div class="i">📝</div><h3>Loo Routes</h3><p>{_("Walking guides with every bathroom stop on the way.")}</p></div>
+   <div class="feat"><div class="i">📊</div><h3>{_("Real numbers")}</h3><p>{_("We measure returning visitors and taps on business pins.")}</p></div>
   </div>
  </div>
 </section>
@@ -208,30 +234,30 @@ def build(listed, routes, n_pages, names, city_url, now, site):
 <section class="alt" id="business">
  <div class="wrap two">
   <div>
-   <p class="eyebrow">For businesses</p>
-   <h2>Be the red pin on a tourist's walk.</h2>
-   <p class="lead">Your name, icon, hours and a discount code, shown on the route to the nearest bathroom. Then see exactly how many people saw you, tapped, asked for directions and copied your code.</p>
+   <p class="eyebrow">{_("For businesses")}</p>
+   <h2>{_("Be the red pin on a tourist's walk.")}</h2>
+   <p class="lead">{_("Your name, icon, hours and a discount code, shown on the route to the nearest bathroom. Then see exactly how many people saw you, tapped, asked for directions and copied your code.")}</p>
    <div class="price">
-    <div class="card"><h3>Free listing</h3><p>A red pin with hours, description, website and a discount code. Keep it real with a window sticker photo now and then.</p></div>
-    <div class="card"><h3>Yearly plans</h3><p>From about $20 to $89 a year for more visibility, deeper stats and a stop in our Loo Routes guides. The first businesses in each new city get year one free.</p></div>
+    <div class="card"><h3>{_("Free listing")}</h3><p>{_("A red pin with hours, description, website and a discount code. Keep it real with a window sticker photo now and then.")}</p></div>
+    <div class="card"><h3>{_("Yearly plans")}</h3><p>{_("From about $20 to $89 a year for more visibility, deeper stats and a stop in our Loo Routes guides. The first businesses in each new city get year one free.")}</p></div>
    </div>
-   <div class="cta" style="margin-top:18px"><a class="btn" href="/business.html">Add your business, free</a><a class="btn o" href="/account.html">Sign in</a></div>
+   <div class="cta" style="margin-top:18px"><a class="btn" href="/business.html">{_("Add your business, free")}</a><a class="btn o" href="/account.html">{_("Sign in")}</a></div>
   </div>
   <div>
    <div class="mock" style="max-width:360px;margin:0 auto">
-    <b>👗 Heron CA</b><br><span class="t">Local</span><span class="t">10am to 7pm</span>
-    <p style="margin:8px 0 0">California coastal clothing, vintage and original designs on the Venice boardwalk.</p>
-    <span class="code">TAP TO COPY · LALOO10</span><br><span class="go">🚶 Show route</span>
+    <b>👗 Heron CA</b><br><span class="t">{_("Local")}</span><span class="t">{_("10am to 7pm")}</span>
+    <p style="margin:8px 0 0">{_("California coastal clothing, vintage and original designs on the Venice boardwalk.")}</p>
+    <span class="code">{_("TAP TO COPY")} · LALOO10</span><br><span class="go">🚶 {_("Show route")}</span>
    </div>
    <div class="mock" style="max-width:360px;margin:14px auto 0">
-    <b>Last 30 days</b>
+    <b>{_("Last 30 days")}</b>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">1,240</b>saw your pin</div>
-     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">186</b>opened it</div>
-     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">74</b>directions</div>
-     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">39</b>copied your code</div>
+     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">{fm(1240)}</b>{_("saw your pin")}</div>
+     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">186</b>{_("opened it")}</div>
+     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">74</b>{_("directions")}</div>
+     <div class="t" style="display:block;font-size:13px;padding:8px"><b style="font-size:22px;display:block">39</b>{_("copied your code")}</div>
     </div>
-    <p style="margin:8px 0 0;font-size:12px;color:#5f6b7d">Example of the business dashboard.</p>
+    <p style="margin:8px 0 0;font-size:12px;color:#5f6b7d">{_("Example of the business dashboard.")}</p>
    </div>
   </div>
  </div>
@@ -240,68 +266,75 @@ def build(listed, routes, n_pages, names, city_url, now, site):
 <section id="cities">
  <div class="wrap two">
   <div>
-   <p class="eyebrow">For cities</p>
-   <h2>Your public toilets, in five languages, for free.</h2>
-   <p class="lead">We prepare a profile for each city from open data. The city claims it with an official email address, then marks toilets as closed, fixes hours and fees, and gets a “Verified by the city” badge. No fee, no contract, switch off any time.</p>
-   <div class="cta"><a class="btn o" href="mailto:hello@laloo.org?subject=City%20profile">Ask for your city's profile</a><a class="btn o" href="/terms.html#cities">Terms for cities</a></div>
+   <p class="eyebrow">{_("For cities")}</p>
+   <h2>{_("Your public toilets, in five languages, for free.")}</h2>
+   <p class="lead">{_("We prepare a profile for each city from open data. The city claims it with an official email address, then marks toilets as closed, fixes hours and fees, and gets a “Verified by the city” badge. No fee, no contract, switch off any time.")}</p>
+   <div class="cta"><a class="btn o" href="mailto:hello@laloo.org?subject=City%20profile">{_("Ask for your city's profile")}</a><a class="btn o" href="/terms.html#cities">{_("Terms for cities")}</a></div>
   </div>
   <div class="mock" style="max-width:360px;margin:0 auto">
-   <b>🚻 Public toilet · Centrum</b><br><span class="t v">✓ Verified by the city</span><span class="t">Paid</span><span class="t">7am to 10pm</span>
-   <p style="margin:8px 0 0">Operated by the city. Contactless payment.</p>
-   <span class="go">🚶 Show route</span>
+   <b>🚻 {_("Public toilet")} · Centrum</b><br><span class="t v">✓ {_("Verified by the city")}</span><span class="t">{_("Paid")}</span><span class="t">{_("7am to 10pm")}</span>
+   <p style="margin:8px 0 0">{_("Operated by the city. Contactless payment.")}</p>
+   <span class="go">🚶 {_("Show route")}</span>
   </div>
  </div>
 </section>
 
-{f'<section class="alt"><div class="wrap"><p class="eyebrow">Loo Routes</p><h2>Walks with every bathroom stop.</h2><p class="lead">Travel guides centered on the walk, not on generic top-10 lists. Paying businesses appear as clearly labeled partner stops.</p><div class="cities">{route_list}</div></div></section>' if route_list else ""}
+{f'<section class="alt"><div class="wrap"><p class="eyebrow">Loo Routes</p><h2>{_("Walks with every bathroom stop.")}</h2><p class="lead">{_("Travel guides centered on the walk, not on generic top-10 lists. Paying businesses appear as clearly labeled partner stops.")}</p><div class="cities">{route_list}</div></div></section>' if route_list else ""}
 
 <section>
  <div class="wrap">
-  <p class="eyebrow">Where we are going</p>
-  <h2>From one boardwalk to 150 tourist cities.</h2>
+  <p class="eyebrow">{_("Where we are going")}</p>
+  <h2>{_("From one boardwalk to 150 tourist cities.")}</h2>
   <div class="road">
-   <div><b class="l">LIVE</b><ul><li>Map, filters, routes, 12 languages</li><li>{fmt(n_cities)} cities, {fmt(n_tips)} hand-picked spots</li><li>City pages and Loo Routes in 5 languages</li><li>Business pins, codes and sign-up</li><li>Account panel for businesses and cities</li></ul></div>
-   <div><b class="n">NEXT</b><ul><li>City profiles claimed by municipalities</li><li>Hostel and host QR packs</li><li>“Was this helpful?” reviews</li><li>Weekly Loo Routes</li></ul></div>
-   <div><b class="t">LATER</b><ul><li>Moderated bathroom reviews</li><li>Ambassador program at scale</li><li>Bathroom access codes shared by businesses</li></ul></div>
+   <div><b class="l">{_("LIVE")}</b><ul><li>{_("Map, filters, routes, 12 languages")}</li><li>{_("{c} cities, {t} hand-picked spots").format(c=fmt(n_cities), t=fmt(n_tips))}</li><li>{_("City pages and Loo Routes in 5 languages")}</li><li>{_("Business pins, codes and sign-up")}</li><li>{_("Account panel for businesses and cities")}</li></ul></div>
+   <div><b class="n">{_("NEXT")}</b><ul><li>{_("City profiles claimed by municipalities")}</li><li>{_("Hostel and host QR packs")}</li><li>{_("“Was this helpful?” reviews")}</li><li>{_("Weekly Loo Routes")}</li></ul></div>
+   <div><b class="t">{_("LATER")}</b><ul><li>{_("Moderated bathroom reviews")}</li><li>{_("Ambassador program at scale")}</li><li>{_("Bathroom access codes shared by businesses")}</li></ul></div>
   </div>
  </div>
 </section>
 
 <section class="alt">
  <div class="wrap">
-  <h2>Try it now. Then put your city on it.</h2>
-  <div class="grid3">
-   <div class="feat"><h3>Travelers</h3><p>Open laloo.org and tap “Near me”.</p><p><a href="/?ref=about">Open the map →</a></p></div>
-   <div class="feat"><h3>Businesses</h3><p>Free listing in minutes.</p><p><a href="/business.html">laloo.org/business.html →</a></p></div>
-   <div class="feat"><h3>Press, cities, investors</h3><p>We'd love to talk.</p><p><a href="mailto:hello@laloo.org">hello@laloo.org</a> · Instagram <a href="https://instagram.com/loo.la.loo" rel="noopener">@loo.la.loo</a></p></div>
+  <h2>{_("Try it now. Then put your city on it.")}</h2>
+  <div class="grid4">
+   <div class="feat"><h3>{_("Travelers")}</h3><p>{_("Open laloo.org and tap “Near me”.")}</p><p><a href="/?ref=about">{_("Open the map")} →</a></p></div>
+   <div class="feat"><h3>{_("Businesses")}</h3><p>{_("Free listing in minutes.")}</p><p><a href="/business.html">laloo.org/business.html →</a></p></div>
+   <div class="feat"><h3>{_("Hosts and hostels")}</h3><p>{_("A free printable QR card for your guests.")}</p><p><a href="/hosts/">laloo.org/hosts →</a></p></div>
+   <div class="feat"><h3>{_("Press, cities, investors")}</h3><p>{_("We'd love to talk.")}</p><p><a href="mailto:hello@laloo.org">hello@laloo.org</a> · Instagram <a href="https://instagram.com/loo.la.loo" rel="noopener">@loo.la.loo</a></p></div>
   </div>
  </div>
 </section>
 """
-  title = "About Laloo · Find a bathroom anywhere"
-  desc = f"Laloo is a free map that helps travelers find a bathroom in seconds. Live in {n_cities} cities with {total:,} places. For travelers, businesses and cities."
+  title = _("About Laloo · Find a bathroom anywhere")
+  desc = _("Laloo is a free map that helps travelers find a bathroom in seconds. Live in {c} cities with {p} places. For travelers, businesses and cities.").format(c=n_cities, p=fm(total))
+  canon = site + lpath(lang, "/about/")
+  ab = {l: lpath(l, "/about/") for l in LANGS}
+  alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{site}{ab[l]}">' for l in LANGS) + f'<link rel="alternate" hreflang="x-default" href="{site}/about/">'
+  langs = "".join(f'<a href="{ab[l]}" onclick="try{{localStorage.laloo_about_lang=\'{l}\'}}catch(e){{}}" class="{"on" if l == lang else ""}" lang="{l}">{l.upper()}</a>' for l in LANGS)
   return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<link rel="canonical" href="{site}/about/">
+<link rel="canonical" href="{canon}">
+{alts}
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
-<meta property="og:url" content="{site}/about/">
+<meta property="og:url" content="{canon}">
 <meta property="og:image" content="{site}/favicon-512.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#fefef8">
 <style>{CSS}</style>
+{AUTO if lang == "en" else ""}
 </head>
 <body>
 <header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a>
-<nav><a class="pill" href="/cities/">Cities</a><a class="pill p" href="/?ref=about">Open the map</a></nav></header>
+<nav><span class="langs">{langs}</span><a class="pill p" href="/?ref=about">{_("Open the map")}</a></nav></header>
 {body}
-<footer>laloo.org · Made on the Venice Beach boardwalk · <a href="/terms.html">Terms</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a><br>Numbers updated automatically every night. Map data © OpenStreetMap contributors.</footer>
+<footer>laloo.org · {_("Made on the Venice Beach boardwalk")} · <a href="/terms.html">{_("Terms")}</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a><br>{_("Numbers updated automatically every night.")} {_("Map data © OpenStreetMap contributors.")}</footer>
 </body>
 </html>
 """
