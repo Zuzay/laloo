@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Early members · Laloo</title>
+<meta name="description" content="Join Laloo early. Numbered badge, your own invite link, and a share of what the businesses you bring pay. No fees, no paperwork.">
+<link rel="canonical" href="https://laloo.org/join/">
+<meta property="og:title" content="Laloo early members">
+<meta property="og:description" content="Numbered badges for the first 100, 500 and 1000 people who help Laloo grow.">
+<meta name="theme-color" content="#fefef8">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+:root{--navy:#10223d;--blue:#1c4fa0;--red:#e0453a;--orange:#f39a1e;--line:#e6e1d4;--bg:#fefef8;--muted:#5f6b7d;--card:#fff;--tag:#e8f0fb;--green:#1b7a3a;--greenbg:#e3f6e8;--sand:#f6f1e4;--field:#fff;--bar:#ece6d6}
+@media (prefers-color-scheme:dark){:root{--navy:#e9eef6;--blue:#8fb4ff;--line:#2a3445;--bg:#111722;--muted:#9aa6b8;--card:#172030;--tag:#1f2e48;--green:#7fd79a;--greenbg:#1d3326;--sand:#161e2b;--field:#0f1520;--bar:#243044}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--blue)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;border-bottom:1px solid var(--line)}
+header img{height:34px;display:block;border-radius:8px}
+@media (prefers-color-scheme:dark){header img{background:#fefef8;padding:2px 6px;height:38px}}
+header nav{display:flex;gap:6px}
+@media(max-width:420px){header .pill{font-size:14px;padding:8px 11px}body.in header nav a.pill{display:none}}
+main{max-width:640px;margin:0 auto;padding:24px 16px 40px}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:0 0 8px}
+h1{font-size:clamp(34px,8vw,54px);line-height:1;letter-spacing:-.02em;margin:0 0 14px}
+h2{font-size:22px;margin:0 0 10px}
+.lead{font-size:19px;margin:0 0 20px}
+.pill{display:inline-block;white-space:nowrap;text-decoration:none;font:inherit;font-weight:700;font-size:15px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--navy);background:var(--card);cursor:pointer}
+.pill.p{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.pill:disabled{opacity:.6;cursor:default}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 14px}
+.count{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.count b{font-size:52px;line-height:1;letter-spacing:-.02em}
+.count span{color:var(--muted)}
+.bar{height:12px;background:var(--bar);border-radius:6px;overflow:hidden;margin:12px 0 8px}
+.bar i{display:block;height:100%;background:var(--red);border-radius:6px;min-width:6px}
+.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.tiers div{border:1px solid var(--line);border-radius:10px;padding:8px;text-align:left}
+.tiers div.on{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.tiers b{display:block;font-size:15px}.tiers span{font-size:13px;color:var(--muted)}
+@media(max-width:460px){.tiers{grid-template-columns:1fr 1fr}}
+ol.get{margin:0;padding-left:22px}
+ol.get li{margin:0 0 10px}
+label{display:block;font-size:14px;font-weight:700;margin:12px 0 0}
+label .opt{font-weight:500;color:var(--muted)}
+input[type=text],input[type=email]{display:block;width:100%;margin-top:5px;font:inherit;font-size:16px;color:var(--navy);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(28,79,160,.15)}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:15px}
+.check input{margin-top:4px;width:18px;height:18px;flex:none}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.msg{font-weight:700;margin:12px 0 0}.msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+.inv{background:var(--tag);color:var(--blue);border-radius:10px;padding:8px 12px;font-weight:700;font-size:15px;margin:0 0 6px}
+.muted{color:var(--muted)}.small{font-size:14px}
+.badge{display:inline-flex;align-items:baseline;flex-wrap:wrap;gap:8px;border:2px solid var(--navy);border-radius:12px;padding:8px 14px;font-weight:800;font-size:20px;transform:rotate(-2deg);margin:6px 0 12px;background:var(--card)}
+.badge small{font-size:13px;font-weight:700;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 4px}
+.stats div{background:var(--sand);border-radius:12px;padding:10px;min-width:0}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.stats div{display:flex;align-items:center;gap:12px;padding:8px 12px}.stats b{min-width:34px}}
+.stats b{display:block;font-size:26px;line-height:1.1}.stats span{display:block;font-size:13px;line-height:1.3;color:var(--muted)}
+.link{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.link code{flex:1 1 220px;font:15px/1.3 ui-monospace,Menlo,monospace;background:var(--sand);border-radius:10px;padding:10px;overflow-wrap:anywhere}
+.qr{width:150px;height:150px;background:#fff;padding:8px;border-radius:10px;margin-top:12px}
+.qr svg{width:100%;height:100%;display:block}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+footer{max-width:640px;margin:0 auto;padding:18px 16px 40px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO"></a><nav><a class="pill" href="/" data-i="map">Open the map</a><button class="pill" id="out" hidden data-i="signout">Sign out</button></nav></header>
+<main>
+  <p class="eyebrow" data-i="eyebrow">Early members</p>
+  <h1 id="h1"></h1>
+  <p class="lead" data-i="lead">Laloo grows because people tell other people. The first ones to help get a numbered badge that stays with them.</p>
+
+  <div class="box" id="counter">
+    <div class="count"><b id="cn">…</b><span id="cl"></span></div>
+    <div class="bar"><i id="cb" style="width:0"></i></div>
+    <div class="small muted" id="cleft"></div>
+    <div class="tiers" id="tiers"></div>
+  </div>
+
+  <!-- Üye sayfası (giriş yapınca) -->
+  <div id="me" hidden></div>
+
+  <!-- Nasıl işliyor -->
+  <div class="box">
+    <h2 data-i="get_t">What you get</h2>
+    <ol class="get">
+      <li data-i="get1">A numbered badge: First 100, First 500 or First 1000. It stays on your profile for good.</li>
+      <li data-i="get2">Your own invite link. We count who came through you.</li>
+      <li data-i="get3">When a business you bring pays for a Laloo plan, you get 50% of its first year.</li>
+      <li id="get4"></li>
+      <li data-i="get5">No fees, no ID, no bank papers. Payouts go through PayPal or Stripe.</li>
+    </ol>
+    <p class="small muted" style="margin:10px 0 0" data-i="get_n">We look at every sign-up by hand, so it can take a day or two. Stories and ratings you send count toward your profile.</p>
+  </div>
+  <!-- Katılım formu -->
+  <div class="box" id="joinbox">
+    <h2 data-i="form_t">Join</h2>
+    <p class="inv" id="invby" hidden></p>
+    <form id="jf" novalidate>
+      <label><span data-i="nick">Nickname</span><input type="text" name="nick" maxlength="40" autocomplete="nickname" required></label>
+      <label><span data-i="email">Email</span><input type="email" name="email" maxlength="200" autocomplete="email" required></label>
+      <label><span data-i="city">Your city</span> <span class="opt" data-i="optional">(optional)</span><input type="text" name="city" maxlength="80"></label>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="check" style="margin-top:14px"><input type="checkbox" name="ok"> <span data-i="consent">Email me about my membership. Nothing else, no newsletters.</span></label>
+      <button class="pill p" id="jsend" style="width:100%;margin-top:14px" data-i="send">Join</button>
+      <p class="msg" id="jmsg" hidden></p>
+    </form>
+    <p class="small muted" id="already"><span data-i="member_q">Already joined?</span> <a href="#" id="signin" data-i="signin_l">Get a sign-in link</a></p>
+  </div>
+
+</main>
+<footer><a href="/">laloo.org</a> · <a href="/stories/">Stories</a> · <a href="/terms.html">Terms</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a></footer>
+
+<script src="/qrcode.js"></script>
+<script>
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
+const TXT = {
+en:{ map:"Open the map", signout:"Sign out", eyebrow:"Early members", h1:"Be one of the first {t}.", h1std:"Join Laloo.",
+  lead:"Laloo grows because people tell other people. The first ones to help get a numbered badge that stays with them.",
+  taken:"of the first {t} spots taken", left:"{n} spots left. Then the next badge opens.", full:"All numbered badges are gone. You can still join.",
+  tier100:"First 100", tier500:"First 500", tier1000:"First 1000", tier0:"Member", later:"after year one",
+  form_t:"Join", nick:"Nickname", email:"Email", city:"Your city", optional:"(optional)", consent:"Email me about my membership. Nothing else, no newsletters.",
+  send:"Join", sending:"Sending…", member_q:"Already joined?", signin_l:"Get a sign-in link",
+  invited:"Invited by {n}", need:"Please fill in a nickname and a valid email, and tick the box.", fail:"Something went wrong. Please try again.", toomany:"Too many sign-ups from this device today. Try again tomorrow.",
+  joined:"You're #{p} in line. That's inside the {t}.", joined0:"You're #{p} in line.", again:"You've already joined with this email.",
+  checkmail:"Check your inbox: we sent a link to {e}. Open it to confirm your email and see your member page.", linkSent:"Sign-in link sent to {e}. It works once and expires in an hour.", mailFail:"We couldn't send the email. Write to hello@laloo.org.",
+  emailQ:"Your email", sendLink:"Email me the link",
+  get_t:"What you get", get1:"A numbered badge: First 100, First 500 or First 1000. It stays on your profile for good.", get2:"Your own invite link. We count who came through you.",
+  get3:"When a business you bring pays for a Laloo plan, you get 50% of its first year.", get4:"Every year after that you keep a share: {a}.",
+  get5:"No fees, no ID, no bank papers. Payouts go through PayPal or Stripe.", get_n:"We look at every sign-up by hand, so it can take a day or two. Stories and ratings you send count toward your profile.",
+  hi:"Hi {n}", pending:"We're looking at your sign-up. You're #{p} in line{t}.", pendingT:", inside the {t}", approved:"You're in.", rejected:"We couldn't approve this sign-up. Questions: hello@laloo.org",
+  your_badge:"Your badge", memberNo:"Member #{s}", yourShare:"Your share: 50% of a business's first year, then {r}% every year.",
+  s_inv:"joined through you", s_st:"stories published", s_rv:"ratings on the map",
+  link_t:"Your invite link", copy:"Copy", copied:"Copied", share:"Share", shareText:"Laloo finds you a bathroom anywhere, no app needed. Join the early members:",
+  do_t:"Things that count", do_story:"Write a story", do_rate:"Rate a loo", do_map:"Open the map",
+  notMember:"This email hasn't joined yet. Fill in the form below.", err:"Couldn't load your page. Pull to refresh.", again_s:"Your session ended, please sign in again." },
+tr:{ map:"Haritayı aç", signout:"Çıkış", eyebrow:"Erken üyeler", h1:"İlk {t} kişiden biri ol.", h1std:"Laloo'ya katıl.",
+  lead:"Laloo, insanlar birbirine anlattıkça büyüyor. İlk yardım edenler, hep onlarla kalacak numaralı bir rozet alıyor.",
+  taken:"kişi ilk {t} içinde yerini aldı", left:"{n} yer kaldı. Dolunca sıradaki rozet açılıyor.", full:"Numaralı rozetler bitti. Yine de katılabilirsin.",
+  tier100:"İlk 100", tier500:"İlk 500", tier1000:"İlk 1000", tier0:"Üye", later:"ilk yıldan sonra",
+  form_t:"Katıl", nick:"Rumuz", email:"E-posta", city:"Şehrin", optional:"(isteğe bağlı)", consent:"Üyeliğimle ilgili e-posta alabilirim. Başka hiçbir şey, bülten yok.",
+  send:"Katıl", sending:"Gönderiliyor…", member_q:"Zaten katıldın mı?", signin_l:"Giriş linki iste",
+  invited:"Seni davet eden: {n}", need:"Rumuz ve geçerli bir e-posta yaz, kutuyu işaretle.", fail:"Bir şeyler ters gitti. Tekrar dener misin?", toomany:"Bugün bu cihazdan çok kayıt yapıldı. Yarın tekrar dene.",
+  joined:"Sıradaki yerin #{p}. Bu, {t} içinde.", joined0:"Sıradaki yerin #{p}.", again:"Bu e-postayla zaten katılmışsın.",
+  checkmail:"Gelen kutuna bak: {e} adresine bir link gönderdik. Açınca e-postan onaylanır ve üye sayfan görünür.", linkSent:"Giriş linki {e} adresine gitti. Bir kez çalışır, bir saat geçerli.", mailFail:"E-posta gönderilemedi. hello@laloo.org adresine yaz.",
+  emailQ:"E-postan", sendLink:"Linki gönder",
+  get_t:"Ne kazanırsın", get1:"Numaralı rozet: İlk 100, İlk 500 ya da İlk 1000. Profilinde hep kalır.", get2:"Sana özel davet linki. Senin üzerinden kimin geldiğini sayıyoruz.",
+  get3:"Getirdiğin bir işletme Laloo'da ücretli pakete geçerse ilk yılın yüzde 50'si senin.", get4:"Sonraki her yıl da payın sürer: {a}.",
+  get5:"Ücret yok, kimlik yok, banka belgesi yok. Ödemeler PayPal ya da Stripe ile.", get_n:"Her kaydı elle kontrol ediyoruz, bir iki gün sürebilir. Gönderdiğin hikayeler ve puanlar profiline sayılır.",
+  hi:"Merhaba {n}", pending:"Kaydına bakıyoruz. Sıradaki yerin #{p}{t}.", pendingT:", yani {t} içinde", approved:"İçeridesin.", rejected:"Bu kaydı onaylayamadık. Sorular için: hello@laloo.org",
+  your_badge:"Rozetin", memberNo:"Üye #{s}", yourShare:"Payın: işletmenin ilk yılının yüzde 50'si, sonra her yıl yüzde {r}.",
+  s_inv:"kişi senin üzerinden geldi", s_st:"hikaye yayında", s_rv:"puan haritada",
+  link_t:"Davet linkin", copy:"Kopyala", copied:"Kopyalandı", share:"Paylaş", shareText:"Laloo her yerde en yakın tuvaleti buluyor, uygulama gerekmiyor. Erken üyelere katıl:",
+  do_t:"Profiline sayılanlar", do_story:"Hikaye yaz", do_rate:"Tuvalet puanla", do_map:"Haritayı aç",
+  notMember:"Bu e-postayla henüz katılmamışsın. Aşağıdaki formu doldur.", err:"Sayfan yüklenemedi. Yenilemeyi dene.", again_s:"Oturumun bitti, tekrar giriş yap." },
+es:{ map:"Abrir el mapa", signout:"Salir", eyebrow:"Miembros pioneros", h1:"Sé una de las primeras {t} personas.", h1std:"Únete a Laloo.",
+  lead:"Laloo crece porque la gente se lo cuenta a otra gente. Quienes ayudan primero reciben una insignia numerada que se queda con ellos.",
+  taken:"de las primeras {t} plazas ocupadas", left:"Quedan {n} plazas. Después se abre la siguiente insignia.", full:"Ya no quedan insignias numeradas. Puedes unirte igualmente.",
+  tier100:"Primeros 100", tier500:"Primeros 500", tier1000:"Primeros 1000", tier0:"Miembro", later:"a partir del segundo año",
+  form_t:"Únete", nick:"Apodo", email:"Email", city:"Tu ciudad", optional:"(opcional)", consent:"Quiero recibir emails sobre mi membresía. Nada más, sin boletines.",
+  send:"Unirme", sending:"Enviando…", member_q:"¿Ya te uniste?", signin_l:"Pide un enlace para entrar",
+  invited:"Te invita {n}", need:"Escribe un apodo y un email válido, y marca la casilla.", fail:"Algo ha fallado. Inténtalo otra vez.", toomany:"Demasiados registros desde este dispositivo hoy. Vuelve mañana.",
+  joined:"Eres el n.º {p} de la lista. Eso es dentro de los {t}.", joined0:"Eres el n.º {p} de la lista.", again:"Ya te habías unido con este email.",
+  checkmail:"Mira tu bandeja de entrada: hemos enviado un enlace a {e}. Ábrelo para confirmar tu email y ver tu página de miembro.", linkSent:"Enlace enviado a {e}. Funciona una vez y caduca en una hora.", mailFail:"No hemos podido enviar el email. Escribe a hello@laloo.org.",
+  emailQ:"Tu email", sendLink:"Enviarme el enlace",
+  get_t:"Qué recibes", get1:"Una insignia numerada: Primeros 100, 500 o 1000. Se queda en tu perfil para siempre.", get2:"Tu propio enlace de invitación. Contamos quién llega a través de ti.",
+  get3:"Si un negocio que traes contrata un plan de Laloo, te llevas el 50% de su primer año.", get4:"Y cada año siguiente sigues cobrando una parte: {a}.",
+  get5:"Sin cuotas, sin DNI, sin papeles del banco. Los pagos van por PayPal o Stripe.", get_n:"Revisamos cada registro a mano, así que puede tardar un día o dos. Las historias y valoraciones que envíes cuentan para tu perfil.",
+  hi:"Hola, {n}", pending:"Estamos revisando tu registro. Eres el n.º {p} de la lista{t}.", pendingT:", dentro de los {t}", approved:"Ya estás dentro.", rejected:"No hemos podido aprobar este registro. Dudas: hello@laloo.org",
+  your_badge:"Tu insignia", memberNo:"Miembro n.º {s}", yourShare:"Tu parte: el 50% del primer año de un negocio y luego el {r}% cada año.",
+  s_inv:"han llegado por ti", s_st:"historias publicadas", s_rv:"valoraciones en el mapa",
+  link_t:"Tu enlace de invitación", copy:"Copiar", copied:"Copiado", share:"Compartir", shareText:"Laloo te encuentra un baño en cualquier sitio, sin descargar nada. Únete a los pioneros:",
+  do_t:"Lo que cuenta", do_story:"Escribir una historia", do_rate:"Puntuar un baño", do_map:"Abrir el mapa",
+  notMember:"Este email todavía no se ha unido. Rellena el formulario de abajo.", err:"No se ha podido cargar tu página. Recarga.", again_s:"Tu sesión ha caducado, vuelve a entrar." },
+de:{ map:"Karte öffnen", signout:"Abmelden", eyebrow:"Frühe Mitglieder", h1:"Sei unter den ersten {t}.", h1std:"Mach mit bei Laloo.",
+  lead:"Laloo wächst, weil Leute es anderen erzählen. Wer früh hilft, bekommt ein nummeriertes Abzeichen, das bleibt.",
+  taken:"der ersten {t} Plätze vergeben", left:"Noch {n} Plätze frei. Danach geht das nächste Abzeichen los.", full:"Die nummerierten Abzeichen sind weg. Mitmachen kannst du trotzdem.",
+  tier100:"Erste 100", tier500:"Erste 500", tier1000:"Erste 1000", tier0:"Mitglied", later:"ab dem zweiten Jahr",
+  form_t:"Mitmachen", nick:"Spitzname", email:"E-Mail", city:"Deine Stadt", optional:"(optional)", consent:"Schreibt mir zu meiner Mitgliedschaft. Sonst nichts, kein Newsletter.",
+  send:"Mitmachen", sending:"Wird gesendet…", member_q:"Schon dabei?", signin_l:"Anmeldelink anfordern",
+  invited:"Eingeladen von {n}", need:"Bitte Spitzname und gültige E-Mail eintragen und das Kästchen anhaken.", fail:"Da ist etwas schiefgelaufen. Versuch es noch mal.", toomany:"Heute gab es zu viele Anmeldungen von diesem Gerät. Morgen wieder.",
+  joined:"Du bist Nr. {p} in der Warteschlange. Das ist innerhalb der {t}.", joined0:"Du bist Nr. {p} in der Warteschlange.", again:"Mit dieser E-Mail bist du schon dabei.",
+  checkmail:"Schau in dein Postfach: Wir haben einen Link an {e} geschickt. Öffne ihn, um deine E-Mail zu bestätigen und deine Mitgliederseite zu sehen.", linkSent:"Anmeldelink an {e} geschickt. Er funktioniert einmal und läuft nach einer Stunde ab.", mailFail:"Die E-Mail konnte nicht gesendet werden. Schreib an hello@laloo.org.",
+  emailQ:"Deine E-Mail", sendLink:"Link schicken",
+  get_t:"Was du bekommst", get1:"Ein nummeriertes Abzeichen: Erste 100, Erste 500 oder Erste 1000. Es bleibt dauerhaft in deinem Profil.", get2:"Deinen eigenen Einladungslink. Wir zählen, wer über dich kommt.",
+  get3:"Wenn ein Geschäft, das du mitbringst, ein Laloo-Paket bucht, bekommst du 50 % seines ersten Jahres.", get4:"Danach bekommst du jedes Jahr weiter einen Anteil: {a}.",
+  get5:"Keine Gebühren, kein Ausweis, keine Bankunterlagen. Auszahlung über PayPal oder Stripe.", get_n:"Wir schauen uns jede Anmeldung selbst an, das kann ein, zwei Tage dauern. Geschichten und Bewertungen von dir zählen für dein Profil.",
+  hi:"Hallo {n}", pending:"Wir schauen uns deine Anmeldung an. Du bist Nr. {p} in der Warteschlange{t}.", pendingT:", also innerhalb der {t}", approved:"Du bist dabei.", rejected:"Diese Anmeldung konnten wir nicht bestätigen. Fragen: hello@laloo.org",
+  your_badge:"Dein Abzeichen", memberNo:"Mitglied Nr. {s}", yourShare:"Dein Anteil: 50 % vom ersten Jahr eines Geschäfts, danach jedes Jahr {r} %.",
+  s_inv:"über dich dazugekommen", s_st:"Geschichten veröffentlicht", s_rv:"Bewertungen auf der Karte",
+  link_t:"Dein Einladungslink", copy:"Kopieren", copied:"Kopiert", share:"Teilen", shareText:"Laloo findet überall eine Toilette, ohne App. Mach mit bei den frühen Mitgliedern:",
+  do_t:"Was zählt", do_story:"Geschichte schreiben", do_rate:"Klo bewerten", do_map:"Karte öffnen",
+  notMember:"Mit dieser E-Mail bist du noch nicht dabei. Füll unten das Formular aus.", err:"Deine Seite konnte nicht geladen werden. Neu laden.", again_s:"Deine Sitzung ist abgelaufen, bitte melde dich neu an." },
+fr:{ map:"Ouvrir la carte", signout:"Se déconnecter", eyebrow:"Membres pionniers", h1:"Soyez parmi les {t} premiers.", h1std:"Rejoignez Laloo.",
+  lead:"Laloo grandit parce que les gens en parlent autour d'eux. Ceux qui aident en premier reçoivent un badge numéroté, pour de bon.",
+  taken:"des {t} premières places prises", left:"Encore {n} places. Ensuite, le badge suivant s'ouvre.", full:"Les badges numérotés sont tous partis. Vous pouvez quand même nous rejoindre.",
+  tier100:"100 premiers", tier500:"500 premiers", tier1000:"1000 premiers", tier0:"Membre", later:"après la première année",
+  form_t:"Rejoindre", nick:"Pseudo", email:"E-mail", city:"Votre ville", optional:"(facultatif)", consent:"Écrivez-moi au sujet de mon adhésion. Rien d'autre, pas de newsletter.",
+  send:"Rejoindre", sending:"Envoi…", member_q:"Déjà inscrit ?", signin_l:"Recevoir un lien de connexion",
+  invited:"Invité par {n}", need:"Indiquez un pseudo et un e-mail valide, et cochez la case.", fail:"Quelque chose n'a pas marché. Réessayez.", toomany:"Trop d'inscriptions depuis cet appareil aujourd'hui. Revenez demain.",
+  joined:"Vous êtes n° {p} dans la file. C'est dans les {t}.", joined0:"Vous êtes n° {p} dans la file.", again:"Vous êtes déjà inscrit avec cet e-mail.",
+  checkmail:"Regardez votre boîte mail : nous avons envoyé un lien à {e}. Ouvrez-le pour confirmer votre e-mail et voir votre page membre.", linkSent:"Lien envoyé à {e}. Il marche une fois et expire au bout d'une heure.", mailFail:"L'e-mail n'a pas pu partir. Écrivez à hello@laloo.org.",
+  emailQ:"Votre e-mail", sendLink:"Recevoir le lien",
+  get_t:"Ce que vous y gagnez", get1:"Un badge numéroté : 100, 500 ou 1000 premiers. Il reste sur votre profil pour toujours.", get2:"Votre propre lien d'invitation. On compte qui arrive par vous.",
+  get3:"Si un commerce que vous amenez prend une formule Laloo, vous touchez 50 % de sa première année.", get4:"Et chaque année suivante, vous gardez une part : {a}.",
+  get5:"Pas de frais, pas de pièce d'identité, pas de papiers bancaires. Paiement par PayPal ou Stripe.", get_n:"Chaque inscription est vérifiée à la main, cela peut prendre un jour ou deux. Les histoires et notes que vous envoyez comptent pour votre profil.",
+  hi:"Bonjour {n}", pending:"Nous regardons votre inscription. Vous êtes n° {p} dans la file{t}.", pendingT:", donc dans les {t}", approved:"C'est bon, vous en êtes.", rejected:"Nous n'avons pas pu valider cette inscription. Questions : hello@laloo.org",
+  your_badge:"Votre badge", memberNo:"Membre n° {s}", yourShare:"Votre part : 50 % de la première année d'un commerce, puis {r} % chaque année.",
+  s_inv:"arrivés par vous", s_st:"histoires publiées", s_rv:"notes sur la carte",
+  link_t:"Votre lien d'invitation", copy:"Copier", copied:"Copié", share:"Partager", shareText:"Laloo trouve des toilettes partout, sans appli. Rejoins les membres pionniers :",
+  do_t:"Ce qui compte", do_story:"Écrire une histoire", do_rate:"Noter des toilettes", do_map:"Ouvrir la carte",
+  notMember:"Cet e-mail n'est pas encore inscrit. Remplissez le formulaire ci-dessous.", err:"Impossible de charger votre page. Rechargez.", again_s:"Votre session a expiré, reconnectez-vous." }
+};
+const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
+  .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
+const tx = (k, o = {}) => String(TXT[LANG][k] ?? TXT.en[k] ?? k).replace(/\{(\w)\}/g, (m, x) => o[x] ?? m);
+document.documentElement.lang = LANG;
+document.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const TIERS = [[100, 30], [500, 25], [1000, 15], [0, 10]];
+const tierName = t => tx("tier" + (t || 0));
+const rateOf = t => (TIERS.find(x => x[0] === (t || 0)) || [0, 10])[1];
+$("#get4").textContent = tx("get4", { a: TIERS.map(([t, r]) => `${tierName(t)} ${r}%`).join(" · ") });
+
+// ================= KİMLİK, DAVET, ÖLÇÜM =================
+const DEVICE = (() => {
+  const make = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+  try{ let d = localStorage.getItem("laloo_device"); if (!d){ d = make(); localStorage.setItem("laloo_device", d); } return d; }catch(e){ return make(); }
+})();
+const Q = new URLSearchParams(location.search);
+let INV = /^[a-z0-9]{6}$/.test(Q.get("i") || "") ? Q.get("i") : null;
+try{ if (INV) localStorage.setItem("laloo_inv", INV); else INV = localStorage.getItem("laloo_inv"); }catch(e){}
+const REF = (Q.get("ref") || (INV ? "invite" : "") || (document.referrer && !document.referrer.includes(location.hostname) ? (() => { try{ return new URL(document.referrer).hostname.replace(/^www\./, ""); }catch(e){ return ""; } })() : "") || "direct").slice(0, 60);
+function track(type, target){
+  try{ if (localStorage.getItem("laloo_notrack")) return; }catch(e){}
+  try{ fetch(SB_URL + "/rest/v1/events", { method:"POST", keepalive:true,
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
+    body:JSON.stringify({ device:DEVICE, type, ref:REF, target: target != null ? String(target).slice(0, 100) : null }) }).catch(() => {}); }catch(e){}
+}
+
+// ================= OTURUM (hesap sayfasıyla aynı) =================
+let S = null;
+try{ S = JSON.parse(localStorage.getItem("laloo_acc") || "null"); }catch(e){}
+function jwtEmail(t){ try{ return JSON.parse(atob(t.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).email || ""; }catch(e){ return ""; } }
+function save(d){
+  S = { access_token:d.access_token, refresh_token:d.refresh_token, expires_at: +d.expires_at || Math.floor(Date.now()/1000) + (+d.expires_in || 3600) };
+  S.email = jwtEmail(S.access_token);
+  try{ localStorage.setItem("laloo_acc", JSON.stringify(S)); }catch(e){}
+}
+function signOut(){ document.body.classList.remove("in"); S = null; try{ localStorage.removeItem("laloo_acc"); }catch(e){} $("#out").hidden = true; $("#me").hidden = true; $("#joinbox").hidden = false; }
+(() => {
+  if (!location.hash.includes("access_token") && !location.hash.includes("error")) return;
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get("access_token")) save(Object.fromEntries(h));
+  history.replaceState(null, "", location.pathname + location.search);
+})();
+async function refresh(){
+  if (S && Date.now()/1000 > S.expires_at - 60){
+    const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`, { method:"POST",
+      headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify({ refresh_token:S.refresh_token }) });
+    if (!r.ok){ signOut(); throw new Error(tx("again_s")); }
+    save(await r.json());
+  }
+}
+async function rpc(name, body = {}, auth = false){
+  if (auth) await refresh();
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/${name}`, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json", ...(auth && S ? { Authorization:"Bearer " + S.access_token } : {}) },
+    body:JSON.stringify(body) });
+  const t = await r.text();
+  if (!r.ok){ let m = t; try{ m = JSON.parse(t).message; }catch(e){} throw new Error(m); }
+  return t ? JSON.parse(t) : null;
+}
+async function sendLink(email){
+  const r = await fetch(`${SB_URL}/auth/v1/otp?redirect_to=${encodeURIComponent(location.origin + "/join/")}`, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify({ email, create_user:true }) });
+  return r.ok;
+}
+
+// ================= SAYAÇ =================
+async function counter(){
+  let c;
+  try{ c = await rpc("member_counter"); }catch(e){ $("#counter").hidden = true; $("#h1").textContent = tx("h1", { t:100 }); return; }
+  const t = c.tier || 0;
+  $("#h1").textContent = t ? tx("h1", { t }) : tx("h1std");
+  if (t){
+    const prev = t === 100 ? 0 : t === 500 ? 100 : 500, inTier = c.approved - prev, size = t - prev;
+    $("#cn").textContent = c.approved;
+    $("#cl").textContent = tx("taken", { t });
+    $("#cb").style.width = Math.min(100, Math.max(2, 100 * inTier / size)) + "%";
+    $("#cleft").textContent = tx("left", { n: c.left });
+  } else {
+    $("#cn").textContent = c.approved; $("#cl").textContent = ""; $("#cb").style.width = "100%"; $("#cleft").textContent = tx("full");
+  }
+  $("#tiers").innerHTML = TIERS.map(([n, r]) => `<div class="${n === t ? "on" : ""}"><b>${esc(tierName(n))}</b><span>${r}% ${esc(tx("later"))}</span></div>`).join("");
+}
+
+// ================= DAVET EDEN =================
+(async () => {
+  if (!INV) return;
+  try{ const r = await rpc("invite_info", { p_code:INV }); if (r && r.nickname){ $("#invby").textContent = tx("invited", { n:r.nickname }); $("#invby").hidden = false; } }catch(e){}
+})();
+
+// ================= KATILIM =================
+const jf = $("#jf");
+function jmsg(t, ok){ const m = $("#jmsg"); m.textContent = t; m.className = "msg " + (ok ? "ok" : "err"); m.hidden = false; }
+jf.onsubmit = async e => {
+  e.preventDefault();
+  if (jf.website.value) return;
+  const nick = jf.nick.value.trim(), email = jf.email.value.trim(), city = jf.city.value.trim();
+  if (nick.length < 2 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !jf.ok.checked){ jmsg(tx("need")); return; }
+  const btn = $("#jsend"); btn.disabled = true; btn.textContent = tx("sending");
+  try{
+    const r = await rpc("member_join", { p_email:email, p_nick:nick, p_city:city || null, p_invite:INV, p_device:DEVICE, p_lang:LANG, p_ref:REF });
+    track("join_sent", INV);
+    const mailed = S && S.email && S.email.toLowerCase() === email.toLowerCase() ? true : await sendLink(email);
+    if (S && S.email && S.email.toLowerCase() === email.toLowerCase()){ await loadMe(); return; }
+    const head = r.again ? tx("again") : (r.tier ? tx("joined", { p:r.position, t:tierName(r.tier) }) : tx("joined0", { p:r.position }));
+    jf.innerHTML = `<p class="msg ok" style="font-size:19px">${esc(head)}</p><p>${esc(mailed ? tx("checkmail", { e:email }) : tx("mailFail"))}</p>`;
+    $("#already").hidden = true;
+    counter();
+  }catch(err){
+    jmsg(/too_many/.test(err.message) ? tx("toomany") : /bad_email|bad_nick/.test(err.message) ? tx("need") : tx("fail"));
+    btn.disabled = false; btn.textContent = tx("send");
+  }
+};
+$("#signin").onclick = e => {
+  e.preventDefault();
+  $("#already").innerHTML = `<label><span>${esc(tx("emailQ"))}</span><input type="email" id="lem" autocomplete="email"></label>
+    <button class="pill" id="lgo" style="margin-top:10px">${esc(tx("sendLink"))}</button><p class="msg" id="lmsg" hidden></p>`;
+  $("#lem").value = jf.email.value; $("#lem").focus();
+  $("#lgo").onclick = async () => {
+    const em = $("#lem").value.trim(), m = $("#lmsg");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) return;
+    $("#lgo").disabled = true;
+    const ok = await sendLink(em);
+    m.hidden = false; m.className = "msg " + (ok ? "ok" : "err"); m.textContent = ok ? tx("linkSent", { e:em }) : tx("mailFail");
+    $("#lgo").disabled = false;
+  };
+};
+
+// ================= ÜYE SAYFASI =================
+function qrSvg(u){
+  try{ const q = qrcode(0, "M"); q.addData(u); q.make(); return q.createSvgTag({ cellSize:4, margin:0, scalable:true }); }catch(e){ return ""; }
+}
+async function loadMe(){
+  $("#out").hidden = false; document.body.classList.add("in");
+  let d;
+  try{ d = await rpc("my_member", { p_device:DEVICE }, true); }
+  catch(e){ $("#me").hidden = false; $("#me").innerHTML = `<div class="box"><p class="msg err">${esc(e.message === tx("again_s") ? e.message : tx("err"))}</p></div>`; return; }
+  if (!d.member){
+    $("#me").hidden = false; $("#me").innerHTML = `<div class="box"><p style="margin:0">${esc(tx("notMember"))}</p></div>`;
+    jf.email.value = d.email || ""; $("#already").hidden = true; return;
+  }
+  const m = d.member, st = d.stats;
+  $("#joinbox").hidden = true;
+  try{ localStorage.setItem("laloo_mycode", m.invite_code); if (m.nickname) localStorage.setItem("laloo_nick", m.nickname); }catch(e){}
+  const link = `https://laloo.org/join/?i=${m.invite_code}`;
+  let head;
+  if (m.status === "approved") head = `<p style="margin:0 0 4px">${esc(tx("approved"))}</p>
+      <div class="badge">${m.tier ? "🏅 " + esc(tierName(m.tier)) : esc(tierName(0))} <small>${esc(tx("memberNo", { s:m.seq }))}</small></div>
+      <p class="small muted" style="margin:0">${esc(tx("yourShare", { r:rateOf(m.tier) }))}</p>`;
+  else if (m.status === "pending") head = `<p style="margin:0">${esc(tx("pending", { p:m.position, t: m.position_tier ? tx("pendingT", { t:tierName(m.position_tier) }) : "" }))}</p>`;
+  else head = `<p style="margin:0">${esc(tx("rejected"))}</p>`;
+  $("#me").hidden = false;
+  $("#me").innerHTML = `
+    <div class="box"><h2>${esc(tx("hi", { n:m.nickname }))}</h2>${head}
+      ${m.status !== "rejected" ? `<div class="stats">
+        <div><b>${st.invited}</b><span>${esc(tx("s_inv"))}</span></div>
+        <div><b>${st.stories}</b><span>${esc(tx("s_st"))}</span></div>
+        <div><b>${st.reviews}</b><span>${esc(tx("s_rv"))}</span></div></div>` : ""}</div>
+    ${m.status !== "rejected" ? `<div class="box"><h2>${esc(tx("link_t"))}</h2>
+      <div class="link"><code>${esc(link.replace("https://", ""))}</code><button class="pill" id="cp">${esc(tx("copy"))}</button><button class="pill p" id="sh">${esc(tx("share"))}</button></div>
+      <div class="qr">${qrSvg(link)}</div></div>
+    <div class="box"><h2>${esc(tx("do_t"))}</h2><div class="row">
+      <a class="pill" href="/stories/#write">${esc(tx("do_story"))}</a><a class="pill" href="/rate/">${esc(tx("do_rate"))}</a><a class="pill" href="/">${esc(tx("do_map"))}</a></div></div>` : ""}`;
+  if ($("#cp")) $("#cp").onclick = async () => { try{ await navigator.clipboard.writeText(link); $("#cp").textContent = tx("copied"); }catch(e){ prompt("", link); } };
+  if ($("#sh")) $("#sh").onclick = async () => {
+    track("invite_share", m.invite_code);
+    if (navigator.share){ try{ await navigator.share({ title:"Laloo", text:tx("shareText"), url:link }); return; }catch(e){ if (e && e.name === "AbortError") return; } }
+    try{ await navigator.clipboard.writeText(tx("shareText") + " " + link); $("#sh").textContent = tx("copied"); }catch(e){ prompt("", link); }
+  };
+}
+$("#out").onclick = signOut;
+
+track("join_open", INV);
+counter();
+if (S) loadMe();
+</script>
+</body>
+</html>

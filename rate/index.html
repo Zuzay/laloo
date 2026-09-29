@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rate this loo · Laloo</title>
+<meta name="description" content="Rate the bathroom you just used. Two taps, no account. Your rating helps the next traveler.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fefef8">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+:root{--navy:#10223d;--blue:#1c4fa0;--red:#e0453a;--orange:#f39a1e;--line:#e6e1d4;--bg:#fefef8;--muted:#5f6b7d;--card:#fff;--tag:#e8f0fb;--green:#1b7a3a;--greenbg:#e3f6e8;--sand:#f6f1e4;--field:#fff}
+@media (prefers-color-scheme:dark){:root{--navy:#e9eef6;--blue:#8fb4ff;--line:#2a3445;--bg:#111722;--muted:#9aa6b8;--card:#172030;--tag:#1f2e48;--green:#7fd79a;--greenbg:#1d3326;--sand:#161e2b;--field:#0f1520}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--navy);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--blue)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;border-bottom:1px solid var(--line)}
+header img{height:34px;display:block;border-radius:8px}
+@media (prefers-color-scheme:dark){header img{background:#fefef8;padding:2px 6px;height:38px}}
+main{max-width:560px;margin:0 auto;padding:22px 16px 40px}
+h1{font-size:clamp(30px,8vw,42px);line-height:1.05;letter-spacing:-.01em;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 18px}
+.pill{display:inline-block;text-decoration:none;font:inherit;font-weight:700;font-size:15px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--navy);background:var(--card);cursor:pointer}
+.pill.p{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 14px}
+.box h2{font-size:16px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.pl{display:flex;flex-direction:column;gap:8px}
+.pl button{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;width:100%;font:inherit;color:var(--navy);background:var(--field);border:1px solid var(--line);border-radius:12px;padding:11px 12px;cursor:pointer}
+.pl button small{color:var(--muted);white-space:nowrap}
+.pl button.on{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.chosen{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.chosen b{font-size:19px;overflow-wrap:anywhere}
+.chosen button{font:inherit;font-size:14px;color:var(--blue);background:none;border:0;cursor:pointer;white-space:nowrap}
+input[type=text],textarea{display:block;width:100%;font:inherit;font-size:16px;color:var(--navy);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:6px}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(28,79,160,.15)}
+label{display:block;font-size:14px;font-weight:700;margin-top:12px}
+label .opt{font-weight:500;color:var(--muted)}
+.stars{display:flex;gap:4px;margin:2px 0 4px}
+.stars button{font-size:44px;line-height:1;background:none;border:0;padding:2px;cursor:pointer;color:#c9c2b0;transition:transform .1s}
+.stars button.on{color:var(--orange)}
+.stars button:active{transform:scale(.9)}
+.slab{min-height:22px;font-weight:700;color:var(--muted);font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags label{margin:0;font-weight:600;font-size:14px}
+.tags input{position:absolute;opacity:0;pointer-events:none}
+.tags span{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;background:var(--field)}
+.tags input:checked + span{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.tags .neg input:checked + span{background:var(--red);border-color:var(--red)}
+.tags input:focus-visible + span{box-shadow:0 0 0 3px rgba(28,79,160,.3)}
+.cnt{font-size:13px;color:var(--muted);text-align:right;margin-top:4px}
+.msg{font-weight:700;margin:10px 0 0}.msg.err{color:var(--red)}
+.muted{color:var(--muted)}.small{font-size:14px}
+.thanks{background:var(--greenbg);color:var(--green);border-radius:16px;padding:20px;margin:0 0 14px}
+.thanks b{display:block;font-size:22px;margin-bottom:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+footer{max-width:560px;margin:0 auto;padding:18px 16px 40px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO"></a><a class="pill" href="/" data-i="map">Open the map</a></header>
+<main>
+  <h1 data-i="h1">Rate this loo</h1>
+  <p class="lead" data-i="lead">Two taps, no account. The next traveler will thank you.</p>
+
+  <div id="form">
+    <div class="box" id="where">
+      <h2 data-i="which">Which place?</h2>
+      <p class="muted small" id="wmsg" data-i="finding">Finding places near you…</p>
+      <div class="pl" id="pl"></div>
+      <label id="namel" hidden><span data-i="notlisted">Not in the list? Type the name</span><input type="text" id="pname" maxlength="120" autocomplete="off"></label>
+      <div class="chosen" id="chosen" hidden><b id="cname"></b><button type="button" id="change" data-i="change">Change</button></div>
+    </div>
+
+    <div class="box">
+      <h2 data-i="howwas">How was it?</h2>
+      <div class="stars" id="stars" role="radiogroup"></div>
+      <div class="slab" id="slab"></div>
+      <label style="margin-top:14px" data-i="quick">Quick notes</label>
+      <div class="tags" id="tags" style="margin-top:8px"></div>
+      <label><span data-i="comment">Anything else?</span> <span class="opt" data-i="optional">(optional)</span>
+        <textarea id="comment" maxlength="500"></textarea></label>
+      <div class="cnt" id="cnt"></div>
+      <label><span data-i="nick">Your nickname</span> <span class="opt" data-i="optional">(optional)</span><input type="text" id="nick" maxlength="40" autocomplete="nickname"></label>
+      <input type="text" id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="muted small" data-i="note">We check every rating before it goes on the map. No name or location of yours is shown.</p>
+      <button class="pill p" id="send" style="width:100%;margin-top:6px" data-i="send">Send rating</button>
+      <p class="msg" id="msg" hidden></p>
+    </div>
+  </div>
+
+  <div id="done" hidden>
+    <div class="thanks"><b data-i="thx_t">Thank you!</b><span data-i="thx_p">Your rating will be on the map once we've checked it.</span></div>
+    <div class="box">
+      <h2 data-i="friends_t">Ask your friends</h2>
+      <p class="small" data-i="friends_p">One rating is a hint. Ten is a fact. Send them this place.</p>
+      <div class="row"><button class="pill p" id="share" data-i="share">Share</button><a class="pill" href="/" data-i="map">Open the map</a></div>
+    </div>
+    <div class="box">
+      <p class="small" style="margin:0 0 10px" data-i="more">Know a spot nobody knows? Write it down, in your own words.</p>
+      <div class="row"><a class="pill" href="/stories/#write" data-i="story">Share a story</a><a class="pill" href="/join/" data-i="join">Become an early member</a></div>
+    </div>
+  </div>
+</main>
+<footer><a href="/">laloo.org</a> · <a href="/stories/">Stories</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a></footer>
+
+<script>
+const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
+const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
+const TXT = {
+en:{ map:"Open the map", h1:"Rate this loo", lead:"Two taps, no account. The next traveler will thank you.", which:"Which place?", finding:"Finding places near you…",
+  nearby:"Places within 250 m", noneNear:"We don't have a bathroom within 250 m of you. Type the name below.", noLoc:"Location is off. Type the name of the place below.",
+  notlisted:"Not in the list? Type the name", change:"Change", howwas:"How was it?", quick:"Quick notes", comment:"Anything else?", optional:"(optional)",
+  nick:"Your nickname", note:"We check every rating before it goes on the map. No name or location of yours is shown.", send:"Send rating", sending:"Sending…",
+  s1:"Awful", s2:"Not great", s3:"It'll do", s4:"Good", s5:"Spotless",
+  clean:"Clean", paper:"Paper", soap:"Soap", free:"Free", code:"Needs a code", queue:"Queue", accessible:"Accessible", baby:"Baby changing", dirty:"Dirty", broken:"Something broken",
+  needPlace:"Pick a place or type its name.", needStars:"Tap the stars first.", already:"You already rated this place today.", toomany:"That's a lot of ratings for one day. Thank you! Try again tomorrow.", fail:"Couldn't send. Check your connection and try again.",
+  thx_t:"Thank you!", thx_p:"Your rating will be on the map once we've checked it.", friends_t:"Ask your friends", friends_p:"One rating is a hint. Ten is a fact. Send them this place.",
+  share:"Share", copied:"Link copied", shareText:"I just rated this bathroom on Laloo. Your turn:", more:"Know a spot nobody knows? Write it down, in your own words.", story:"Share a story", join:"Become an early member",
+  pubRest:"Public restroom", rest:"Restroom", chars:"characters left" },
+tr:{ map:"Haritayı aç", h1:"Burayı puanla", lead:"İki dokunuş, hesap yok. Sonraki gezgin sana teşekkür edecek.", which:"Hangi yer?", finding:"Yakınındaki yerler aranıyor…",
+  nearby:"250 m içindeki yerler", noneNear:"250 m içinde kayıtlı tuvalet yok. Yerin adını aşağıya yaz.", noLoc:"Konum kapalı. Yerin adını aşağıya yaz.",
+  notlisted:"Listede yok mu? Adını yaz", change:"Değiştir", howwas:"Nasıldı?", quick:"Kısa notlar", comment:"Eklemek istediğin bir şey?", optional:"(isteğe bağlı)",
+  nick:"Rumuzun", note:"Her puanı haritaya koymadan önce kontrol ediyoruz. Adın ya da konumun hiçbir yerde görünmez.", send:"Puanı gönder", sending:"Gönderiliyor…",
+  s1:"Berbat", s2:"Pek iyi değil", s3:"İdare eder", s4:"İyi", s5:"Tertemiz",
+  clean:"Temiz", paper:"Kağıt var", soap:"Sabun var", free:"Ücretsiz", code:"Şifreli", queue:"Sıra var", accessible:"Engelli erişimi", baby:"Bebek masası", dirty:"Kirli", broken:"Bir şey bozuk",
+  needPlace:"Bir yer seç ya da adını yaz.", needStars:"Önce yıldızlara dokun.", already:"Bu yeri bugün zaten puanladın.", toomany:"Bir gün için epey puan verdin, teşekkürler! Yarın yine dene.", fail:"Gönderilemedi. Bağlantını kontrol edip tekrar dene.",
+  thx_t:"Teşekkürler!", thx_p:"Puanın kontrol edildikten sonra haritada görünecek.", friends_t:"Arkadaşların da puanlasın", friends_p:"Bir puan fikir verir, on puan gerçeği söyler. Bu yeri onlara gönder.",
+  share:"Paylaş", copied:"Link kopyalandı", shareText:"Bu tuvaleti Laloo'da puanladım. Sıra sende:", more:"Kimsenin bilmediği bir yer mi biliyorsun? Kendi cümlelerinle yaz.", story:"Hikaye paylaş", join:"Erken üye ol",
+  pubRest:"Umumi tuvalet", rest:"Tuvalet", chars:"karakter kaldı" },
+es:{ map:"Abrir el mapa", h1:"Puntúa este baño", lead:"Dos toques y sin cuenta. El próximo viajero te lo agradecerá.", which:"¿Qué sitio?", finding:"Buscando sitios cerca de ti…",
+  nearby:"Sitios a menos de 250 m", noneNear:"No tenemos ningún baño a menos de 250 m. Escribe el nombre abajo.", noLoc:"La ubicación está desactivada. Escribe el nombre del sitio abajo.",
+  notlisted:"¿No aparece? Escribe el nombre", change:"Cambiar", howwas:"¿Qué tal?", quick:"Notas rápidas", comment:"¿Algo más?", optional:"(opcional)",
+  nick:"Tu apodo", note:"Revisamos cada valoración antes de ponerla en el mapa. Tu nombre y tu ubicación no se muestran.", send:"Enviar valoración", sending:"Enviando…",
+  s1:"Horrible", s2:"Regular tirando a mal", s3:"Pasable", s4:"Bien", s5:"Impecable",
+  clean:"Limpio", paper:"Hay papel", soap:"Hay jabón", free:"Gratis", code:"Con código", queue:"Hay cola", accessible:"Accesible", baby:"Cambiador", dirty:"Sucio", broken:"Algo roto",
+  needPlace:"Elige un sitio o escribe su nombre.", needStars:"Primero toca las estrellas.", already:"Ya has valorado este sitio hoy.", toomany:"Muchas valoraciones para un solo día, ¡gracias! Vuelve mañana.", fail:"No se ha podido enviar. Revisa la conexión e inténtalo otra vez.",
+  thx_t:"¡Gracias!", thx_p:"Tu valoración aparecerá en el mapa cuando la revisemos.", friends_t:"Pídeselo a tus amigos", friends_p:"Una valoración es una pista. Diez son un hecho. Mándales este sitio.",
+  share:"Compartir", copied:"Enlace copiado", shareText:"Acabo de puntuar este baño en Laloo. Te toca:", more:"¿Conoces un sitio que nadie conoce? Cuéntalo con tus palabras.", story:"Compartir una historia", join:"Hazte miembro pionero",
+  pubRest:"Baño público", rest:"Baño", chars:"caracteres restantes" },
+de:{ map:"Karte öffnen", h1:"Bewerte dieses Klo", lead:"Zwei Tipps, kein Konto. Der nächste Reisende wird es dir danken.", which:"Welcher Ort?", finding:"Suche Orte in deiner Nähe…",
+  nearby:"Orte im Umkreis von 250 m", noneNear:"Im Umkreis von 250 m kennen wir keine Toilette. Gib unten den Namen ein.", noLoc:"Standort ist aus. Gib unten den Namen des Ortes ein.",
+  notlisted:"Nicht dabei? Namen eingeben", change:"Ändern", howwas:"Wie war's?", quick:"Kurz notiert", comment:"Noch etwas?", optional:"(optional)",
+  nick:"Dein Spitzname", note:"Wir prüfen jede Bewertung, bevor sie auf die Karte kommt. Dein Name und dein Standort werden nicht angezeigt.", send:"Bewertung senden", sending:"Wird gesendet…",
+  s1:"Furchtbar", s2:"Eher nicht", s3:"Geht so", s4:"Gut", s5:"Blitzsauber",
+  clean:"Sauber", paper:"Papier da", soap:"Seife da", free:"Kostenlos", code:"Mit Code", queue:"Schlange", accessible:"Barrierefrei", baby:"Wickeltisch", dirty:"Schmutzig", broken:"Etwas kaputt",
+  needPlace:"Wähle einen Ort oder gib den Namen ein.", needStars:"Tippe zuerst auf die Sterne.", already:"Diesen Ort hast du heute schon bewertet.", toomany:"Ganz schön viele Bewertungen für einen Tag, danke! Morgen wieder.", fail:"Senden hat nicht geklappt. Prüf die Verbindung und versuch es noch mal.",
+  thx_t:"Danke!", thx_p:"Deine Bewertung erscheint auf der Karte, sobald wir sie geprüft haben.", friends_t:"Frag deine Freunde", friends_p:"Eine Bewertung ist ein Hinweis. Zehn sind ein Fakt. Schick ihnen diesen Ort.",
+  share:"Teilen", copied:"Link kopiert", shareText:"Ich habe dieses Klo gerade auf Laloo bewertet. Jetzt du:", more:"Du kennst einen Ort, den sonst keiner kennt? Schreib ihn auf, mit deinen Worten.", story:"Geschichte teilen", join:"Frühes Mitglied werden",
+  pubRest:"Öffentliche Toilette", rest:"Toilette", chars:"Zeichen übrig" },
+fr:{ map:"Ouvrir la carte", h1:"Notez ces toilettes", lead:"Deux gestes, sans compte. Le prochain voyageur vous dira merci.", which:"Quel endroit ?", finding:"Recherche des lieux autour de vous…",
+  nearby:"Lieux à moins de 250 m", noneNear:"Aucune toilette connue à moins de 250 m. Tapez le nom ci-dessous.", noLoc:"La localisation est coupée. Tapez le nom du lieu ci-dessous.",
+  notlisted:"Pas dans la liste ? Tapez le nom", change:"Changer", howwas:"C'était comment ?", quick:"En bref", comment:"Autre chose ?", optional:"(facultatif)",
+  nick:"Votre pseudo", note:"Chaque note est vérifiée avant d'apparaître sur la carte. Votre nom et votre position ne sont jamais affichés.", send:"Envoyer la note", sending:"Envoi…",
+  s1:"Horrible", s2:"Bof", s3:"Ça dépanne", s4:"Bien", s5:"Impeccable",
+  clean:"Propre", paper:"Papier", soap:"Savon", free:"Gratuit", code:"Avec code", queue:"File d'attente", accessible:"Accessible", baby:"Table à langer", dirty:"Sale", broken:"Quelque chose de cassé",
+  needPlace:"Choisissez un lieu ou tapez son nom.", needStars:"Touchez d'abord les étoiles.", already:"Vous avez déjà noté ce lieu aujourd'hui.", toomany:"Beaucoup de notes pour une journée, merci ! Revenez demain.", fail:"L'envoi n'a pas marché. Vérifiez la connexion et réessayez.",
+  thx_t:"Merci !", thx_p:"Votre note apparaîtra sur la carte après vérification.", friends_t:"Demandez à vos amis", friends_p:"Une note, c'est un indice. Dix, c'est un fait. Envoyez-leur ce lieu.",
+  share:"Partager", copied:"Lien copié", shareText:"Je viens de noter ces toilettes sur Laloo. À toi :", more:"Vous connaissez un endroit que personne ne connaît ? Racontez-le avec vos mots.", story:"Partager une histoire", join:"Devenir membre pionnier",
+  pubRest:"Toilettes publiques", rest:"Toilettes", chars:"caractères restants" }
+};
+const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
+  .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
+const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
+document.documentElement.lang = LANG;
+document.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const trName = n => n === "Public restroom" ? tx("pubRest") : n === "Restroom" ? tx("rest") : n;
+
+// ================= KİMLİK VE ÖLÇÜM =================
+const DEVICE = (() => {
+  const make = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+  try{ let d = localStorage.getItem("laloo_device"); if (!d){ d = make(); localStorage.setItem("laloo_device", d); } return d; }catch(e){ return make(); }
+})();
+const Q = new URLSearchParams(location.search);
+const REF = (Q.get("ref") || (document.referrer && !document.referrer.includes(location.hostname) ? (() => { try{ return new URL(document.referrer).hostname.replace(/^www\./, ""); }catch(e){ return ""; } })() : "") || "direct").slice(0, 60);
+if (/^[a-z0-9]{6}$/.test(Q.get("i") || "")){ try{ localStorage.setItem("laloo_inv", Q.get("i")); }catch(e){} }
+function track(type, target){
+  try{ if (localStorage.getItem("laloo_notrack")) return; }catch(e){}
+  try{ fetch(SB_URL + "/rest/v1/events", { method:"POST", keepalive:true,
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
+    body:JSON.stringify({ device:DEVICE, type, ref:REF, target: target != null ? String(target).slice(0, 100) : null }) }).catch(() => {}); }catch(e){}
+}
+async function sb(path){
+  const r = await fetch(SB_URL + "/rest/v1/" + path, { headers:{ apikey:SB_KEY } });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+async function rpc(name, body){
+  const r = await fetch(SB_URL + "/rest/v1/rpc/" + name, { method:"POST",
+    headers:{ apikey:SB_KEY, "Content-Type":"application/json" }, body:JSON.stringify(body) });
+  const t = await r.text();
+  if (!r.ok){ let m = t; try{ m = JSON.parse(t).message; }catch(e){} throw new Error(m); }
+  return t ? JSON.parse(t) : null;
+}
+track("rate_open", Q.get("p"));
+
+// ================= YER SEÇİMİ =================
+let place = null, myLL = null, list = [];
+function choose(p){
+  place = p;
+  $("#cname").textContent = p.id ? (p.kind === "tip" ? "⭐ " : "") + trName(p.name) : p.name;
+  $("#chosen").hidden = false; $("#pl").hidden = true; $("#namel").hidden = true; $("#wmsg").hidden = true;
+}
+$("#change").onclick = () => {
+  place = null; $("#chosen").hidden = true; $("#pl").hidden = false; $("#namel").hidden = false;
+  $("#wmsg").hidden = !$("#wmsg").textContent; $("#pname").value = "";
+};
+function dist(a, b){
+  const R = 6371e3, t = Math.PI / 180, dLat = (b[0] - a[0]) * t, dLng = (b[1] - a[1]) * t;
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * t) * Math.cos(b[0] * t) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+function drawList(){
+  $("#pl").innerHTML = list.map((p, i) => `<button type="button" data-k="${i}"><span>${p.kind === "tip" ? "⭐" : p.kind === "public" ? "🚻" : "☕"} ${esc(trName(p.name))}</span><small>${Math.round(p.d)} m</small></button>`).join("");
+  $("#pl").querySelectorAll("button").forEach(b => b.onclick = () => choose(list[+b.dataset.k]));
+}
+async function nearby(){
+  $("#namel").hidden = false;
+  if (!navigator.geolocation){ $("#wmsg").textContent = tx("noLoc"); return; }
+  navigator.geolocation.getCurrentPosition(async pos => {
+    myLL = [pos.coords.latitude, pos.coords.longitude];
+    const dLat = 0.0025, dLng = 0.0025 / Math.max(0.2, Math.cos(myLL[0] * Math.PI / 180));
+    try{
+      const rows = await sb(`places?select=id,name,kind,lat,lng&kind=neq.water&active=not.is.false` +
+        `&lat=gte.${(myLL[0] - dLat).toFixed(5)}&lat=lte.${(myLL[0] + dLat).toFixed(5)}` +
+        `&lng=gte.${(myLL[1] - dLng).toFixed(5)}&lng=lte.${(myLL[1] + dLng).toFixed(5)}&limit=200`);
+      list = rows.map(p => ({ ...p, d: dist(myLL, [p.lat, p.lng]) })).filter(p => p.d <= 250).sort((a, b) => a.d - b.d).slice(0, 12);
+    }catch(e){ list = []; }
+    if (place) return;                                   // ?p= ile zaten seçildi
+    if (list.length === 1){ choose(list[0]); return; }
+    $("#wmsg").textContent = list.length ? tx("nearby") : tx("noneNear");
+    drawList();
+  }, () => { if (!place) $("#wmsg").textContent = tx("noLoc"); }, { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
+}
+(async () => {
+  const pid = /^\d+$/.test(Q.get("p") || "") ? +Q.get("p") : null;
+  if (pid){
+    try{ const r = await sb(`places?select=id,name,kind,lat,lng&id=eq.${pid}`); if (r[0]) choose(r[0]); }catch(e){}
+  }
+  nearby();
+})();
+
+// ================= YILDIZLAR VE NOTLAR =================
+let stars = 0;
+$("#stars").innerHTML = [1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-label="${n}" data-s="${n}">★</button>`).join("");
+function paint(){
+  $("#stars").querySelectorAll("button").forEach(b => { b.classList.toggle("on", +b.dataset.s <= stars); b.setAttribute("aria-checked", +b.dataset.s === stars); });
+  $("#slab").textContent = stars ? tx("s" + stars) : "";
+}
+$("#stars").querySelectorAll("button").forEach(b => b.onclick = () => { stars = +b.dataset.s; paint(); });
+const TAGS = ["clean", "paper", "soap", "free", "code", "queue", "accessible", "baby", "dirty", "broken"];
+$("#tags").innerHTML = TAGS.map(t => `<label class="${t === "dirty" || t === "broken" ? "neg" : ""}"><input type="checkbox" value="${t}"><span>${esc(tx(t))}</span></label>`).join("");
+const cm = $("#comment");
+cm.oninput = () => { const n = 500 - cm.value.length; $("#cnt").textContent = n < 120 ? `${n} ${tx("chars")}` : ""; };
+try{ $("#nick").value = localStorage.getItem("laloo_nick") || ""; }catch(e){}
+
+// ================= GÖNDER =================
+function err(t){ const m = $("#msg"); m.textContent = t; m.className = "msg err"; m.hidden = false; }
+$("#send").onclick = async () => {
+  $("#msg").hidden = true;
+  if ($("#website").value) return;                                   // bot tuzağı
+  const typed = $("#pname").value.trim();
+  if (!place && typed.length < 2){ err(tx("needPlace")); $("#where").scrollIntoView({ behavior:"smooth" }); return; }
+  if (!stars){ err(tx("needStars")); return; }
+  const btn = $("#send"); btn.disabled = true; btn.textContent = tx("sending");
+  const nick = $("#nick").value.trim();
+  try{ if (nick) localStorage.setItem("laloo_nick", nick); }catch(e){}
+  try{
+    await rpc("submit_review", {
+      p_place: place && place.id ? place.id : null, p_name: place ? place.name : typed, p_stars: stars,
+      p_tags: [...document.querySelectorAll("#tags input:checked")].map(i => i.value),
+      p_comment: cm.value.trim() || null, p_nick: nick || null, p_device: DEVICE, p_ref: REF,
+      p_lat: myLL ? myLL[0] : null, p_lng: myLL ? myLL[1] : null, p_lang: LANG });
+    track("rate_sent", place && place.id ? place.id : typed);
+    $("#form").hidden = true; $("#done").hidden = false; scrollTo(0, 0);
+  }catch(e){
+    const m = String(e.message);
+    err(/already/.test(m) ? tx("already") : /too_many/.test(m) ? tx("toomany") : tx("fail"));
+    btn.disabled = false; btn.textContent = tx("send");
+  }
+};
+$("#share").onclick = async () => {
+  track("rate_share", place && place.id ? place.id : null);
+  let inv = ""; try{ inv = localStorage.getItem("laloo_mycode") || ""; }catch(e){}
+  const url = location.origin + "/rate/" + (place && place.id ? "?p=" + place.id + "&ref=rate-share" : "?ref=rate-share") + (inv ? "&i=" + inv : "");
+  const text = tx("shareText");
+  if (navigator.share){ try{ await navigator.share({ title:"Laloo", text, url }); return; }catch(e){ if (e && e.name === "AbortError") return; } }
+  try{ await navigator.clipboard.writeText(text + " " + url); $("#share").textContent = tx("copied"); }catch(e){ prompt("", url); }
+};
+</script>
+</body>
+</html>

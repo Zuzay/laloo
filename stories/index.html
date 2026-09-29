@@ -93,7 +93,8 @@ textarea#body{min-height:280px;resize:vertical;line-height:1.6}
 .ex .body p{font-size:16px}
 .wc{font-size:13px;color:var(--muted);text-align:right;margin-top:4px}
 #fmsg{font-weight:700;margin-top:14px}
-#fmsg.ok{color:var(--green)}#fmsg.err{color:var(--red)}
+#fmsg.ok{color:var(--green)}#fmsg.err,#pvmsg.err{color:var(--red)}
+#pvmsg{font-weight:700;margin-top:14px}
 .ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin-top:8px}
 .ph div{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--sand)}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
@@ -105,6 +106,13 @@ textarea#body{min-height:280px;resize:vertical;line-height:1.6}
 .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:22px 0}
 .gal figure{margin:0}.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block;cursor:zoom-in}
 .gal figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.mic{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.mic .pill.on{background:var(--red);border-color:var(--red);color:#fff}
+#pv{scroll-margin-top:72px}
+#pv .pvbox{border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px;background:var(--bg)}
+#pv .pvbox h1{font-size:clamp(28px,6vw,40px);margin:0 0 10px}
+#pv .pvph{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;margin:14px 0}
+#pv .pvph img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block}
 .thanks{background:var(--greenbg);color:var(--green);border-radius:16px;padding:22px;font-size:18px;font-weight:600}
 footer{max-width:1040px;margin:0 auto;padding:22px 16px 44px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
 @media(max-width:560px){header nav .hide-s{display:none}}
@@ -152,6 +160,7 @@ footer{max-width:1040px;margin:0 auto;padding:22px 16px 44px;color:var(--muted);
         <h3 data-i="f_story">Your story</h3>
         <label><span data-i="f_title">Title</span><input type="text" name="title" maxlength="160" required></label>
         <label><span data-i="f_body">Your story</span><textarea id="body" name="body" required></textarea></label>
+        <div class="mic" id="micbox" hidden><button type="button" class="pill" id="mic" data-i="mic">🎙️ Speak instead of typing</button><span class="muted small" id="micst"></span></div>
         <div class="wc" id="wc"></div>
         <ul class="rules">
           <li data-i="r1">Write what you saw and felt yourself.</li>
@@ -194,10 +203,17 @@ footer{max-width:1040px;margin:0 auto;padding:22px 16px 44px;color:var(--muted);
         <p class="muted small" data-i="f_email_s">Leave your email and we'll tell you when your story is live and how many people read it. We never show it.</p>
         <label class="check" style="margin-top:14px"><input type="checkbox" name="consent" required> <span data-i="consent">I wrote this myself. Laloo may publish it, lightly edit it and translate it into other languages. Stories go live within two weeks.</span></label>
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="ctas"><button class="pill p big" id="send" data-i="send">Send my story</button></div>
+        <div class="ctas"><button class="pill p big" id="send" data-i="preview">Preview and send</button></div>
         <p id="fmsg" hidden></p>
       </div>
     </form>
+    <div class="fb" id="pv" hidden>
+      <h3 data-i="pv_t">Check it before sending</h3>
+      <p class="muted small" data-i="pv_s"></p>
+      <div class="pvbox" id="pvbody"></div>
+      <div class="ctas"><button type="button" class="pill" id="pvedit" data-i="pv_edit">Edit</button><button type="button" class="pill p big" id="pvsend" data-i="pv_send">Send</button></div>
+      <p id="pvmsg" hidden></p>
+    </div>
     <div class="thanks" id="thanks" hidden data-i="thanks"></div>
   </div>
 </section>
@@ -253,7 +269,7 @@ const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
 const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";   // herkese açık anahtar
 // ================= DİLLER =================
 const TXT = {
-en:{ map:"Open the map", share:"Share your story", eyebrow:"Laloo Stories", h1:"Not AI. Real people, real experiences.",
+en:{ mic:"🎙️ Speak instead of typing", mic_stop:"⏹ Stop", mic_on:"Listening… talk the way you would to a friend, we'll write it down.", mic_note:"Your browser turns your voice into text. Laloo never records audio.", mic_err:"We couldn't hear you. Check the microphone permission.", preview:"Preview and send", pv_t:"Check it before sending", pv_s:"This is how your story will look. Fix anything you like, then send.", pv_edit:"✏️ Edit", pv_send:"Looks good, send it", report:"Report this story", reportQ:"Report it? Tap again", reported:"Thanks, we'll check it.", map:"Open the map", share:"Share your story", eyebrow:"Laloo Stories", h1:"Not AI. Real people, real experiences.",
   p1:"Tired of travel posts that sound human but were written by a machine? Robot tips are fine, they work. But nothing replaces an experience told with real feeling. So come and share your story.",
   p2:"Write about your neighborhood, your street, the corner of the world you know. The things nobody else knows. The things only someone who went there can tell.",
   p3:"We'll share your experience with people in other languages. Your story might lead someone on the other side of the world to something they would never have found.",
@@ -280,7 +296,7 @@ en:{ map:"Open the map", share:"Share your story", eyebrow:"Laloo Stories", h1:"
   who_all_t:"Open to anyone", who_cust_t:"Customers only", who_ask_t:"Ask inside", clean3:"Clean", clean2:"OK", clean1:"Not great", queue_none:"No queue", queue_short:"Short queue", queue_long:"Long queue",
   baby_t:"Baby changing", park_yes:"Parking", park_street:"Street parking", park_no:"No parking", visited:"Visited",
   readin:"Read in", copy:"Copy link", copied:"Link copied", route:"Route", write_own:"Write your own story", notfound:"This story isn't available." },
-tr:{ map:"Haritayı aç", share:"Hikayeni paylaş", eyebrow:"Laloo Hikayeleri", h1:"Yapay zeka değil. Gerçek insanlar, gerçek deneyimler.",
+tr:{ mic:"🎙️ Yazmak yerine konuş", mic_stop:"⏹ Durdur", mic_on:"Dinliyorum… arkadaşına anlatır gibi anlat, biz yazıya dökelim.", mic_note:"Sesini yazıya tarayıcın çeviriyor. Laloo ses kaydı tutmaz.", mic_err:"Seni duyamadık. Mikrofon iznini kontrol et.", preview:"Önizle ve gönder", pv_t:"Göndermeden önce bir bak", pv_s:"Hikayen böyle görünecek. İstediğini düzelt, sonra gönder.", pv_edit:"✏️ Düzelt", pv_send:"Tamam, gönder", report:"Bu hikayeyi bildir", reportQ:"Bildirilsin mi? Bir daha dokun", reported:"Teşekkürler, bakacağız.", map:"Haritayı aç", share:"Hikayeni paylaş", eyebrow:"Laloo Hikayeleri", h1:"Yapay zeka değil. Gerçek insanlar, gerçek deneyimler.",
   p1:"İnsan gibi görünen ama bir makinenin yazdığı gezi yazılarından sıkılmadınız mı? Robotların önerileri tamam, işe yarar. Ama gerçek bir hissiyatla anlatılan deneyimin yerini kim tutabilir? O yüzden gelin, hikayenizi paylaşın.",
   p2:"Mahallenizi yazın, sokağınızı, çevrenizi. Kimsenin bilmediği şeyleri. Gidip görmeyenin anlatamayacağı şeyleri.",
   p3:"Biz de deneyiminizi başka dillerde insanlarla paylaşalım. Sizin hikayeniz, dünyanın öbür ucundaki birini belki de asla bulamayacağı bir bilgiye ulaştıracak.",
@@ -307,7 +323,7 @@ tr:{ map:"Haritayı aç", share:"Hikayeni paylaş", eyebrow:"Laloo Hikayeleri", 
   who_all_t:"Herkese açık", who_cust_t:"Sadece müşteri", who_ask_t:"İçeride sor", clean3:"Temiz", clean2:"İdare eder", clean1:"Pek temiz değil", queue_none:"Sıra yok", queue_short:"Kısa sıra", queue_long:"Uzun sıra",
   baby_t:"Bebek masası", park_yes:"Otopark var", park_street:"Sokakta park", park_no:"Otopark yok", visited:"Ziyaret",
   readin:"Şu dilde oku", copy:"Linki kopyala", copied:"Link kopyalandı", route:"Rota", write_own:"Kendi hikayeni yaz", notfound:"Bu hikaye bulunamadı." },
-es:{ map:"Abrir el mapa", share:"Comparte tu historia", eyebrow:"Historias de Laloo", h1:"Nada de IA. Gente real, experiencias reales.", p1:"¿No estás harto de relatos de viaje que parecen escritos por una persona pero los escribió una máquina? Los consejos de los robots están bien, funcionan. Pero nada sustituye una experiencia contada con ganas. Así que ven y comparte tu historia.", p2:"Escribe sobre tu barrio, tu calle, tu rincón del mundo. Lo que nadie más sabe. Lo que solo puede contar quien estuvo allí.",
+es:{ mic:"🎙️ Habla en vez de escribir", mic_stop:"⏹ Parar", mic_on:"Te escucho… cuéntalo como se lo contarías a un amigo, nosotros lo escribimos.", mic_note:"Es tu navegador el que pasa tu voz a texto. Laloo no graba audio.", mic_err:"No te hemos oído. Revisa el permiso del micrófono.", preview:"Revisar y enviar", pv_t:"Échale un vistazo antes de enviarla", pv_s:"Así se verá tu historia. Corrige lo que quieras y envíala.", pv_edit:"✏️ Corregir", pv_send:"Está bien, enviar", report:"Denunciar esta historia", reportQ:"¿Denunciar? Toca otra vez", reported:"Gracias, lo revisamos.", map:"Abrir el mapa", share:"Comparte tu historia", eyebrow:"Historias de Laloo", h1:"Nada de IA. Gente real, experiencias reales.", p1:"¿No estás harto de relatos de viaje que parecen escritos por una persona pero los escribió una máquina? Los consejos de los robots están bien, funcionan. Pero nada sustituye una experiencia contada con ganas. Así que ven y comparte tu historia.", p2:"Escribe sobre tu barrio, tu calle, tu rincón del mundo. Lo que nadie más sabe. Lo que solo puede contar quien estuvo allí.",
   p3:"Nosotros compartiremos tu experiencia con gente de otros idiomas. Tu historia quizá lleve a alguien, al otro lado del mundo, a algo que nunca habría encontrado.", readall:"Leer historias", latest:"Últimas historias", loading:"Cargando…", none:"Todavía no hay historias. Estrena tú la sección.", err:"No hemos podido cargar las historias. Vuelve a intentarlo.",
   w_h:"Cuéntanos lo que solo tú puedes contar.", w_p:"Tu barrio, una calle que te encanta, un viaje que no se te va de la cabeza. Escríbelo como se lo contarías a un amigo. Sin límite de palabras.", ex_t:"Lee antes un ejemplo", f_story:"Tu historia", f_title:"Título", f_body:"Tu historia",
   words:"palabras", r1:"Escribe lo que viste y sentiste tú.", r2:"Nada de días u horas exactas, y ningún nombre de casino.", r3:"Si no recuerdas el nombre de un sitio, descríbelo. No vamos a adivinarlo.", f_where:"¿Dónde pasó?", f_where_s:"Añade todas las ciudades. Una historia puede cruzar países.",
@@ -326,7 +342,7 @@ es:{ map:"Abrir el mapa", share:"Comparte tu historia", eyebrow:"Historias de La
   clean2:"Aceptable", clean1:"No muy limpio", queue_none:"Sin cola", queue_short:"Poca cola", queue_long:"Mucha cola", baby_t:"Cambiador",
   park_yes:"Aparcamiento", park_street:"Aparcar en la calle", park_no:"Sin aparcamiento", visited:"Visitado", readin:"Leer en", copy:"Copiar enlace",
   copied:"Enlace copiado", route:"Ruta", write_own:"Escribe tu historia", notfound:"Esta historia no está disponible." },
-de:{ map:"Karte öffnen", share:"Erzähl deine Geschichte", eyebrow:"Laloo Geschichten", h1:"Keine KI. Echte Menschen, echte Erlebnisse.", p1:"Genug von Reiseberichten, die klingen, als hätte sie ein Mensch geschrieben, aber eigentlich kommen sie aus einer Maschine? Tipps von Robotern sind okay, die funktionieren. Aber nichts ersetzt ein Erlebnis, das jemand mit echtem Gefühl erzählt. Also: Erzähl deine Geschichte.", p2:"Schreib über dein Viertel, deine Straße, deine Ecke der Welt. Über das, was sonst keiner weiß. Über das, was nur erzählen kann, wer wirklich da war.",
+de:{ mic:"🎙️ Sprechen statt tippen", mic_stop:"⏹ Stopp", mic_on:"Ich höre zu… erzähl es, wie du es einem Freund erzählen würdest, wir schreiben mit.", mic_note:"Dein Browser macht aus deiner Stimme Text. Laloo nimmt kein Audio auf.", mic_err:"Wir konnten dich nicht hören. Prüf die Mikrofonfreigabe.", preview:"Vorschau und senden", pv_t:"Kurz prüfen vor dem Senden", pv_s:"So wird deine Geschichte aussehen. Korrigier, was du willst, dann abschicken.", pv_edit:"✏️ Bearbeiten", pv_send:"Passt, abschicken", report:"Diese Geschichte melden", reportQ:"Melden? Noch mal tippen", reported:"Danke, wir schauen es uns an.", map:"Karte öffnen", share:"Erzähl deine Geschichte", eyebrow:"Laloo Geschichten", h1:"Keine KI. Echte Menschen, echte Erlebnisse.", p1:"Genug von Reiseberichten, die klingen, als hätte sie ein Mensch geschrieben, aber eigentlich kommen sie aus einer Maschine? Tipps von Robotern sind okay, die funktionieren. Aber nichts ersetzt ein Erlebnis, das jemand mit echtem Gefühl erzählt. Also: Erzähl deine Geschichte.", p2:"Schreib über dein Viertel, deine Straße, deine Ecke der Welt. Über das, was sonst keiner weiß. Über das, was nur erzählen kann, wer wirklich da war.",
   p3:"Wir teilen dein Erlebnis mit Menschen in anderen Sprachen. Vielleicht bringt deine Geschichte jemanden am anderen Ende der Welt zu etwas, das er sonst nie gefunden hätte.", readall:"Geschichten lesen", latest:"Neueste Geschichten", loading:"Lädt…", none:"Noch keine Geschichten. Mach du den Anfang.", err:"Die Geschichten konnten nicht geladen werden. Versuch es noch mal.",
   w_h:"Erzähl, was nur du erzählen kannst.", w_p:"Dein Viertel, eine Straße, die du liebst, eine Reise, die dir nicht aus dem Kopf geht. Schreib so, wie du es einem Freund erzählen würdest. Ohne Wortlimit.", ex_t:"Erst mal ein Beispiel lesen", f_story:"Deine Geschichte", f_title:"Titel", f_body:"Deine Geschichte",
   words:"Wörter", r1:"Schreib, was du selbst gesehen und gefühlt hast.", r2:"Keine genauen Tage oder Uhrzeiten und keine Namen von Casinos.", r3:"Wenn du den Namen eines Ortes nicht mehr weißt, beschreib ihn einfach. Wir raten nicht.", f_where:"Wo war das?", f_where_s:"Füg jede Stadt hinzu. Eine Geschichte kann über Grenzen gehen.",
@@ -345,7 +361,7 @@ de:{ map:"Karte öffnen", share:"Erzähl deine Geschichte", eyebrow:"Laloo Gesch
   clean2:"Geht so", clean1:"Nicht besonders sauber", queue_none:"Keine Schlange", queue_short:"Kurze Schlange", queue_long:"Lange Schlange", baby_t:"Wickeltisch",
   park_yes:"Parkplatz", park_street:"Parken auf der Straße", park_no:"Kein Parkplatz", visited:"Besucht", readin:"Lesen auf", copy:"Link kopieren",
   copied:"Link kopiert", route:"Route", write_own:"Schreib deine Geschichte", notfound:"Diese Geschichte ist nicht verfügbar." },
-fr:{ map:"Ouvrir la carte", share:"Racontez votre histoire", eyebrow:"Histoires Laloo", h1:"Pas d'IA. De vraies personnes, de vraies expériences.", p1:"Marre des récits de voyage qui ont l'air écrits par quelqu'un mais qui sortent en fait d'une machine ? Les conseils des robots, ça dépanne, ça marche. Mais rien ne remplace une expérience racontée avec du vrai ressenti. Alors venez raconter la vôtre.", p2:"Parlez de votre quartier, de votre rue, de votre coin du monde. De ce que personne ne sait. De ce que seul quelqu'un qui y est allé peut raconter.",
+fr:{ mic:"🎙️ Parlez au lieu d'écrire", mic_stop:"⏹ Arrêter", mic_on:"On vous écoute… racontez comme à un ami, on écrit pour vous.", mic_note:"C'est votre navigateur qui transforme la voix en texte. Laloo n'enregistre aucun son.", mic_err:"On ne vous entend pas. Vérifiez l'autorisation du micro.", preview:"Relire et envoyer", pv_t:"Un dernier coup d'œil avant l'envoi", pv_s:"Voici à quoi ressemblera votre histoire. Corrigez ce que vous voulez, puis envoyez.", pv_edit:"✏️ Corriger", pv_send:"C'est bon, envoyer", report:"Signaler cette histoire", reportQ:"Signaler ? Touchez encore", reported:"Merci, on vérifie.", map:"Ouvrir la carte", share:"Racontez votre histoire", eyebrow:"Histoires Laloo", h1:"Pas d'IA. De vraies personnes, de vraies expériences.", p1:"Marre des récits de voyage qui ont l'air écrits par quelqu'un mais qui sortent en fait d'une machine ? Les conseils des robots, ça dépanne, ça marche. Mais rien ne remplace une expérience racontée avec du vrai ressenti. Alors venez raconter la vôtre.", p2:"Parlez de votre quartier, de votre rue, de votre coin du monde. De ce que personne ne sait. De ce que seul quelqu'un qui y est allé peut raconter.",
   p3:"Nous partagerons votre expérience avec des gens qui parlent d'autres langues. Votre histoire mènera peut-être quelqu'un, à l'autre bout du monde, vers ce qu'il n'aurait jamais trouvé.", readall:"Lire les histoires", latest:"Dernières histoires", loading:"Chargement…", none:"Pas encore d'histoire. À vous d'ouvrir le bal.", err:"Impossible de charger les histoires. Réessayez.",
   w_h:"Racontez ce que vous seul pouvez raconter.", w_p:"Votre quartier, une rue que vous aimez, un voyage qui ne vous quitte pas. Écrivez-le comme vous le raconteriez à un ami. Pas de limite de mots.", ex_t:"Lire un exemple d'abord", f_story:"Votre histoire", f_title:"Titre", f_body:"Votre histoire",
   words:"mots", r1:"Écrivez ce que vous avez vu et ressenti vous-même.", r2:"Pas de jours ni d'heures précis, et aucun nom de casino.", r3:"Si vous ne vous souvenez plus du nom d'un lieu, décrivez-le. Nous ne devinerons pas.", f_where:"Où ça s'est passé ?", f_where_s:"Ajoutez chaque ville. Une histoire peut traverser des frontières.",
@@ -476,7 +492,16 @@ async function openStory(id){
     ${pinned.length ? `<div id="smap"></div>` : ""}
     ${places.length ? `<h2 style="font-size:24px;margin-top:26px">${esc(tx("places"))}</h2>${places.map(placeHtml).join("")}` : ""}
     <div class="tr"><span class="small muted">${esc(tx("readin"))}:</span>${trLangs.map(l => `<a class="pill small" href="${trUrl(l)}" target="_blank" rel="noopener">${l.split("-")[0].toUpperCase()}</a>`).join("")}</div>
-    <div class="ctas"><button class="pill" id="cpy">${esc(tx("copy"))}</button><a class="pill p" href="#write" id="own">${esc(tx("write_own"))}</a><a class="pill" href="/">${esc(tx("map"))}</a></div>`;
+    <div class="ctas"><button class="pill" id="cpy">${esc(tx("copy"))}</button><a class="pill p" href="#write" id="own">${esc(tx("write_own"))}</a><a class="pill" href="/">${esc(tx("map"))}</a></div>
+    <p style="margin-top:22px"><button class="pill small" id="flag" style="font-size:13px;font-weight:600;color:var(--muted)">⚑ ${esc(tx("report"))}</button></p>`;
+  $("#flag").onclick = () => {
+    const b = $("#flag");
+    if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = "⚑ " + tx("reportQ"); return; }
+    let dev = null; try{ dev = localStorage.getItem("laloo_device"); }catch(e){}
+    if (dev) fetch(SB_URL + "/rest/v1/rpc/flag_content", { method:"POST", headers:{ apikey:SB_KEY, "Content-Type":"application/json" },
+      body:JSON.stringify({ p_kind:"story", p_id:String(s.id), p_device:dev }) }).catch(() => {});
+    b.textContent = tx("reported"); b.disabled = true;
+  };
   $("#cpy").onclick = () => { try{ navigator.clipboard.writeText(here); }catch(e){} $("#cpy").textContent = tx("copied"); };
   if (pinned.length && window.L){
     const m = L.map("smap", { scrollWheelZoom:false });
@@ -499,6 +524,7 @@ async function openStory(id){
 }
 
 const sid = new URLSearchParams(location.search).get("s");
+(() => { const i = new URLSearchParams(location.search).get("i"); if (/^[a-z0-9]{6}$/.test(i || "")){ try{ localStorage.setItem("laloo_inv", i); }catch(e){} } })();
 if (sid) openStory(sid); else loadList();
 
 // ================= FORM =================
@@ -612,8 +638,63 @@ setInterval(() => {
   try{ localStorage.setItem(DRAFT, JSON.stringify({ title:sf.title.value, body:body.value, nickname:sf.nickname.value, cities })); }catch(e){}
 }, 4000);
 
+// ================= SESLE YAZ =================
+// Tarayıcının konuşma tanıma özelliği. Ses Laloo'ya gitmez, sadece yazıya dönüşen metin kutuya düşer.
+(() => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  $("#micbox").hidden = false;
+  let rec = null, on = false, base = "", fin = "";
+  const btn = $("#mic"), st = $("#micst");
+  const stop = () => { on = false; btn.classList.remove("on"); btn.textContent = tx("mic"); st.textContent = tx("mic_note"); try{ rec && rec.stop(); }catch(e){} };
+  st.textContent = tx("mic_note");
+  function start(){
+    rec = new SR();
+    rec.lang = navigator.language || "en-US"; rec.continuous = true; rec.interimResults = true;
+    base = body.value.replace(/\s+$/, ""); fin = "";
+    rec.onresult = ev => {
+      let interim = "";
+      for (let i = ev.resultIndex; i < ev.results.length; i++){
+        const t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) fin += (fin && !/\s$/.test(fin) ? " " : "") + t.trim(); else interim += t;
+      }
+      body.value = (base ? base + (/\n$/.test(base) ? "" : " ") : "") + fin + (interim ? " " + interim : "");
+      upd();
+    };
+    rec.onerror = ev => { if (ev.error === "not-allowed" || ev.error === "service-not-allowed" || ev.error === "audio-capture"){ stop(); st.textContent = tx("mic_err"); } };
+    rec.onend = () => { if (on){ try{ start(); }catch(e){ stop(); } } };   // sessizlikte durursa devam et
+    rec.start();
+  }
+  btn.onclick = () => {
+    if (on){ stop(); return; }
+    on = true; btn.classList.add("on"); btn.textContent = tx("mic_stop"); st.textContent = tx("mic_on");
+    try{ start(); }catch(e){ stop(); st.textContent = tx("mic_err"); }
+  };
+  window._micStop = () => { if (on) stop(); };
+})();
+
+// ================= ÖNİZLEME =================
+let PAYLOAD = null;
+function showPreview(payload){
+  PAYLOAD = payload;
+  const cs = payload.cities.map(c => `<span class="chip">${esc(cityLabel(c))}</span>`).join("");
+  const thumbs = Object.values(photos).flat().map(p => `<img src="${p.url}" alt="">`).join("");
+  $("#pvbody").innerHTML = `<h1>${esc(payload.title)}</h1>
+    <div class="chips">${cs}${payload.is_route ? `<span class="chip">🧭 ${esc(tx("route"))}</span>` : ""}</div>
+    <p class="meta">${esc(tx("by"))} <b>${esc(payload.nickname)}</b></p>
+    <div class="body">${paras(payload.body)}</div>
+    ${thumbs ? `<div class="pvph">${thumbs}</div>` : ""}
+    ${payload.places.length ? `<h2 style="font-size:22px;margin-top:22px">${esc(tx("places"))}</h2>${payload.places.map(placeHtml).join("")}` : ""}`;
+  sf.hidden = true; $("#pv").hidden = false; $("#pvmsg").hidden = true;
+  $("#pvsend").disabled = false; $("#pvsend").textContent = tx("pv_send");
+  $("#pv").scrollIntoView({ behavior:"smooth", block:"start" });
+}
+$("#pvedit").onclick = () => { $("#pv").hidden = true; sf.hidden = false; $("#send").scrollIntoView({ block:"center" }); };
+$("#pvsend").onclick = () => sendStory(PAYLOAD);
+
 sf.onsubmit = async e => {
   e.preventDefault();
+  if (window._micStop) window._micStop();
   if (sf.website.value) return;                       // bot tuzağı
   if ($("#cin").value.trim()) addCity();              // yazılıp eklenmemiş şehir
   const title = sf.title.value.trim(), text = body.value.trim(), nick = sf.nickname.value.trim(), email = sf.email.value.trim();
@@ -626,7 +707,16 @@ sf.onsubmit = async e => {
   let device = null; try{ device = localStorage.getItem("laloo_device"); }catch(err){}
   const payload = { title:title.slice(0, 160), body:text.slice(0, 60000), nickname:nick.slice(0, 40), email: email ? email.slice(0, 200) : null,
     cities, is_route: sf.is_route.checked, places: readPlaces(), lang: LANG, consent:true, device };
-  const btn = $("#send"); btn.disabled = true; btn.textContent = tx("sending");
+  showPreview(payload);
+};
+async function sendStory(src){
+  const payload = { ...src, places: src.places.slice(), cities: src.cities.slice() };
+  const device = payload.device;
+  const day = new Date().toISOString().slice(0, 10);
+  let cnt = { d:day, n:0 };
+  try{ const c = JSON.parse(localStorage.getItem("laloo_story_n") || "null"); if (c && c.d === day) cnt = c; }catch(err){}
+  const pm = t => { const m = $("#pvmsg"); m.hidden = false; m.textContent = t; m.className = "err"; };
+  const btn = $("#pvsend"); btn.disabled = true; btn.textContent = tx("sending");
   try{
     if (Object.values(photos).some(l => l.length)){ btn.textContent = tx("uploading"); payload.photos = await uploadPhotos(); btn.textContent = tx("sending"); }
     const r = await fetch(SB_URL + "/rest/v1/stories", { method:"POST",
@@ -635,12 +725,12 @@ sf.onsubmit = async e => {
     cnt.n++; try{ localStorage.setItem("laloo_story_n", JSON.stringify(cnt)); localStorage.removeItem(DRAFT); }catch(err){}
     try{ window.fetch(SB_URL + "/rest/v1/events", { method:"POST", keepalive:true, headers:{ apikey:SB_KEY, "Content-Type":"application/json", Prefer:"return=minimal" },
       body: JSON.stringify({ device: device || "anon", type:"story_sent", ref:"stories" }) }).catch(() => {}); }catch(err){}
-    sf.hidden = true; $("#thanks").hidden = false; $("#thanks").scrollIntoView({ behavior:"smooth", block:"center" });
+    sf.hidden = true; $("#pv").hidden = true; $("#thanks").hidden = false; $("#thanks").scrollIntoView({ behavior:"smooth", block:"center" });
   }catch(err){
-    fmsg(/too_many/.test(String(err.message)) ? tx("toomany") : tx("fail"));
-    btn.disabled = false; btn.textContent = tx("send");
+    pm(/too_many/.test(String(err.message)) ? tx("toomany") : tx("fail"));
+    btn.disabled = false; btn.textContent = tx("pv_send");
   }
-};
+}
 </script>
 </body>
 </html>

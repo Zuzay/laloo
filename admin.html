@@ -89,6 +89,8 @@
     <button data-t="sugg">📥 Öneriler</button>
     <button data-t="reddit">🟠 Reddit</button>
     <button data-t="stories">📖 Hikayeler</button>
+    <button data-t="revs">🌟 Puanlar</button>
+    <button data-t="mem">🏅 Üyeler</button>
     <button data-t="set">⚙️ Ayarlar</button>
   </nav>
   <main id="main"></main>
@@ -186,7 +188,7 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => tab(b.dat
 async function tab(t){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
   $("#main").innerHTML = "<p>Yükleniyor…</p>";
-  try{ await ({ stats, tips, biz, muni, sugg, reddit, stories, set })[t](); }
+  try{ await ({ stats, tips, biz, muni, sugg, reddit, stories, revs, mem, set })[t](); }
   catch(e){ $("#main").innerHTML = `<p style="color:var(--red)">${esc(e.message)}</p>`; }
 }
 
@@ -403,7 +405,8 @@ async function sugg(){
     <h2>📥 Ziyaretçi önerileri</h2>
     <p class="hint">Sitedeki "Tuvalet ekle" formundan gelenler. Onayla'ya basarsan yıldızlı yer formu dolu gelir, son kontrolü sen yaparsın.</p>
     <div class="tbl"><table><tr><th>Öneri</th><th></th></tr>
-      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}${s.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=18/${s.lat}/${s.lng}" target="_blank" rel="noopener">haritada gör</a>` : ""}</span><br>${esc(s.note)}<br><span class="hint">${s.created_at.slice(0, 10)}</span></td>
+      ${list.map(s => `<tr><td><b>${esc(s.name)}</b><br><span class="hint">${esc(s.city)} · ${esc(s.address)}${s.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=18/${s.lat}/${s.lng}" target="_blank" rel="noopener">haritada gör</a>` : ""}</span><br>${esc(s.note)}<br><span class="hint">${s.created_at.slice(0, 10)}</span>
+        ${(s.photos || []).length ? `<div class="row" style="margin-top:6px">${s.photos.map(ph => `<a href="${phUrl(ph.path)}" target="_blank" rel="noopener"><img src="${phUrl(ph.path)}" style="width:84px;height:84px;object-fit:cover;border-radius:8px;display:block" loading="lazy"></a>`).join("")}</div>` : `<br><span class="pill bad">fotoğraf yok</span>`}</td>
         <td class="row"><button class="b p" data-ap="${s.id}">Onayla</button><button class="b r" data-rj="${s.id}">Reddet</button></td></tr>`).join("") || `<tr><td colspan="2">Bekleyen öneri yok</td></tr>`}
     </table></div>`;
   document.querySelectorAll("[data-ap]").forEach(b => b.onclick = async () => {
@@ -412,7 +415,18 @@ async function sugg(){
     document.querySelectorAll("nav button").forEach(n => n.classList.toggle("on", n.dataset.t === "tips"));
     tips({ name:s.name, city:s.city || "la", address:s.address, info:s.note, lat:s.lat, lng:s.lng });
   });
-  document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => { await db(`suggestions?id=eq.${b.dataset.rj}`, "PATCH", { status:"rejected" }); sugg(); });
+  document.querySelectorAll("[data-rj]").forEach(b => b.onclick = async () => {
+    const s = list.find(x => x.id == b.dataset.rj);
+    await dropStorage((s.photos || []).map(p => p.path));
+    await db(`suggestions?id=eq.${s.id}`, "PATCH", { status:"rejected", photos:null }); sugg();
+  });
+}
+const phUrl = path => `${SB_URL}/storage/v1/object/public/story-photos/${path}`;
+async function dropStorage(paths){
+  if (!paths.length) return;
+  try{ await fresh(); await fetch(`${SB_URL}/storage/v1/object/story-photos`, { method:"DELETE",
+    headers:{ apikey:SB_KEY, Authorization:"Bearer " + S.access_token, "Content-Type":"application/json" }, body:JSON.stringify({ prefixes:paths }) }); }
+  catch(e){ toast("Fotoğraflar silinemedi"); }
 }
 
 // ---------- REDDIT ----------
@@ -463,6 +477,7 @@ async function stories(){
         const age = Math.floor((Date.now() - new Date(s.created_at)) / 864e5);
         return `<tr><td><b>${esc(s.title)}</b><br><span class="hint">${esc(s.nickname)}${s.email ? " · " + esc(s.email) : ""} · ${esc(cl(s))} · ${words(s.body)} kelime · ${esc(s.lang || "")} · ${s.created_at.slice(0, 10)}</span>
           ${storyTab === "pending" ? `<br><span class="pill ${age >= 10 ? "bad" : ""}">${age} gün önce geldi${age >= 10 ? ", süre doluyor" : ""}</span>` : ""}
+          ${s.flag_count ? `<br><span class="pill bad">⚑ ${s.flag_count} şikayet${s.flag_count >= 3 ? ", otomatik askıya alındı" : ""}</span>` : ""}${s.bad_words ? ` <span class="pill bad">küfür olabilir</span>` : ""}
           ${storyTab === "published" ? `<br><span class="pill ok">${s.reads} okunma</span> ${s.mailed_at ? `<span class="pill">son mail ${s.mailed_at.slice(0, 10)}</span>` : ""}` : ""}</td>
           <td class="row"><button class="b" data-so="${s.id}">${storyOpen === s.id ? "Kapat" : "Aç"}</button>
           ${storyTab === "published" ? `<a class="b" href="https://laloo.org/stories/?s=${s.id}" target="_blank" rel="noopener">Gör</a>${s.email ? `<a class="b" data-ml="${s.id}" href="${storyMail(s, "reads")}">Okunma maili</a>` : ""}` : ""}</td></tr>
@@ -580,6 +595,7 @@ async function muni(){
           <button class="b" data-as="${m.id}" data-city="${esc(m.city)}">Tuvaletleri bağla</button>
           <button class="b" data-cp="${m.id}">Linki kopyala</button>
           <a class="b" href="${link(m.id)}" target="_blank" rel="noopener">Önizle</a>
+          <button class="b r" data-md="${m.id}">Sil</button>
         </div></td></tr>`).join("") || `<tr><td colspan="4">Henüz profil yok</td></tr>`}
     </table></div>
     <p class="hint">"Tuvaletleri bağla": o şehirde OSM işleten (operator) bilgisinde bu kelime geçen bütün umumi tuvaletleri profile bağlar. Birkaç kez farklı kelimelerle çalıştırabilirsin (ör. "Gemeente", "Stadsdeel").</p>`;
@@ -602,6 +618,93 @@ async function muni(){
   });
   document.querySelectorAll("[data-cp]").forEach(b => b.onclick = () => {
     try{ navigator.clipboard.writeText(link(b.dataset.cp)); toast("Link kopyalandı"); }catch(e){ prompt("Link:", link(b.dataset.cp)); }
+  });
+  // Silme: önce "Emin misin?", ikinci basışta siler. Tuvaletler haritada kalır, sadece rozet ve bağlantı kalkar.
+  document.querySelectorAll("[data-md]").forEach(b => b.onclick = async () => {
+    const m = list.find(x => String(x.id) === b.dataset.md);
+    if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = `Emin misin? ${m.status === "claimed" ? "Sahiplenilmiş profil!" : ""}`; return; }
+    b.disabled = true;
+    try{ const r = await db("rpc/admin_delete_muni", "POST", { p_id:+m.id }); toast(`Silindi, ${r.places} tuvaletin bağlantısı kalktı`); muni(); }
+    catch(err){ toast(err.message); b.disabled = false; }
+  });
+}
+
+// ---------- PUANLAR (laloo.org/rate) ----------
+let revTab = "pending";
+const RTAG = { clean:"temiz", paper:"kağıt", soap:"sabun", free:"ücretsiz", code:"şifreli", queue:"sıra", accessible:"erişilebilir", baby:"bebek masası", dirty:"kirli", broken:"bozuk" };
+async function revs(){
+  const [list, all] = await Promise.all([
+    db(`reviews?select=*&status=eq.${revTab}&order=created_at.desc&limit=300`),
+    db("reviews?select=ref,status&limit=5000"),
+  ]);
+  const byRef = {}; all.forEach(r => { const k = r.ref || "direct"; byRef[k] = byRef[k] || { n:0, ok:0 }; byRef[k].n++; if (r.status === "approved") byRef[k].ok++; });
+  const silent = list.filter(r => !r.comment && !r.bad_words);
+  $("#main").innerHTML = `
+    <h2>🌟 Puanlar</h2>
+    <p class="hint">laloo.org/rate sayfasından gelir. Onaylananlar haritada yerin penceresinde görünür (ortalama ve son 2 yorum). Üç farklı cihazdan şikayet gelen puan kendiliğinden buraya geri düşer.</p>
+    <div class="row">${["pending","approved","rejected"].map(t => `<button class="b ${t === revTab ? "p" : ""}" data-rt="${t}">${{pending:"Bekleyen",approved:"Onaylı",rejected:"Reddedilen"}[t]}</button>`).join("")}
+      <a class="b" href="https://laloo.org/rate/" target="_blank" rel="noopener">Sayfayı aç</a><span class="hint">${list.length} puan</span>
+      ${revTab === "pending" && silent.length ? `<button class="b p" id="bulk">Yorumsuzları toplu onayla (${silent.length})</button>` : ""}</div>
+    <div class="tbl" style="margin-top:10px"><table><tr><th>Puan</th><th></th></tr>
+      ${list.map(r => `<tr><td><b>${"★".repeat(r.stars)}<span style="color:#c9c2b0">${"★".repeat(5 - r.stars)}</span></b> · <b>${esc(r.place_name)}</b>${r.place_id ? "" : ` <span class="pill">listede yoktu</span>`}
+        <br><span class="hint">${esc(r.city || "şehir yok")} · ${esc(r.ref || "direct")} · ${esc(r.lang || "")} · ${r.created_at.slice(0, 16).replace("T", " ")}${r.nickname ? " · " + esc(r.nickname) : ""}
+        ${r.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lng}#map=18/${r.lat}/${r.lng}" target="_blank" rel="noopener">konum</a>` : ""}</span>
+        ${(r.tags || []).length ? `<br>${r.tags.map(t => `<span class="pill ${t === "dirty" || t === "broken" ? "bad" : ""}">${RTAG[t] || esc(t)}</span>`).join(" ")}` : ""}
+        ${r.comment ? `<div class="note" style="margin-top:6px">${esc(r.comment)}</div>` : ""}
+        ${r.bad_words ? `<span class="pill bad">küfür olabilir</span> ` : ""}${r.flag_count ? `<span class="pill bad">⚑ ${r.flag_count} şikayet</span>` : ""}</td>
+        <td class="row">${r.status !== "approved" ? `<button class="b p" data-ra="${r.id}">Onayla</button>` : ""}${r.status !== "rejected" ? `<button class="b r" data-rr="${r.id}">Reddet</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="2">Burada puan yok</td></tr>`}
+    </table></div>
+    <h2>Kaynağa göre</h2>
+    <div class="tbl"><table><tr><th>Kaynak</th><th>Toplam</th><th>Onaylı</th></tr>
+      ${Object.entries(byRef).sort((a, b) => b[1].n - a[1].n).map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v.n}</td><td>${v.ok}</td></tr>`).join("") || `<tr><td colspan="3">Henüz yok</td></tr>`}
+    </table></div>`;
+  document.querySelectorAll("[data-rt]").forEach(b => b.onclick = () => { revTab = b.dataset.rt; revs(); });
+  const setR = async (id, status) => { try{ await db(`reviews?id=eq.${id}`, "PATCH", { status }); revs(); }catch(e){ toast(e.message); } };
+  document.querySelectorAll("[data-ra]").forEach(b => b.onclick = () => setR(b.dataset.ra, "approved"));
+  document.querySelectorAll("[data-rr]").forEach(b => b.onclick = () => setR(b.dataset.rr, "rejected"));
+  if ($("#bulk")) $("#bulk").onclick = async () => {
+    try{ await db(`reviews?id=in.(${silent.map(r => r.id).join(",")})`, "PATCH", { status:"approved" }); toast(`${silent.length} puan onaylandı`); revs(); }
+    catch(e){ toast(e.message); }
+  };
+}
+
+// ---------- ÜYELER (laloo.org/join) ----------
+let memTab = "pending";
+async function mem(){
+  const all = await db("rpc/admin_members", "POST", {});
+  const ap = all.filter(m => m.status === "approved"), pend = all.filter(m => m.status === "pending");
+  const inT = (lo, hi) => ap.filter(m => m.seq > lo && m.seq <= hi).length;
+  const list = all.filter(m => m.status === memTab).sort((a, b) => memTab === "approved" ? a.seq - b.seq : a.created_at.localeCompare(b.created_at));
+  const badge = t => t === 100 ? "İlk 100" : t === 500 ? "İlk 500" : t === 1000 ? "İlk 1000" : "Üye";
+  const pct = t => t === 100 ? 30 : t === 500 ? 25 : t === 1000 ? 15 : 10;
+  $("#main").innerHTML = `
+    <h2>🏅 Erken üyeler</h2>
+    <p class="hint">laloo.org/join sayfasından gelir. Onaylayınca sıra numarası ve rozet verilir (1-100 İlk 100, 101-500 İlk 500, 501-1000 İlk 1000). Hikaye ve puan sayıları üyenin cihazı ve e-postasıyla eşleşir. "E-posta onaylı" = kişi maildeki linke tıkladı.</p>
+    <div class="cards">
+      <div class="card"><b>${inT(0, 100)}/100</b><span>İlk 100 (sonraki yıllar %30)</span></div>
+      <div class="card"><b>${inT(100, 500)}/400</b><span>İlk 500 (%25)</span></div>
+      <div class="card"><b>${inT(500, 1000)}/500</b><span>İlk 1000 (%15)</span></div>
+      <div class="card"><b>${pend.length}</b><span>onay bekleyen aday</span></div>
+    </div>
+    <div class="row" style="margin-top:12px">${["pending","approved","rejected"].map(t => `<button class="b ${t === memTab ? "p" : ""}" data-mt="${t}">${{pending:"Adaylar",approved:"Üyeler",rejected:"Reddedilen"}[t]}</button>`).join("")}
+      <a class="b" href="https://laloo.org/join/" target="_blank" rel="noopener">Sayfayı aç</a></div>
+    <div class="tbl" style="margin-top:10px"><table><tr><th>${memTab === "approved" ? "No" : "Geliş"}</th><th>Kişi</th><th>Getirdiği</th><th>Hikaye</th><th>Puan</th><th></th></tr>
+      ${list.map(m => `<tr>
+        <td>${memTab === "approved" ? `<b>#${m.seq}</b><br><span class="pill ok">${badge(m.tier)}</span><br><span class="hint">%50 → %${pct(m.tier)}</span>` : `<span class="hint">${m.created_at.slice(0, 10)}</span>`}</td>
+        <td><b>${esc(m.nickname)}</b><br><span class="hint">${esc(m.email)}${m.city ? " · " + esc(m.city) : ""} · ${esc(m.lang || "")} · ${esc(m.ref || "")}</span>
+          <br>${m.email_verified_at ? `<span class="pill ok">e-posta onaylı</span>` : `<span class="pill">e-posta onaysız</span>`}${m.invited_by ? ` <span class="pill">davet: ${esc(m.invited_by)}</span>` : ""}
+          <br><span class="hint">davet kodu: ${esc(m.invite_code)}</span></td>
+        <td>${m.invited}</td><td>${m.stories}</td><td>${m.reviews}</td>
+        <td class="row">${m.status !== "approved" ? `<button class="b p" data-ma="${m.id}">Onayla</button>` : ""}${m.status !== "rejected" ? `<button class="b r" data-mr="${m.id}">Reddet</button>` : ""}
+          <button class="b" data-ml="${esc(m.invite_code)}">Davet linki</button></td></tr>`).join("") || `<tr><td colspan="6">Burada kimse yok</td></tr>`}
+    </table></div>`;
+  document.querySelectorAll("[data-mt]").forEach(b => b.onclick = () => { memTab = b.dataset.mt; mem(); });
+  const setM = async (id, st) => { try{ const r = await db("rpc/admin_member_set", "POST", { p_id:id, p_status:st }); toast(st === "approved" ? `Onaylandı: #${r.seq}` : "Reddedildi"); mem(); }catch(e){ toast(e.message); } };
+  document.querySelectorAll("[data-ma]").forEach(b => b.onclick = () => setM(b.dataset.ma, "approved"));
+  document.querySelectorAll("[data-mr]").forEach(b => b.onclick = () => { if (!b.dataset.sure){ b.dataset.sure = 1; b.textContent = "Emin misin?"; return; } setM(b.dataset.mr, "rejected"); });
+  document.querySelectorAll("[data-ml]").forEach(b => b.onclick = () => {
+    const u = "https://laloo.org/join/?i=" + b.dataset.ml;
+    try{ navigator.clipboard.writeText(u); toast("Link kopyalandı"); }catch(e){ prompt("Link:", u); }
   });
 }
 
