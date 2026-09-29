@@ -291,13 +291,14 @@ async function counter(){
   const t = c.tier || 0;
   $("#h1").textContent = t ? tx("h1", { t }) : tx("h1std");
   if (t){
-    const prev = t === 100 ? 0 : t === 500 ? 100 : 500, inTier = c.approved - prev, size = t - prev;
-    $("#cn").textContent = c.approved;
+    const taken = c.taken ?? c.approved;
+    const prev = t === 100 ? 0 : t === 500 ? 100 : 500, inTier = taken - prev, size = t - prev;
+    $("#cn").textContent = taken;
     $("#cl").textContent = tx("taken", { t });
     $("#cb").style.width = Math.min(100, Math.max(2, 100 * inTier / size)) + "%";
     $("#cleft").textContent = tx("left", { n: c.left });
   } else {
-    $("#cn").textContent = c.approved; $("#cl").textContent = ""; $("#cb").style.width = "100%"; $("#cleft").textContent = tx("full");
+    $("#cn").textContent = c.taken ?? c.approved; $("#cl").textContent = ""; $("#cb").style.width = "100%"; $("#cleft").textContent = tx("full");
   }
   $("#tiers").innerHTML = TIERS.map(([n, r]) => `<div class="${n === t ? "on" : ""}"><b>${esc(tierName(n))}</b><span>${r}% ${esc(tx("later"))}</span></div>`).join("");
 }

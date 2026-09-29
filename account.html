@@ -182,8 +182,13 @@ let DATA = null, STATS = { businesses:[], places:[] }, DAYS = 30;
 const statOf = (arr, id) => arr.find(x => String(x.id) === String(id)) || {};
 const pct = (a, b) => b ? Math.round(100 * a / b) + "%" : "–";
 
+let MEMBER = null;
 async function load(){
-  [DATA, STATS] = await Promise.all([rpc("my_account"), rpc("my_stats", { days:DAYS })]);
+  let dev = null; try{ dev = localStorage.getItem("laloo_device"); }catch(e){}
+  [DATA, STATS, MEMBER] = await Promise.all([rpc("my_account"), rpc("my_stats", { days:DAYS }),
+    rpc("my_member", { p_device:dev }).then(r => r && r.member).catch(() => null)]);
+  // Erken üye, işletmesi/yeri yoksa: doğrudan üye sayfasına (giriş linki buraya düşse bile)
+  if (MEMBER && !CLAIM && !DATA.businesses.length && !DATA.places.length){ location.replace("/join/"); return new Promise(() => {}); }
   render();
 }
 function render(){
@@ -249,6 +254,8 @@ function render(){
   if ($("#q")) $("#q").oninput = e => { const q = e.target.value.toLowerCase();
     document.querySelectorAll("#pl details").forEach(d => d.hidden = q && !d.dataset.q.includes(q)); };
   $("#empty").hidden = !!(biz.length || pl.length || (CLAIM && PRE));
+  if (MEMBER && !document.getElementById("memLink")) $("#who").insertAdjacentHTML("afterend",
+    `<p class="muted" id="memLink">🏅 <a href="/join/">Your early member page</a></p>`);
   $("#muniOff").innerHTML = muni ? `<div class="card" style="margin-top:24px"><b>Switch off your profile</b>
     <p class="muted">Your toilets stay on the map as public information, but the badge is removed and this account loses access. You can claim again later.</p>
     <button class="danger" id="closeMuni">Switch off profile</button></div>` : "";
