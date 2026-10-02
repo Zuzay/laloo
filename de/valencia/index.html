@@ -108,12 +108,6 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <li><b>Öffentliche Toilette</b></li>
 <li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 </ul>
-<h3>Barri de Sant Josep · 4</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
 <h3>Nou Moles · 4</h3><ul class="pl sm">
 <li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 <li><b>Öffentliche Toilette</b></li>
@@ -159,6 +153,14 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <h3>la Roqueta · 3</h3><ul class="pl sm">
 <li><b>2TheLoo</b><span class="t ">Kostenpflichtig</span></li>
 <li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
+<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
+</ul>
+<h3>Barri de Sant Josep · 2</h3><ul class="pl sm">
+<li><b>Öffentliche Toilette</b></li>
+<li><b>Öffentliche Toilette</b></li>
+</ul>
+<h3>Ciutat Mudeco · 2</h3><ul class="pl sm">
+<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 <li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 </ul>
 <h3>Ciutat Vella · 2</h3><ul class="pl sm">
@@ -260,5 +262,6 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <a class="cta" href="/?at=39.4700,-0.3765,14&amp;ref=city-valencia">📍 Karte für Valencia öffnen</a>
 </main>
 <footer><a href="/">laloo.org · Finde überall eine Toilette</a> · <a href="/de/cities/">Alle Städte</a> · <a href="/de/about/">Über uns</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>Kartendaten © OpenStreetMap-Mitwirkende.</footer>
+<script>(()=>{const r=new URLSearchParams(location.search).get("ref");if(!r||!/^[A-Za-z0-9_-]{1,60}$/.test(r))return;document.querySelectorAll('a[href^="/?"],a[href^="/stories/?"]').forEach(a=>{const u=new URL(a.href);u.searchParams.set("ref",r);a.href=u.pathname+u.search;});})();</script>
 </body>
 </html>

@@ -167,5 +167,6 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <a class="cta" href="/?at=28.1235,-15.4365,14&amp;ref=city-las-palmas">📍 Abrir el mapa en Las Palmas de Gran Canaria</a>
 </main>
 <footer><a href="/">laloo.org · Encuentra un baño en cualquier lugar</a> · <a href="/es/cities/">Todas las ciudades</a> · <a href="/es/about/">Acerca de</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>Datos del mapa © colaboradores de OpenStreetMap.</footer>
+<script>(()=>{const r=new URLSearchParams(location.search).get("ref");if(!r||!/^[A-Za-z0-9_-]{1,60}$/.test(r))return;document.querySelectorAll('a[href^="/?"],a[href^="/stories/?"]').forEach(a=>{const u=new URL(a.href);u.searchParams.set("ref",r);a.href=u.pathname+u.search;});})();</script>
 </body>
 </html>

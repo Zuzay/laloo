@@ -622,5 +622,6 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <a class="cta" href="/?at=55.6760,12.5680,14&amp;ref=city-copenhagen">📍 Open the map in Copenhagen</a>
 </main>
 <footer><a href="/">laloo.org · Find a bathroom anywhere</a> · <a href="/cities/">All cities</a> · <a href="/about/">About</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>Map data © OpenStreetMap contributors.</footer>
+<script>(()=>{const r=new URLSearchParams(location.search).get("ref");if(!r||!/^[A-Za-z0-9_-]{1,60}$/.test(r))return;document.querySelectorAll('a[href^="/?"],a[href^="/stories/?"]').forEach(a=>{const u=new URL(a.href);u.searchParams.set("ref",r);a.href=u.pathname+u.search;});})();</script>
 </body>
 </html>
