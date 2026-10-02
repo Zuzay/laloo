@@ -175,6 +175,9 @@ article p{margin:0 0 14px}.box{background:var(--tag);border-radius:12px;padding:
 .rl{list-style:none;padding:0;margin:0}.rl li{margin:0 0 10px}.rl a{font-weight:700}.rl span{display:block;color:var(--muted);font-size:14px}
 footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}"""
 
+# Mailden/QR'dan ?ref= ile gelen ziyaretçinin kaynağı haritaya geçerken kaybolmasın
+REFJS = """<script>(()=>{const r=new URLSearchParams(location.search).get("ref");if(!r||!/^[A-Za-z0-9_-]{1,60}$/.test(r))return;document.querySelectorAll('a[href^="/?"],a[href^="/stories/?"]').forEach(a=>{const u=new URL(a.href);u.searchParams.set("ref",r);a.href=u.pathname+u.search;});})();</script>"""
+
 def tag_html(tags, lang):
   t = T[lang]; out = []
   for g in tags:
@@ -210,6 +213,7 @@ def page(lang, title, desc, canon, alts, body, slug_for_lang):
 {body}
 </main>
 <footer><a href="/">laloo.org · {esc(T[lang]["home"])}</a> · <a href="{'/cities/' if lang == 'en' else f'/{lang}/cities/'}">{esc(T[lang]["all"])}</a> · <a href="{'/about/' if lang == 'en' else f'/{lang}/about/'}">{esc(ABOUT[lang])}</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>{esc(T[lang]["src"])}</footer>
+{REFJS}
 </body>
 </html>
 """
@@ -301,13 +305,169 @@ def route_body(r, lang, now):
   b.append(f'<a class="cta" href="/?at={r["lat"]:.4f},{r["lng"]:.4f},15&amp;ref=route-{esc(r["slug"])}">📍 {esc(t["open_route"])}</a>')
   return "\n".join(b)
 
+# ---------- Laloo Stories: her yayınlanmış hikayeye Google'ın okuyabileceği sade sayfa ----------
+PHOTO_BASE = "https://tizfdnsjhhepxnqqrzuk.supabase.co/storage/v1/object/public/story-photos/"
+ST = {
+  "en": {"by": "by {n}", "places": "Places in this story", "wc": "Bathroom here", "live": "See it with the map and photos",
+         "map": "Open the Laloo map", "write": "Share your own story", "kicker": "Laloo Stories · Not AI. Real people, real experiences.",
+         "route": "Route", "read_in": "Also in"},
+  "tr": {"by": "yazan: {n}", "places": "Bu hikayedeki yerler", "wc": "Tuvalet var", "live": "Harita ve fotoğraflarla gör",
+         "map": "Laloo haritasını aç", "write": "Sen de hikayeni paylaş", "kicker": "Laloo Hikayeleri · Yapay zeka değil. Gerçek insanlar, gerçek deneyimler.",
+         "route": "Rota", "read_in": "Diğer diller"},
+  "es": {"by": "por {n}", "places": "Sitios de esta historia", "wc": "Tiene baño", "live": "Verla con el mapa y las fotos",
+         "map": "Abrir el mapa de Laloo", "write": "Comparte tu propia historia", "kicker": "Historias de Laloo · Nada de IA. Gente real, experiencias reales.",
+         "route": "Ruta", "read_in": "También en"},
+  "de": {"by": "von {n}", "places": "Orte in dieser Geschichte", "wc": "Mit Toilette", "live": "Mit Karte und Fotos ansehen",
+         "map": "Laloo-Karte öffnen", "write": "Erzähl deine eigene Geschichte", "kicker": "Laloo Geschichten · Keine KI. Echte Menschen, echte Erlebnisse.",
+         "route": "Route", "read_in": "Auch auf"},
+  "fr": {"by": "par {n}", "places": "Les lieux de cette histoire", "wc": "Toilettes sur place", "live": "La voir avec la carte et les photos",
+         "map": "Ouvrir la carte Laloo", "write": "Racontez votre propre histoire", "kicker": "Histoires Laloo · Pas d'IA. De vraies personnes, de vraies expériences.",
+         "route": "Itinéraire", "read_in": "Aussi en"},
+}
+LANG_NAMES = {"en": "English", "tr": "Türkçe", "es": "Español", "de": "Deutsch", "fr": "Français", "it": "Italiano", "pt": "Português",
+              "nl": "Nederlands", "pl": "Polski", "ru": "Русский", "zh": "中文", "ja": "日本語"}
+
+def story_slug(s):
+  return (slugify(s.get("title") or "")[:60].strip("-") or "story") + "-" + re.sub(r"[^a-z0-9]", "", str(s["id"]).lower())[:6]
+
+def paras(text):
+  parts = [p.strip() for p in re.split(r"\n\s*\n", str(text or "").replace("\r", "")) if p.strip()]
+  return "".join(f"<p>{esc(p).replace(chr(10), '<br>')}</p>" for p in parts)
+
+def story_versions(s):
+  """Orijinal dil + admin'in eklediği çeviriler: {dil: (başlık, metin)}"""
+  base = (s.get("lang") or "en").split("-")[0].lower()
+  out = {base: (s.get("title") or "", s.get("body") or "")}
+  for l, v in (s.get("i18n") or {}).items():
+    l = str(l).split("-")[0].lower()
+    if isinstance(v, dict) and v.get("body") and l not in out:
+      out[l] = (v.get("title") or s.get("title") or "", v["body"])
+  return base, out
+
+def story_html(s, lang, title, body, canon, alts):
+  t = ST.get(lang, ST["en"])
+  cities = " · ".join(esc(c.get("city", "") + (", " + c["country"] if c.get("country") else "")) for c in (s.get("cities") or []))
+  desc = re.sub(r"\s+", " ", body).strip()[:155]
+  photos = [p for p in (s.get("photos") or []) if isinstance(p, dict) and p.get("pub", True) and re.match(r"^[\w/.-]+$", p.get("path") or "")][:6]
+  places = [p for p in (s.get("places") or []) if isinstance(p, dict) and p.get("name")]
+  first = next((p for p in places if isinstance(p.get("lat"), (int, float))), None)
+  links = "".join(f'<link rel="alternate" hreflang="{l}" href="{esc(u)}">' for l, u in alts)
+  other = [(l, u) for l, u in alts if l != lang]
+  b = [f'<p class="note">{esc(t["kicker"])}</p>', f"<h1>{esc(title)}</h1>",
+       f'<p class="stat">{esc(t["by"].format(n=s.get("nickname") or ""))}{" · " + cities if cities else ""}{" · " + esc(t["route"]) if s.get("is_route") else ""}</p>',
+       f"<article>{paras(body)}</article>"]
+  if photos:
+    b.append('<div class="gal">' + "".join(f'<img src="{PHOTO_BASE}{esc(p["path"])}" alt="{esc(p.get("city") or title)}" loading="lazy">' for p in photos) + "</div>")
+  if places:
+    b.append(f'<h2>{esc(t["places"])}</h2><ul class="pl">')
+    for p in places:
+      where = ", ".join(x for x in (p.get("hood"), p.get("city")) if x)
+      b.append(f'<li><b>{esc(p["name"])}</b>' + (f'<div class="h">{esc(where)}</div>' if where else "")
+               + (f'<span class="t f">{esc(t["wc"])}</span>' if p.get("wc") == "yes" else "")
+               + (f'<p>{esc(p["wc_where"])}</p>' if p.get("wc") == "yes" and p.get("wc_where") else "") + "</li>")
+    b.append("</ul>")
+  b.append(f'<p><a class="cta" href="/stories/?s={esc(s["id"])}&amp;ref=story-page">📖 {esc(t["live"])}</a></p>')
+  maplink = f'/?at={first["lat"]:.4f},{first["lng"]:.4f},15&amp;ref=story-page' if first else "/?ref=story-page"
+  b.append(f'<p><a href="{maplink}">📍 {esc(t["map"])}</a> · <a href="/stories/#write">✍️ {esc(t["write"])}</a></p>')
+  if other:
+    b.append(f'<p class="note">{esc(t["read_in"])}: ' + " · ".join(f'<a href="{esc(u)}" lang="{l}">{esc(LANG_NAMES.get(l, l))}</a>' for l, u in other) + "</p>")
+  ld = {"@context": "https://schema.org", "@type": "Article", "headline": title[:110], "inLanguage": lang,
+        "author": {"@type": "Person", "name": s.get("nickname") or "Laloo traveler"},
+        "datePublished": (s.get("published_at") or "")[:10] or None, "publisher": {"@type": "Organization", "name": "Laloo", "url": SITE},
+        "mainEntityOfPage": canon}
+  if photos: ld["image"] = [PHOTO_BASE + photos[0]["path"]]
+  ld = {k: v for k, v in ld.items() if v}
+  ld_json = json.dumps(ld, ensure_ascii=False).replace("</", "<" + chr(92) + "/")
+  og_img = esc(PHOTO_BASE + photos[0]["path"]) if photos else SITE + "/favicon-512.png"
+  body_html = chr(10).join(b)
+  return f"""<!DOCTYPE html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)} · Laloo Stories</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="{esc(canon)}">
+{links}
+<meta property="og:type" content="article">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="{esc(canon)}">
+<meta property="og:image" content="{og_img}">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#fefef8">
+<script type="application/ld+json">{ld_json}</script>
+<style>{CSS}
+article p{{font-size:18px;line-height:1.7}}.gal{{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:18px 0}}.gal img{{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block}}</style>
+</head>
+<body>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs"><a href="/stories/">Stories</a></nav></header>
+<main>
+{body_html}
+</main>
+<footer><a href="/">laloo.org</a> · <a href="/stories/">Laloo Stories</a> · <a href="/join/">Early members</a></footer>
+{REFJS}
+</body>
+</html>
+"""
+
+def story_pages(stories, root, made):
+  """/stories/<slug>/ (orijinal dil) ve /stories/<slug>/<dil>/ (çeviriler). Yayından kalkan hikayenin sayfası manifest ile silinir."""
+  out = []
+  for s in stories or []:
+    if not s.get("id") or not s.get("body"): continue
+    slug = story_slug(s)
+    base, vers = story_versions(s)
+    path = lambda l: f"/stories/{slug}/" if l == base else f"/stories/{slug}/{l}/"
+    alts = [(l, SITE + path(l)) for l in vers]
+    for l, (title, body) in vers.items():
+      rel = path(l).strip("/") + "/index.html"
+      write(os.path.join(root, rel), story_html(s, l, title, body, SITE + path(l), alts))
+      made.append(rel)
+    out.append((s, slug))
+  return out
+
+def llms_txt(listed, stories, routes, root):
+  """Yapay zeka arama motorları için kısa özet (llmstxt.org biçimi). Her gece canlı sayılarla yazılır."""
+  L = ["# Laloo", "",
+       "> Laloo (laloo.org) is a free web map that helps travelers find the nearest bathroom anywhere, with no app to download. "
+       "It shows public restrooms, hand-picked spots and cafés, walking directions, drinking water, and short travel stories written by real people, not AI.", "",
+       "Key facts:",
+       f"- Covers {len(listed)} cities with their own pages; the live map works worldwide using OpenStreetMap data plus places checked by the Laloo team.",
+       "- 12 languages, picked automatically from the phone's language. No account needed to use the map.",
+       "- Local businesses on the way can appear as red pins with a discount code. Paid listings are always labeled.",
+       "- Started in 2026 at a small shop on the Venice Beach boardwalk in Los Angeles, where visitors kept asking where the bathroom was.",
+       "- Contact: hello@laloo.org", "",
+       "## Main pages",
+       f"- [Live map]({SITE}/): nearest bathroom from your location",
+       f"- [All cities]({SITE}/cities/): public bathrooms city by city",
+       f"- [Laloo Stories]({SITE}/stories/): travel stories by real people, with the places and bathrooms they mention",
+       f"- [Rate a bathroom]({SITE}/rate/): two-tap ratings, checked before they appear",
+       f"- [About]({SITE}/about/): how Laloo works", ""]
+  if listed:
+    L.append("## City pages")
+    for c, slug, nt, npub in sorted(listed, key=lambda x: -(x[2] * 5 + x[3]))[:60]:
+      L.append(f"- [{cname(c, 'en')}]({SITE}/{slug}/): {npub} public restrooms, {nt} hand-picked spots")
+    L.append("")
+  if routes:
+    L.append("## Loo Routes (walks with bathroom stops)")
+    for r in routes:
+      if "en" in r.get("i18n", {}): L.append(f'- [{r["i18n"]["en"]["h1"]}]({SITE}/routes/{r["slug"]}/)')
+    L.append("")
+  if stories:
+    L.append("## Recent stories")
+    for s, slug in stories[:30]: L.append(f'- [{s.get("title")}]({SITE}/stories/{slug}/)')
+    L.append("")
+  write(os.path.join(root, "llms.txt"), "\n".join(L))
+
 def write(path, text):
   os.makedirs(os.path.dirname(path), exist_ok=True)
   old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
   if old != text:
     open(path, "w", encoding="utf-8").write(text)
 
-def generate(cities, places_for, root=".", now=None):
+def generate(cities, places_for, root=".", now=None, stories=None):
   """cities: cities tablosu satırları. places_for(city_id) -> o şehrin aktif yerleri (tip + osm)."""
   now = now or datetime.now(timezone.utc)
   old = set(json.load(open(os.path.join(root, MANIFEST)))) if os.path.exists(os.path.join(root, MANIFEST)) else set()
@@ -375,6 +535,9 @@ def generate(cities, places_for, root=".", now=None):
     write(os.path.join(root, rel), page(lang, t["cities_t"] + " · Laloo", t["cities_d"].format(n=len(items)), url(lang, "cities"), alts,
                                         "\n".join(body), lambda l: "/cities/" if l == "en" else f"/{l}/cities/"))
     made.append(rel)
+  # Hikaye sayfaları
+  try: story_list = story_pages(stories, root, made)
+  except Exception as ex: story_list = []; print("story pages failed:", ex)
   # Artık sayfası olmayan eski dosyaları sil
   for rel in old - set(made):
     p = os.path.join(root, rel)
@@ -395,14 +558,19 @@ def generate(cities, places_for, root=".", now=None):
   except Exception as ex:
     print("about page failed:", ex)
   json.dump(sorted(made), open(os.path.join(root, MANIFEST), "w"), indent=0)
+  # Admin panelindeki "şehir linki ve QR" aracı için şehir -> sayfa adresi listesi
+  write(os.path.join(root, "cities.json"), json.dumps([{"id": c["id"], "name": cname(c, "en"), "slug": slug,
+    "lat": round((c["min_lat"] + c["max_lat"]) / 2, 4), "lng": round((c["min_lng"] + c["max_lng"]) / 2, 4)} for c, slug, nt, npub in listed], ensure_ascii=False))
+  try: llms_txt(listed, story_list, routes, root)
+  except Exception as ex: print("llms.txt failed:", ex)
   # sitemap.xml ve robots.txt
   urls = [f"{SITE}/"] + [SITE + "/" + rel[:-len("index.html")] for rel in sorted(made)]
-  for extra in ("hosts/index.html", "stories/index.html", "join/index.html"):          # elle yüklenen sabit sayfalar
+  for extra in ("hosts/index.html", "stories/index.html", "join/index.html", "tour/index.html"):          # elle yüklenen sabit sayfalar
     if os.path.exists(os.path.join(root, extra)): urls.append(SITE + "/" + extra[:-len("index.html")])
   sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
   sm += [f"  <url><loc>{esc(u)}</loc></url>" for u in urls]
   sm.append("</urlset>")
   write(os.path.join(root, "sitemap.xml"), "\n".join(sm) + "\n")
   write(os.path.join(root, "robots.txt"), f"User-agent: *\nDisallow: /admin.html\nSitemap: {SITE}/sitemap.xml\n")
-  print(f"Pages: {len(listed)} cities, {len(made)} files")
+  print(f"Pages: {len(listed)} cities, {len(story_list)} stories, {len(made)} files")
   return listed

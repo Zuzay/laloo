@@ -260,6 +260,10 @@ try:
   import pages
   all_cities = sb("GET", "cities?select=id,name,min_lat,min_lng,max_lat,max_lng,active,areas", prefer="")
   cols = "select=kind,name,info,area,fee,hours,lat,lng,i18n,operator"
-  pages.generate(all_cities, lambda cid: all_rows(f"places?{cols}&city=eq.{cid}&active=eq.true&kind=in.(tip,public)&order=id"))
+  try:
+    stories = sb("GET", "stories_public?select=id,title,body,nickname,cities,is_route,places,photos,i18n,lang,published_at&order=published_at.desc&limit=1000", prefer="")
+  except Exception as ex:
+    stories = []; print("stories fetch failed:", ex)
+  pages.generate(all_cities, lambda cid: all_rows(f"places?{cols}&city=eq.{cid}&active=eq.true&kind=in.(tip,public)&order=id"), stories=stories)
 except Exception as ex:
   print("pages failed:", ex)

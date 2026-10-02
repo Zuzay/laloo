@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How Laloo works · 20 seconds</title>
+<meta name="description" content="Find the nearest bathroom anywhere, with no app. See how Laloo works in 20 seconds.">
+<link rel="canonical" href="https://laloo.org/tour/">
+<meta name="theme-color" content="#fdfaf2">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+@font-face{font-family:Anton;font-display:block;src:url(fonts/anton-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Anton;font-display:block;src:url(fonts/anton-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Brush;font-display:block;src:url(fonts/caveat-brush-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Brush;font-display:block;src:url(fonts/caveat-brush-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+:root{--navy:#10223d;--red:#e0453a;--orange:#f39a1e;--cream:#fdfaf2;--blue:#1c4fa0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#e9e3d3;overflow:hidden}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--navy)}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;background:var(--cream);overflow:hidden}
+/* kağıt dokusu: çok hafif çizgiler */
+#stage::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(16,34,61,.025) 0 2px,transparent 2px 46px);pointer-events:none}
+.hl{position:absolute;left:90px;right:90px;top:110px;font:400 104px/1.02 Anton,Impact,sans-serif;letter-spacing:.005em;color:var(--navy)}
+.hl u{text-decoration:none;background:linear-gradient(transparent 78%,rgba(224,69,58,.9) 78%,rgba(224,69,58,.9) 92%,transparent 92%)}
+.note{position:absolute;right:70px;top:1560px;font:400 64px/1 Brush,cursive;color:var(--red);white-space:nowrap;transform-origin:right center;z-index:3;text-shadow:0 0 8px var(--cream),0 0 14px var(--cream)}
+.sub{position:absolute;left:90px;right:90px;top:1690px;min-height:150px;display:flex;align-items:flex-start}
+.sub span{background:var(--navy);color:#fff;font:700 44px/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:14px 24px;border-radius:18px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.phone{position:absolute;left:230px;top:420px;width:620px;height:1240px;border:16px solid var(--navy);border-radius:74px;background:#fff;overflow:hidden;box-shadow:18px 22px 0 rgba(16,34,61,.12)}
+.app{position:absolute;left:0;top:0;width:390px;height:802px;transform:scale(1.5077);transform-origin:0 0;background:#fefef8;overflow:hidden;font-size:14px}
+.end{position:absolute;inset:0;background:var(--cream);display:flex;flex-direction:column;justify-content:center;padding:0 90px;opacity:0}
+.end img{width:620px;display:block;margin:0 0 40px}
+.end .tag{font:400 92px/1.05 Anton,Impact,sans-serif;min-height:200px}
+.end .tag.x{font:900 70px/1.2 system-ui,-apple-system,"Hiragino Sans","PingFang SC","Noto Sans CJK JP",sans-serif;letter-spacing:-.01em}
+.end .url{font:400 84px/1 Brush,cursive;color:var(--red);margin-top:30px;transform:rotate(-3deg);transform-origin:left}
+/* ---------- telefondaki Laloo arayüzü ---------- */
+.sb{position:relative;z-index:3;background:#fefef8;height:38px;display:flex;justify-content:space-between;align-items:center;padding:0 26px 0 30px;font-weight:700;font-size:15px}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:4px 14px 8px;border-bottom:1px solid #e6e1d4}
+.hd .lg{display:flex;flex-direction:column;gap:3px}.hd img,.shd img{mix-blend-mode:multiply}.hd img{height:30px;display:block}.hd small{font-size:11px;font-weight:600;opacity:.75}
+.btn{background:#1c4fa0;color:#fff;border-radius:8px;font-weight:700;font-size:14px;padding:9px 12px}
+.srch{padding:6px 10px 2px;background:#eef3fa}.srch div{border:1px solid #c5d0de;border-radius:20px;padding:8px 14px;background:#fff;color:#8a94a6;font-size:15px}
+.bar{display:flex;gap:6px;padding:8px 10px;background:#eef3fa;border-bottom:1px solid #d3dae3}
+.bar span{flex:1;text-align:center;border:1px solid #c5d0de;background:#fff;border-radius:18px;padding:6px 4px;font-size:13px;white-space:nowrap}
+.bar span.on{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
+.map{position:absolute;left:0;right:0;bottom:0;overflow:hidden}
+.pin{position:absolute;transform:translate(-50%,-50%) scale(0);font-size:24px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.me{position:absolute;width:18px;height:18px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;transform:translate(-50%,-50%) scale(0);box-shadow:0 0 0 7px rgba(28,124,240,.22),0 1px 4px rgba(0,0,0,.4)}
+.shop{position:absolute;width:36px;height:36px;border-radius:50%;background:#e02424;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px;transform:translate(-50%,-50%) scale(0);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.ring{position:absolute;width:36px;height:36px;border-radius:50%;border:3px solid #e02424;transform:translate(-50%,-50%);opacity:0}
+.pop{position:absolute;background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.28);padding:12px 14px;width:250px;opacity:0;transform-origin:50% 100%}
+.pop b{display:block;font-size:15px;margin-bottom:4px}
+.pop .t{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;margin:2px 4px 4px 0;background:#e8f0fb;color:#1c4fa0}
+.pop .t.g{background:#e3f6e8;color:#1b7a3a}.pop .t.r{background:#fde8e8;color:#b01c1c}
+.pop .q{font-size:13px;margin:4px 0}.pop .st{font-weight:700;font-size:13px}.pop .st i{font-style:normal;color:#f39a1e}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.acts span{font-size:12px;font-weight:700;border-radius:14px;padding:5px 9px;border:1px solid #c5d0de;background:#fff}
+.acts span.go{background:#1c4fa0;color:#fff;border-color:#1c4fa0}
+.code{display:block;margin:6px 0;padding:6px 8px;border:1px dashed #e02424;border-radius:6px;font-weight:700;font-size:13px;color:#b01c1c}
+.toast{position:absolute;left:50%;top:26px;transform:translateX(-50%);background:#fff;padding:8px 14px;border-radius:20px;font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:0}
+.tap{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid rgba(224,69,58,.95);opacity:0;pointer-events:none}
+.tap::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:rgba(224,69,58,.85)}
+/* hikaye ekranları */
+.scr{position:absolute;left:0;right:0;top:38px;bottom:0;opacity:0;background:#fefef8;overflow:hidden}
+.shd{position:relative;z-index:2;background:#fefef8;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #e6e1d4}
+.shd img{height:28px}.shd span{background:#1c4fa0;color:#fff;border-radius:999px;font-weight:700;font-size:12px;padding:7px 11px}
+.fb{background:#fff;border:1px solid #e6e1d4;border-radius:16px;padding:14px;margin:12px}
+.fb h3{margin:0 0 6px;font-size:16px}
+.lbl{font-size:12px;font-weight:700;margin:10px 0 4px}
+.inp{border:1px solid #e6e1d4;border-radius:10px;padding:8px 10px;font-size:14px;min-height:36px;background:#fff;overflow:hidden}
+.inp.on{border-color:#1c4fa0;box-shadow:0 0 0 3px rgba(28,79,160,.15)}
+.ta{min-height:210px;line-height:1.5}
+.caret{display:inline-block;width:2px;height:16px;background:#1c4fa0;vertical-align:-3px;margin-left:1px}
+.mic{display:inline-block;margin-top:8px;border:1px solid #e6e1d4;border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;background:#fff}
+.mic.on{background:#e0453a;border-color:#e0453a;color:#fff}
+.micst{font-size:12px;color:#5f6b7d;margin-left:6px}
+.seg{display:flex;gap:6px;margin-top:4px}.seg span{border:1px solid #e6e1d4;border-radius:999px;padding:5px 11px;font-size:13px;background:#fff}
+.seg span.on{background:#1c4fa0;border-color:#1c4fa0;color:#fff}
+.chip{display:inline-block;background:#e8f0fb;color:#1c4fa0;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.pvh{font-size:26px;font-weight:800;line-height:1.1;margin:4px 0 8px}
+.pvp{font-size:14px;line-height:1.55;margin:10px 0}
+.pc{border:1px solid #e6e1d4;border-radius:12px;padding:10px 12px;margin-top:8px}
+.pc .tg{display:inline-block;font-size:11px;font-weight:700;background:#e3f6e8;color:#1b7a3a;border-radius:8px;padding:2px 7px;margin-top:4px}
+.bigbtn{display:block;text-align:center;background:#1c4fa0;color:#fff;font-weight:700;border-radius:999px;padding:12px;margin:14px 12px 0;font-size:15px}
+.thx{position:absolute;left:12px;right:12px;top:120px;background:#e3f6e8;color:#1b7a3a;border-radius:16px;padding:18px;font-weight:700;font-size:17px;opacity:0}
+.jn{padding:18px 16px}
+.jn .ey{font-size:11px;font-weight:800;letter-spacing:.14em;color:#e0453a}
+.jn h2{font-size:36px;line-height:1.02;margin:8px 0 16px;letter-spacing:-.01em}
+.cnt{background:#fff;border:1px solid #e6e1d4;border-radius:16px;padding:14px}
+.cnt b{font-size:56px;line-height:1}.cnt small{color:#5f6b7d;font-size:13px;margin-left:6px}
+.pbar{height:10px;background:#ece6d6;border-radius:6px;overflow:hidden;margin:10px 0 6px}.pbar i{display:block;height:100%;background:#e0453a;border-radius:6px}
+.gl{margin:18px 0 0;padding:0 0 0 20px;font-size:15px;line-height:1.5}.gl li{margin:0 0 8px}
+.bdg{display:inline-flex;align-items:baseline;gap:8px;white-space:nowrap;border:2px solid #10223d;border-radius:12px;padding:9px 14px;font-weight:800;font-size:23px;background:#fff;margin-top:18px;opacity:0}
+.bdg small{font-size:12px;color:#5f6b7d}
+/* kontroller (videoya girmez) */
+#ctl{position:fixed;right:14px;bottom:14px;display:flex;gap:8px;z-index:5}
+#ctl button,#ctl a{font:700 14px system-ui,sans-serif;border:0;border-radius:999px;padding:10px 14px;background:#10223d;color:#fff;cursor:pointer;text-decoration:none}
+#ctl button[hidden]{display:none}
+body.rec #ctl,body.embed #ctl a{display:none}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <div class="hl" id="hl"></div>
+  <div class="note" id="note"></div>
+  <div class="phone"><div class="app" id="app"></div></div>
+  <div class="sub" id="sub"><span></span></div>
+  <div class="end" id="end"><img src="logo.png" alt="LALOO"><div class="tag" id="endtag"></div><div class="url">laloo.org</div></div>
+</div></div>
+<div id="ctl"><button id="snd" hidden>🔇</button><button id="pp">❚❚</button><button id="rs">↺</button><a id="other" href="?v=stories">▶</a></div>
+
+<script>
+// ================= METİNLER =================
+// Her sahne: [başlık, altyazı (seslendirme metni), el yazısı not]
+const L = {
+en:{ a:[["Need a <u>bathroom?</u>","Need a bathroom?",""],["No app. Just <u>laloo.org</u>","Open laloo.org and tap Near me.","no download"],
+        ["Free or paid, <u>open or closed</u>","See if it's free, when it's open, and what others thought.","real ratings"],["Walk <u>there</u>","Tap the route and walk.","3 min!"],
+        ["Local shops <u>on the way</u>","Local shops on the way show up too, sometimes with a discount.","10% off"],["","Laloo. Find a bathroom anywhere.",""]],
+     b:[["Write what <u>only you know</u>","Know a place nobody writes about? Write it down.",""],["Or just <u>say it</u>","Type it, or just say it out loud.","voice → text"],
+        ["Add the places, <u>and the bathrooms</u>","Add the places, and whether there's a bathroom.",""],["Check it, <u>send it</u>","Check how it looks, then send it.",""],
+        ["Your story, <u>on the map</u>","Once we've read it, your story shows up on the map.","on the map!"],["Early members get a <u>numbered badge</u>","The first hundred people who help get a numbered badge.","#37"],
+        ["","Laloo Stories.",""]],
+     endB:"Not AI. Real people, real experiences.",
+     ui:{near:"📍 Near me",all:"All",pub:"🚻 Public",cafe:"☕ Cafés",tips:"⭐ Tips",srch:"🔍 Search a city or place",tag:"Find a bathroom anywhere",
+       pubRest:"Public restroom",free:"Free",hours:"6am to 10pm",quote:"“Clean, and there's soap.”",route:"🚶 Show route",rate:"⭐ Rate it",mins:"🚶 3 min · 240 m",
+       local:"Local spot",blurb:"Vintage and coastal wear on the boardwalk.",code:"🎟️ Tap to copy code: LALOO10",copied:"Code copied. Show it at the counter",
+       share:"Share your story",yourStory:"Your story",title:"Title",story:"Your story",mic:"🎙️ Speak instead of typing",stop:"⏹ Stop",listen:"Listening…",
+       places:"Places in your story",name:"Name",hood:"Neighborhood",wc:"Is there a bathroom?",yes:"Yes",no:"No",where:"Where is it inside?",
+       pvT:"Check it before sending",by:"by",send:"Looks good, send it",thanks:"Thank you! We'll read it and publish it within two weeks.",
+       fromStory:"From a traveler's story",read:"Read the story",ey:"EARLY MEMBERS",jh:"Be one of the first 100.",taken:"of the first 100 spots taken",
+       badge:"First 100",member:"Member #37",g1:"Numbered badge, yours for good",g2:"Your own invite link",g3:"A share of what the businesses you bring pay",wcYes:"Bathroom here"},
+     tTitle:"A morning in Kadıköy", t1:"We took the early ferry and walked up from the pier.",
+     t2:" The fish market was loud, the tea was cheap, and the café at the end of the pier lets you use the bathroom if you ask.",
+     pName:"Moda pier café", pHood:"Moda", pWhere:"Downstairs, code on the receipt", city:"Istanbul, Turkey" },
+tr:{ a:[["Tuvalet mi <u>lazım?</u>","Tuvalet mi lazım?",""],["Uygulama yok. Sadece <u>laloo.org</u>","laloo.org'u aç, Yakınımda'ya dokun.","indirme yok"],
+        ["Ücretsiz mi, <u>açık mı?</u>","Ücretsiz mi, ne zaman açık, başkaları ne demiş, gör.","gerçek puanlar"],["Yürü, <u>git</u>","Rotaya dokun ve yürü.","3 dk!"],
+        ["Yol üstündeki <u>dükkanlar</u>","Yol üstündeki dükkanlar da görünür, bazen indirimle.","%10 indirim"],["","Laloo. Her yerde tuvalet bul.",""]],
+     b:[["Sadece <u>senin bildiğini</u> yaz","Kimsenin yazmadığı bir yer mi biliyorsun? Yaz.",""],["Ya da <u>anlat</u>","Yaz ya da sesli anlat.","ses → yazı"],
+        ["Yerleri ekle, <u>tuvaletleri de</u>","Yerleri ekle, tuvalet var mı onu da yaz.",""],["Bak, <u>gönder</u>","Nasıl göründüğüne bak, sonra gönder.",""],
+        ["Hikayen <u>haritada</u>","Okuduktan sonra hikayen haritada görünür.","haritada!"],["Erken üyelere <u>numaralı rozet</u>","Yardım eden ilk yüz kişi numaralı bir rozet alır.","#37"],
+        ["","Laloo Hikayeleri.",""]],
+     endB:"Yapay zeka değil. Gerçek insanlar, gerçek deneyimler.",
+     ui:{near:"📍 Yakınımda",all:"Tümü",pub:"🚻 Umumi",cafe:"☕ Kafeler",tips:"⭐ Öneriler",srch:"🔍 Şehir ya da yer ara",tag:"Her yerde tuvalet bul",
+       pubRest:"Umumi tuvalet",free:"Ücretsiz",hours:"06:00 - 22:00",quote:"“Temiz, sabun da var.”",route:"🚶 Yolu göster",rate:"⭐ Puanla",mins:"🚶 3 dk · 240 m",
+       local:"Yerel dükkan",blurb:"Boardwalk'ta vintage ve sahil giyimi.",code:"🎟️ Kodu kopyalamak için dokun: LALOO10",copied:"Kod kopyalandı. Kasada göster",
+       share:"Hikayeni paylaş",yourStory:"Hikayen",title:"Başlık",story:"Hikayen",mic:"🎙️ Yazmak yerine konuş",stop:"⏹ Durdur",listen:"Dinliyorum…",
+       places:"Hikayendeki yerler",name:"Ad",hood:"Semt",wc:"Tuvalet var mı?",yes:"Var",no:"Yok",where:"İçeride nerede?",
+       pvT:"Göndermeden önce bir bak",by:"yazan",send:"Tamam, gönder",thanks:"Teşekkürler! Okuyup iki hafta içinde yayınlayacağız.",
+       fromStory:"Bir gezginin hikayesinden",read:"Hikayeyi oku",ey:"ERKEN ÜYELER",jh:"İlk 100 kişiden biri ol.",taken:"kişi ilk 100 içinde",
+       badge:"İlk 100",member:"Üye #37",g1:"Numaralı rozet, hep senin",g2:"Sana özel davet linki",g3:"Getirdiğin işletmelerin ödemesinden pay",wcYes:"Tuvalet var"},
+     tTitle:"Kadıköy'de bir sabah", t1:"Sabah erken vapura bindik, iskeleden yukarı yürüdük.",
+     t2:" Balık pazarı gürültülüydü, çay ucuzdu, iskelenin ucundaki kafe de sorarsan tuvaletini kullandırıyor.",
+     pName:"Moda iskele kafesi", pHood:"Moda", pWhere:"Aşağı katta, şifre fişte", city:"İstanbul, Türkiye" },
+es:{ a:[["¿Buscas un <u>baño?</u>","¿Buscas un baño?",""],["Sin app. Solo <u>laloo.org</u>","Abre laloo.org y toca Cerca de mí.","sin descargas"],
+        ["¿Gratis? <u>¿Abierto?</u>","Mira si es gratis, cuándo abre y qué opinan otros.","opiniones reales"],["Ve <u>andando</u>","Toca la ruta y camina.","¡3 min!"],
+        ["Tiendas del barrio <u>en el camino</u>","Las tiendas del camino también aparecen, a veces con descuento.","10% dto."],["","Laloo. Encuentra un baño estés donde estés.",""]],
+     b:[["Escribe lo que <u>solo tú sabes</u>","¿Conoces un sitio del que nadie escribe? Cuéntalo.",""],["O simplemente <u>dilo</u>","Escríbelo, o dilo en voz alta.","voz → texto"],
+        ["Añade los sitios, <u>y los baños</u>","Añade los sitios y si tienen baño.",""],["Revísala <u>y envíala</u>","Mira cómo queda y envíala.",""],
+        ["Tu historia, <u>en el mapa</u>","Cuando la leamos, tu historia aparecerá en el mapa.","¡en el mapa!"],["Insignia numerada <u>para los pioneros</u>","Las primeras cien personas que ayuden reciben una insignia numerada.","#37"],
+        ["","Historias de Laloo.",""]],
+     endB:"Nada de IA. Gente real, experiencias reales.",
+     ui:{near:"📍 Cerca de mí",all:"Todos",pub:"🚻 Públicos",cafe:"☕ Cafés",tips:"⭐ Recomendados",srch:"🔍 Busca una ciudad o un sitio",tag:"Encuentra un baño estés donde estés",
+       pubRest:"Baño público",free:"Gratis",hours:"6:00 a 22:00",quote:"“Limpio, y hay jabón.”",route:"🚶 Cómo llegar",rate:"⭐ Puntuar",mins:"🚶 3 min · 240 m",
+       local:"Negocio local",blurb:"Ropa vintage y de playa en el paseo marítimo.",code:"🎟️ Toca para copiar el código: LALOO10",copied:"Código copiado. Enséñalo en caja",
+       share:"Comparte tu historia",yourStory:"Tu historia",title:"Título",story:"Tu historia",mic:"🎙️ Habla en vez de escribir",stop:"⏹ Parar",listen:"Te escucho…",
+       places:"Sitios de tu historia",name:"Nombre",hood:"Barrio",wc:"¿Hay baño?",yes:"Sí",no:"No",where:"¿Dónde está dentro?",
+       pvT:"Échale un vistazo antes de enviarla",by:"por",send:"Está bien, enviar",thanks:"¡Gracias! La leeremos y la publicaremos en dos semanas.",
+       fromStory:"De la historia de un viajero",read:"Leer la historia",ey:"MIEMBROS PIONEROS",jh:"Sé una de las primeras 100 personas.",taken:"de las primeras 100 plazas",
+       badge:"Primeros 100",member:"Miembro n.º 37",g1:"Insignia numerada, tuya para siempre",g2:"Tu propio enlace de invitación",g3:"Una parte de lo que paguen los negocios que traigas",wcYes:"Tiene baño"},
+     tTitle:"Una mañana en Kadıköy", t1:"Cogimos el ferry temprano y subimos andando desde el muelle.",
+     t2:" El mercado de pescado era ruidoso, el té era barato y el café del final del muelle te deja usar el baño si preguntas.",
+     pName:"Café del muelle de Moda", pHood:"Moda", pWhere:"Abajo, el código está en el tique", city:"Estambul, Turquía" },
+de:{ a:[["Du musst <u>mal?</u>","Du musst mal?",""],["Keine App. Nur <u>laloo.org</u>","Öffne laloo.org und tippe auf In meiner Nähe.","kein Download"],
+        ["Kostenlos? <u>Geöffnet?</u>","Sieh, ob es kostenlos ist, wann offen ist und was andere sagen.","echte Bewertungen"],["Einfach <u>hinlaufen</u>","Tippe auf die Route und lauf los.","3 Min.!"],
+        ["Läden <u>auf dem Weg</u>","Läden auf dem Weg tauchen auch auf, manchmal mit Rabatt.","10 % Rabatt"],["","Laloo. Finde überall eine Toilette.",""]],
+     b:[["Schreib, was <u>nur du weißt</u>","Du kennst einen Ort, über den keiner schreibt? Schreib ihn auf.",""],["Oder <u>sag es einfach</u>","Tipp es ein oder sag es einfach laut.","Stimme → Text"],
+        ["Orte eintragen, <u>Toiletten auch</u>","Trag die Orte ein und ob es dort eine Toilette gibt.",""],["Prüfen, <u>abschicken</u>","Schau, wie es aussieht, und schick es ab.",""],
+        ["Deine Geschichte <u>auf der Karte</u>","Sobald wir sie gelesen haben, erscheint deine Geschichte auf der Karte.","auf der Karte!"],["Nummerierte Abzeichen <u>für frühe Mitglieder</u>","Die ersten hundert, die mithelfen, bekommen ein nummeriertes Abzeichen.","#37"],
+        ["","Laloo Geschichten.",""]],
+     endB:"Keine KI. Echte Menschen, echte Erlebnisse.",
+     ui:{near:"📍 In meiner Nähe",all:"Alle",pub:"🚻 Öffentlich",cafe:"☕ Cafés",tips:"⭐ Tipps",srch:"🔍 Stadt oder Ort suchen",tag:"Finde überall eine Toilette",
+       pubRest:"Öffentliche Toilette",free:"Kostenlos",hours:"6 bis 22 Uhr",quote:"„Sauber, und es gibt Seife.“",route:"🚶 Weg anzeigen",rate:"⭐ Bewerten",mins:"🚶 3 Min. · 240 m",
+       local:"Laden um die Ecke",blurb:"Vintage und Strandmode an der Promenade.",code:"🎟️ Tippen, um den Code zu kopieren: LALOO10",copied:"Code kopiert. An der Kasse zeigen",
+       share:"Erzähl deine Geschichte",yourStory:"Deine Geschichte",title:"Titel",story:"Deine Geschichte",mic:"🎙️ Sprechen statt tippen",stop:"⏹ Stopp",listen:"Ich höre zu…",
+       places:"Orte in deiner Geschichte",name:"Name",hood:"Viertel",wc:"Gibt es eine Toilette?",yes:"Ja",no:"Nein",where:"Wo genau drinnen?",
+       pvT:"Kurz prüfen vor dem Senden",by:"von",send:"Passt, abschicken",thanks:"Danke! Wir lesen sie und veröffentlichen sie innerhalb von zwei Wochen.",
+       fromStory:"Aus der Geschichte eines Reisenden",read:"Geschichte lesen",ey:"FRÜHE MITGLIEDER",jh:"Sei unter den ersten 100.",taken:"der ersten 100 Plätze",
+       badge:"Erste 100",member:"Mitglied Nr. 37",g1:"Nummeriertes Abzeichen, für immer deins",g2:"Dein eigener Einladungslink",g3:"Ein Anteil an dem, was deine Geschäfte zahlen",wcYes:"Mit Toilette"},
+     tTitle:"Ein Morgen in Kadıköy", t1:"Wir haben die frühe Fähre genommen und sind vom Anleger hochgelaufen.",
+     t2:" Der Fischmarkt war laut, der Tee billig, und im Café am Ende des Stegs darf man aufs Klo, wenn man fragt.",
+     pName:"Café am Moda-Steg", pHood:"Moda", pWhere:"Unten, Code steht auf dem Bon", city:"Istanbul, Türkei" },
+fr:{ a:[["Besoin de <u>toilettes ?</u>","Besoin de toilettes ?",""],["Pas d'appli. Juste <u>laloo.org</u>","Ouvrez laloo.org et touchez Autour de moi.","rien à installer"],
+        ["Gratuit ? <u>Ouvert ?</u>","Voyez si c'est gratuit, quand c'est ouvert et ce qu'en pensent les autres.","vrais avis"],["Allez-y <u>à pied</u>","Touchez l'itinéraire et marchez.","3 min !"],
+        ["Les commerces <u>sur le chemin</u>","Les commerces sur le chemin apparaissent aussi, parfois avec une réduction.","-10 %"],["","Laloo. Trouvez des toilettes, où que vous soyez.",""]],
+     b:[["Écrivez ce que <u>vous seul savez</u>","Vous connaissez un endroit dont personne ne parle ? Écrivez-le.",""],["Ou <u>dites-le</u> simplement","Tapez-le, ou dites-le à voix haute.","voix → texte"],
+        ["Les lieux, <u>et les toilettes</u>","Ajoutez les lieux, et s'il y a des toilettes.",""],["Relisez, <u>envoyez</u>","Regardez le rendu, puis envoyez.",""],
+        ["Votre histoire, <u>sur la carte</u>","Une fois lue, votre histoire apparaît sur la carte.","sur la carte !"],["Un badge numéroté <u>pour les pionniers</u>","Les cent premières personnes qui aident reçoivent un badge numéroté.","#37"],
+        ["","Histoires Laloo.",""]],
+     endB:"Pas d'IA. De vraies personnes, de vraies expériences.",
+     ui:{near:"📍 Autour de moi",all:"Tout",pub:"🚻 Publiques",cafe:"☕ Cafés",tips:"⭐ Nos adresses",srch:"🔍 Une ville, un lieu…",tag:"Trouvez des toilettes, où que vous soyez",
+       pubRest:"Toilettes publiques",free:"Gratuit",hours:"6 h à 22 h",quote:"« Propre, et il y a du savon. »",route:"🚶 Itinéraire",rate:"⭐ Noter",mins:"🚶 3 min · 240 m",
+       local:"Commerce du coin",blurb:"Vintage et mode de plage sur la promenade.",code:"🎟️ Touchez pour copier le code : LALOO10",copied:"Code copié. Montrez-le en caisse",
+       share:"Racontez votre histoire",yourStory:"Votre histoire",title:"Titre",story:"Votre histoire",mic:"🎙️ Parlez au lieu d'écrire",stop:"⏹ Arrêter",listen:"On vous écoute…",
+       places:"Les lieux de votre histoire",name:"Nom",hood:"Quartier",wc:"Il y a des toilettes ?",yes:"Oui",no:"Non",where:"Où, à l'intérieur ?",
+       pvT:"Un dernier coup d'œil avant l'envoi",by:"par",send:"C'est bon, envoyer",thanks:"Merci ! Nous la lirons et la publierons sous deux semaines.",
+       fromStory:"Tiré du récit d'un voyageur",read:"Lire l'histoire",ey:"MEMBRES PIONNIERS",jh:"Soyez parmi les 100 premiers.",taken:"des 100 premières places",
+       badge:"100 premiers",member:"Membre n° 37",g1:"Un badge numéroté, à vous pour de bon",g2:"Votre propre lien d\'invitation",g3:"Une part de ce que paient les commerces que vous amenez",wcYes:"Toilettes sur place"},
+     tTitle:"Un matin à Kadıköy", t1:"On a pris le premier ferry et on est montés à pied depuis l'embarcadère.",
+     t2:" Le marché aux poissons était bruyant, le thé pas cher, et le café au bout de la jetée prête ses toilettes si on demande.",
+     pName:"Café de la jetée de Moda", pHood:"Moda", pWhere:"En bas, le code est sur le ticket", city:"Istanbul, Turquie" }
+};
+// Son karede dönen slogan (sitenin 12 dilindeki gerçek metinler)
+const TAGS = ["Find a bathroom anywhere","Her yerde tuvalet bul","Encuentra un baño estés donde estés","Trouvez des toilettes, où que vous soyez","Finde überall eine Toilette",
+  "Trova un bagno, ovunque tu sia","Encontre um banheiro onde estiver","Vind overal een wc","Znajdź toaletę, gdziekolwiek jesteś","Туалет рядом, где бы вы ни были","随时随地找厕所","どこでもトイレが見つかる"];
+
+const Q = new URLSearchParams(location.search);
+const LANG = (Q.get("lang") && L[Q.get("lang")]) ? Q.get("lang")
+  : ((navigator.languages || [navigator.language || "en"]).map(l => String(l).toLowerCase().split("-")[0]).find(l => L[l]) || "en");
+const V = Q.get("v") === "stories" ? "b" : "a";
+const X = L[LANG], U = X.ui;
+document.documentElement.lang = LANG;
+if (Q.has("rec")) document.body.classList.add("rec");
+if (Q.has("embed")) document.body.classList.add("embed");
+document.title = V === "a" ? "How Laloo works · 20 seconds" : "Laloo Stories · 30 seconds";
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+// ================= ZAMAN YARDIMCILARI =================
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));                 // a..b arası 0..1
+const ease = x => 1 - Math.pow(1 - x, 3);
+const pop = (t, a, d = .35) => { const x = prog(t, a, a + d); return x <= 0 ? 0 : x >= 1 ? 1 : 1 + 0.18 * Math.sin(x * Math.PI) * (1 - x) * 3 - (1 - ease(x)); };
+const fade = (t, a, b, d = .3) => Math.min(prog(t, a, a + d), 1 - prog(t, b - d, b));   // a'da gir, b'de çık
+// Kesikli çizgiyi baştan sona "yürüyerek" çiz: nokta listesinden p oranı kadarını al
+function partial(pts, p){
+  const seg = []; let tot = 0;
+  for (let i = 1; i < pts.length; i++){ const d = Math.hypot(pts[i][0] - pts[i-1][0], pts[i][1] - pts[i-1][1]); seg.push(d); tot += d; }
+  let left = tot * clamp(p), out = [pts[0]];
+  for (let i = 1; i < pts.length && left > 0; i++){
+    const d = seg[i-1], k = Math.min(1, left / d);
+    out.push([pts[i-1][0] + (pts[i][0] - pts[i-1][0]) * k, pts[i-1][1] + (pts[i][1] - pts[i-1][1]) * k]); left -= d;
+  }
+  return "M" + out.map(q => q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" L");
+}
+const bez = (p0, p1, p2, p3, n = 24) => Array.from({ length:n + 1 }, (_, i) => { const u = i / n, v = 1 - u;
+  return [v*v*v*p0[0] + 3*v*v*u*p1[0] + 3*v*u*u*p2[0] + u*u*u*p3[0], v*v*v*p0[1] + 3*v*v*u*p1[1] + 3*v*u*u*p2[1] + u*u*u*p3[1]]; });
+const ROUTE_A = [[230, 380], [230, 340], [170, 340], [170, 300]];
+const ROUTE_B = [...bez([120, 262], [150, 300], [175, 320], [215, 330]), ...bez([215, 330], [250, 338], [262, 360], [262, 395]).slice(1)];
+const typed = (s, t, a, b) => { const chars = [...s]; return chars.slice(0, Math.round(chars.length * prog(t, a, b))).join(""); };
+
+// ================= SAHNE SÜRELERİ =================
+const SC = V === "a" ? [0, 3, 6.5, 10, 13.5, 17.5, 21.5] : [0, 4, 8, 12, 15.5, 19.5, 24, 27.5];
+const DUR = SC[SC.length - 1];
+const sceneAt = t => { for (let i = SC.length - 2; i >= 0; i--) if (t >= SC[i]) return i; return 0; };
+
+// ================= TELEFON: HARİTA (A) =================
+const MAPSVG = (kind) => kind === "venice" ? `
+<svg viewBox="0 0 390 660" width="390" height="660" style="position:absolute;left:0;top:0">
+  <rect width="390" height="660" fill="#f6f2ea"/>
+  <path d="M0 0 H58 C50 140 64 300 52 660 H0 Z" fill="#aad3df"/>
+  <path d="M58 0 C50 140 64 300 52 660 H86 C92 300 80 140 90 0 Z" fill="#f3e3bd"/>
+  <path d="M92 0 C84 150 96 300 88 660" stroke="#e6d7b8" stroke-width="6" fill="none"/>
+  <rect x="250" y="560" width="80" height="60" rx="6" fill="#d7e8c6"/>
+  <rect x="250" y="60" width="90" height="70" rx="6" fill="#d7e8c6"/><rect x="130" y="470" width="70" height="60" rx="6" fill="#d7e8c6"/>
+  <g stroke="#fff" stroke-width="12" stroke-linecap="round"><path d="M100 340 H390"/><path d="M100 180 H390"/><path d="M100 470 H390"/><path d="M100 600 H390"/><path d="M170 0 V660"/><path d="M230 0 V660"/><path d="M310 0 V660"/></g>
+  <g stroke="#e3ddd0" stroke-width="1"><path d="M100 334 H390 M100 346 H390 M100 174 H390 M100 186 H390 M100 464 H390 M100 476 H390"/></g>
+  <text x="330" y="330" font-size="10" fill="#8a8578" font-family="system-ui">Windward Ave</text>
+  <text x="104" y="250" font-size="10" fill="#8a8578" font-family="system-ui" transform="rotate(-88 104 250)">Ocean Front Walk</text>
+</svg>` : `
+<svg viewBox="0 0 390 700" width="390" height="700" style="position:absolute;left:0;top:0">
+  <rect width="390" height="700" fill="#f6f2ea"/>
+  <path d="M0 0 H390 V150 C330 170 290 140 240 175 C200 205 150 190 110 240 C80 280 40 290 0 300 Z" fill="#aad3df"/>
+  <path d="M0 520 C60 500 90 560 140 600 C180 630 170 700 170 700 H0 Z" fill="#aad3df"/>
+  <rect x="210" y="330" width="110" height="90" rx="8" fill="#d7e8c6"/>
+  <g stroke="#fff" stroke-width="11" stroke-linecap="round" fill="none"><path d="M120 250 C170 300 200 330 260 330 C320 330 360 380 390 400"/><path d="M60 420 C120 400 170 430 230 470 C280 500 330 520 390 520"/><path d="M180 280 V700"/><path d="M90 330 C130 360 150 420 140 520"/></g>
+  <text x="250" y="300" font-size="10" fill="#8a8578" font-family="system-ui">Moda Cd.</text>
+  <text x="40" y="120" font-size="12" fill="#6a9aab" font-family="system-ui" font-style="italic">Marmara</text>
+</svg>`;
+
+// ================= TELEFON DOM =================
+const app = $("#app");
+const SB = `<div class="sb"><span>9:41</span><span>●●● ▲ ▮</span></div>`;
+if (V === "a"){
+  app.innerHTML = SB + `
+  <div class="hd"><div class="lg"><img src="/logo-header.png" alt=""><small>${esc(U.tag)}</small></div><div class="btn" id="near">${esc(U.near)}</div></div>
+  <div class="srch"><div>${esc(U.srch)}</div></div>
+  <div class="bar"><span class="on">${esc(U.all)}</span><span>${esc(U.pub)}</span><span>${esc(U.cafe)}</span><span>${esc(U.tips)}</span></div>
+  <div class="map" id="map">${MAPSVG("venice")}
+    <svg id="rt" width="390" height="660" style="position:absolute;left:0;top:0"><path id="rtp" d="M230 380 V340 H170 V300" fill="none" stroke="#1c4fa0" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 10" opacity=".9"/></svg>
+    <div class="pin" data-p="0" style="left:170px;top:300px">🚻</div><div class="pin" data-p="1" style="left:310px;top:210px">🚻</div>
+    <div class="pin" data-p="2" style="left:130px;top:430px">🚻</div><div class="pin" data-p="3" style="left:330px;top:470px">🚻</div>
+    <div class="pin" data-p="4" style="left:275px;top:410px">☕</div><div class="pin" data-p="5" style="left:210px;top:120px">⭐</div>
+    <div class="ring" id="ring" style="left:205px;top:340px"></div><div class="shop" id="shop" style="left:205px;top:340px">👗</div>
+    <div class="me" id="me" style="left:230px;top:380px"></div>
+    <div class="pop" id="pop1" style="left:45px;top:118px"><b>${esc(U.pubRest)}</b><span class="t g">${esc(U.free)}</span><span class="t">${esc(U.hours)}</span>
+      <div class="st"><i>★</i> 4.3 <span style="color:#6b7688;font-weight:400">(12)</span></div><div class="q">${esc(U.quote)}</div>
+      <div class="acts"><span class="go" id="rbtn">${esc(U.route)}</span><span>Google Maps</span><span>${esc(U.rate)}</span></div></div>
+    <div class="pop" id="pop2" style="left:80px;top:130px"><b>👗 Heron CA</b><span class="t r">${esc(U.local)}</span><span class="t">11am to 7pm</span>
+      <div style="font-size:13px;margin:4px 0">${esc(U.blurb)}</div><span class="code" id="cbtn">${esc(U.code)}</span></div>
+    <div class="toast" id="toast"></div>
+  </div>`;
+} else {
+  app.innerHTML = SB + `
+  <div class="scr" id="s1"><div class="shd"><img src="/logo-header.png" alt=""><span>${esc(U.share)}</span></div>
+    <div id="formscroll" style="position:relative">
+      <div class="fb"><h3>${esc(U.yourStory)}</h3>
+        <div class="lbl">${esc(U.title)}</div><div class="inp" id="fTitle"></div>
+        <div class="lbl">${esc(U.story)}</div><div class="inp ta" id="fBody"></div>
+        <span class="mic" id="mic">${esc(U.mic)}</span><span class="micst" id="micst"></span></div>
+      <div class="fb" id="placebox"><h3>${esc(U.places)}</h3>
+        <div class="lbl">${esc(U.name)}</div><div class="inp" id="pName"></div>
+        <div class="lbl">${esc(U.hood)}</div><div class="inp" id="pHood"></div>
+        <div class="lbl">${esc(U.wc)}</div><div class="seg"><span id="yes">${esc(U.yes)}</span><span>${esc(U.no)}</span></div>
+        <div class="lbl">${esc(U.where)}</div><div class="inp" id="pWhere"></div></div>
+    </div></div>
+  <div class="scr" id="s2"><div class="shd"><img src="/logo-header.png" alt=""><span>${esc(U.share)}</span></div>
+    <div class="fb"><h3>${esc(U.pvT)}</h3>
+      <div class="pvh">${esc(X.tTitle)}</div><span class="chip">${esc(X.city)}</span> <span style="font-size:12px;color:#5f6b7d">${esc(U.by)} <b>Deniz</b></span>
+      <div class="pvp">${esc(X.t1 + X.t2)}</div>
+      <div class="pc"><b>${esc(X.pName)}</b><div style="font-size:12px;color:#5f6b7d">${esc(X.pHood)}</div><div style="font-size:12px">🚻 ${esc(X.pWhere)}</div><span class="tg">${esc(U.wcYes)}</span></div></div>
+    <div class="bigbtn" id="sendbtn">${esc(U.send)}</div>
+    <div class="thx" id="thx">${esc(U.thanks)}</div></div>
+  <div class="scr" id="s3" style="background:#f6f2ea"><div class="map" style="top:0">${MAPSVG("moda")}
+    <svg width="390" height="700" style="position:absolute;left:0;top:0"><path id="rtp" d="M120 262 C150 300 175 320 215 330 C250 338 262 360 262 395" fill="none" stroke="#e0453a" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 9"/></svg>
+    <div class="pin" data-p="0" style="left:120px;top:262px">📖</div><div class="pin" data-p="1" style="left:262px;top:395px">📖</div>
+    <div class="pin" data-p="2" style="left:190px;top:470px;font-size:20px">🚻</div><div class="pin" data-p="3" style="left:320px;top:250px;font-size:20px">🚻</div><div class="pin" data-p="4" style="left:95px;top:360px;font-size:20px">☕</div>
+    <div class="pop" id="pop3" style="left:20px;top:112px;width:230px"><b>📖 ${esc(X.pName)}</b><div style="font-size:12px;color:#6b7688">${esc(U.fromStory)}</div>
+      <i style="display:block;margin:4px 0 8px;font-size:13px">${esc(X.tTitle)}</i><div class="acts"><span class="go">${esc(U.read)}</span><span>${esc(U.route)}</span></div></div>
+  </div></div>
+  <div class="scr" id="s4"><div class="shd"><img src="/logo-header.png" alt=""><span style="background:#fff;color:#10223d;border:1px solid #e6e1d4">🗺️</span></div>
+    <div class="jn"><div class="ey">${esc(U.ey)}</div><h2>${esc(U.jh)}</h2>
+      <div class="cnt"><b id="cnum">36</b><small>${esc(U.taken)}</small><div class="pbar"><i id="cbar" style="width:36%"></i></div></div>
+      <ol class="gl"><li>${esc(U.g1)}</li><li>${esc(U.g2)}</li><li>${esc(U.g3)}</li></ol>
+      <div class="bdg" id="bdg">🏅 ${esc(U.badge)} <small>${esc(U.member)}</small></div></div></div>`;
+}
+// Harita tam filtre çubuğunun altından başlasın
+if (V === "a"){ const bar = app.querySelector(".bar"); $("#map").style.top = (bar.offsetTop + bar.offsetHeight) + "px"; }
+// Dokunma halkaları (uygulama koordinatlarında)
+// Dokunulan yerin merkezi (uygulama koordinatlarında, dönüşümler hariç)
+function center(sel, dy = 0, pinLike = false){
+  let el = app.querySelector(sel), x = 0, y = 0;
+  const w = el.offsetWidth, h = el.offsetHeight;
+  while (el && el !== app){ x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
+  return pinLike ? [x, y + dy] : [x + w / 2, y + h / 2 + dy];
+}
+const TAPS = (V === "a"
+  ? [[3.4, center("#near")], [6.8, center('.pin[data-p="0"]', 0, true)], [10.4, center("#rbtn")], [14.4, center("#shop", 0, true)], [16.0, center("#cbtn")]]
+  : [[4.3, center("#mic")], [8.9, center("#yes", -330)], [14.6, center("#sendbtn")]]).map(([t, [x, y]]) => [t, x, y]);
+TAPS.forEach(() => app.insertAdjacentHTML("beforeend", `<div class="tap"></div>`));
+const tapEls = [...app.querySelectorAll(".tap")];
+
+// ================= ÇİZİM: t saniyesindeki kare =================
+const hl = $("#hl"), sub = $("#sub span"), note = $("#note"), end = $("#end"), endtag = $("#endtag");
+let lastScene = -1;
+const TEXTS = X[V];
+function render(t){
+  t = clamp(t, 0, DUR - 0.001);
+  const s = sceneAt(t), a = SC[s], b = SC[s + 1];
+  if (s !== lastScene){ hl.innerHTML = TEXTS[s][0]; sub.textContent = TEXTS[s][1]; sub.parentNode.style.visibility = TEXTS[s][1] ? "visible" : "hidden";
+    note.textContent = TEXTS[s][2]; lastScene = s; onScene(s);
+    // Uzun başlık telefonun üstüne binmesin: sığana kadar küçült
+    let fs = 104; hl.style.fontSize = fs + "px";
+    while (hl.offsetHeight > 250 && fs > 60){ fs -= 6; hl.style.fontSize = fs + "px"; } }
+  const f = fade(t, a, b, .35);
+  hl.style.opacity = f; hl.style.transform = `translateY(${(1 - ease(prog(t, a, a + .45))) * 30}px)`;
+  sub.parentNode.style.opacity = fade(t, a + .15, b, .3);
+  note.style.opacity = TEXTS[s][2] ? fade(t, a + .6, b, .25) : 0;
+  note.style.transform = `rotate(-5deg) scale(${.8 + .2 * ease(prog(t, a + .6, a + .9))})`;
+  // Dokunmalar
+  TAPS.forEach(([tt, x, y], i) => {
+    const p = prog(t, tt - .15, tt + .45), el = tapEls[i];
+    el.style.left = x + "px"; el.style.top = y + "px";
+    el.style.opacity = p > 0 && p < 1 ? (p < .3 ? p / .3 : 1 - (p - .3) / .7) : 0;
+    el.style.transform = `scale(${.6 + ease(p) * .9})`;
+  });
+  // Son kare
+  const last = SC.length - 2;
+  end.style.opacity = s === last ? ease(prog(t, SC[last], SC[last] + .5)) : 0;
+  if (s === last){
+    if (V === "a"){
+      const k = prog(t, SC[last] + .7, DUR - 1.3);
+      endtag.textContent = t < SC[last] + .7 || k >= 1 ? U.tag : TAGS[Math.min(TAGS.length - 1, Math.floor(k * TAGS.length))];
+    } else endtag.textContent = X.endB;
+    endtag.classList.toggle("x", /[^\u0000-\u024F\s.,!?'’-]/.test(endtag.textContent));
+  }
+  V === "a" ? renderA(t) : renderB(t);
+}
+function renderA(t){
+  const pins = app.querySelectorAll(".pin");
+  $("#me").style.transform = `translate(-50%,-50%) scale(${pop(t, 3.75)})`;
+  pins.forEach((p, i) => p.style.transform = `translate(-50%,-50%) scale(${pop(t, 4.0 + i * .16)})`);
+  $("#near").style.background = t > 3.3 && t < 3.8 ? "#133c7c" : "";
+  const p1 = fade(t, 7.05, 10.75, .25);
+  $("#pop1").style.opacity = p1; $("#pop1").style.transform = `scale(${.85 + .15 * ease(prog(t, 7.05, 7.35))})`;
+  const rp = $("#rtp");
+  rp.style.opacity = t < 10.8 ? 0 : .9;
+  rp.setAttribute("d", partial(ROUTE_A, ease(prog(t, 10.8, 12.0))));
+  const shopS = pop(t, 13.7);
+  $("#shop").style.transform = `translate(-50%,-50%) scale(${shopS})`;
+  const rg = ((t - 13.9) % 1.1) / 1.1;
+  $("#ring").style.opacity = t > 13.9 && t < 14.6 ? (1 - rg) : 0;
+  $("#ring").style.transform = `translate(-50%,-50%) scale(${1 + rg * 1.4})`;
+  const p2 = fade(t, 14.7, 17.6, .25);
+  $("#pop2").style.opacity = p2; $("#pop2").style.transform = `scale(${.85 + .15 * ease(prog(t, 14.7, 15.0))})`;
+  $("#cbtn").style.background = t > 16.0 && t < 16.4 ? "#fde8e8" : "";
+  const toast = $("#toast");
+  if (t >= 12.0 && t < 13.6){ toast.textContent = U.mins; toast.style.opacity = fade(t, 12.0, 13.6, .2); }
+  else if (t >= 16.3 && t < 17.6){ toast.textContent = U.copied; toast.style.opacity = fade(t, 16.3, 17.6, .2); }
+  else toast.style.opacity = 0;
+}
+function renderB(t){
+  const show = (id, a, b) => { $(id).style.opacity = fade(t, a, b, .3); };
+  show("#s1", 0, 12.3); show("#s2", 12.0, 15.8); show("#s3", 15.5, 19.8); show("#s4", 19.5, 24.3);
+  // Form
+  const ti = typed(X.tTitle, t, .6, 2.3), b1 = typed(X.t1, t, 2.4, 3.8), b2 = typed(X.t2, t, 4.7, 7.6);
+  const caret = `<span class="caret"></span>`;
+  const blink = Math.floor(t * 2.5) % 2 === 0;
+  $("#fTitle").innerHTML = esc(ti) + (t > .4 && t < 2.4 && blink ? caret : "");
+  $("#fTitle").classList.toggle("on", t > .4 && t < 2.4);
+  $("#fBody").innerHTML = esc(b1 + b2) + (t > 2.4 && t < 8 && blink ? caret : "");
+  $("#fBody").classList.toggle("on", t > 2.4 && t < 8);
+  const micOn = t > 4.4 && t < 7.9;
+  $("#mic").classList.toggle("on", micOn); $("#mic").textContent = micOn ? U.stop : U.mic;
+  $("#micst").textContent = micOn ? U.listen : "";
+  // Yerler bölümüne kaydır
+  const sc = ease(prog(t, 8.0, 8.6));
+  $("#formscroll").style.transform = `translateY(${-sc * 330}px)`;
+  $("#pName").textContent = typed(X.pName, t, 8.5, 9.3); $("#pHood").textContent = typed(X.pHood, t, 9.3, 9.6);
+  $("#yes").classList.toggle("on", t > 9.0 && t >= 8.9 + .1);
+  $("#pWhere").textContent = typed(X.pWhere, t, 10.0, 11.4);
+  $("#pWhere").classList.toggle("on", t > 9.9 && t < 12);
+  // Önizleme
+  $("#sendbtn").style.background = t > 14.6 && t < 15 ? "#133c7c" : "";
+  $("#thx").style.opacity = fade(t, 15.0, 15.9, .2);
+  // Harita
+  app.querySelectorAll("#s3 .pin").forEach((p, i) => p.style.transform = `translate(-50%,-50%) scale(${pop(t, 15.9 + i * .3)})`);
+  $("#rtp").style.opacity = t > 16.5 ? 1 : 0;
+  $("#rtp").setAttribute("d", partial(ROUTE_B, ease(prog(t, 16.5, 17.8))));
+  $("#pop3").style.opacity = fade(t, 18.0, 19.8, .25); $("#pop3").style.transform = `scale(${.85 + .15 * ease(prog(t, 18.0, 18.3))})`;
+  // Katılım
+  const n = t < 20.2 ? 36 : 37;
+  $("#cnum").textContent = n; $("#cbar").style.width = (36 + ease(prog(t, 20.2, 20.8))) + "%";
+  const bd = ease(prog(t, 21.5, 22.0));
+  $("#bdg").style.opacity = bd; $("#bdg").style.transform = `rotate(${-2 - (1 - bd) * 14}deg) scale(${.8 + .2 * bd})`;
+}
+
+// ================= SES (dosyalar eklenince kendiliğinden açılır) =================
+// Dosya adı: /tour/audio/<a|b>-<dil>-<sahne no>.mp3  (ör. a-en-1.mp3). Yoksa ses düğmesi görünmez.
+let soundOn = false, audio = null;
+function onScene(s){
+  if (!soundOn) return;
+  try{ if (audio) audio.pause(); audio = new Audio(`audio/${V}-${LANG}-${s + 1}.mp3`); audio.play().catch(() => {}); }catch(e){}
+}
+fetch(`audio/${V}-${LANG}-1.mp3`, { method:"HEAD" }).then(r => { if (r.ok) $("#snd").hidden = false; }).catch(() => {});
+$("#snd").onclick = () => { soundOn = !soundOn; $("#snd").textContent = soundOn ? "🔊" : "🔇"; if (!soundOn && audio) audio.pause(); else { lastScene = -1; } };
+
+// ================= OYNATMA =================
+function fit(){
+  const w = innerWidth, h = innerHeight, k = Math.min(w / 1080, h / 1920);
+  const st = $("#stage"); st.style.transform = `scale(${k})`;
+  st.style.left = Math.round((w - 1080 * k) / 2) + "px"; st.style.top = Math.round((h - 1920 * k) / 2) + "px";
+}
+addEventListener("resize", fit); fit();
+let t0 = null, paused = false, pausedAt = 0;
+window.__render = t => render(t);            // video kaydı için: kare kare çizim
+window.__dur = DUR;
+function loop(now){
+  if (!paused){
+    if (t0 === null) t0 = now;
+    let t = (now - t0) / 1000;
+    if (t >= DUR){ t0 = now; t = 0; lastScene = -1; }
+    render(t);
+  }
+  requestAnimationFrame(loop);
+}
+$("#pp").onclick = () => {
+  if (paused){ t0 = performance.now() - pausedAt * 1000; paused = false; $("#pp").textContent = "❚❚"; }
+  else { pausedAt = (performance.now() - t0) / 1000; paused = true; $("#pp").textContent = "▶"; }
+};
+$("#rs").onclick = () => { t0 = performance.now(); paused = false; lastScene = -1; $("#pp").textContent = "❚❚"; };
+$("#other").href = V === "a" ? "?v=stories" : "?v=map";
+$("#other").textContent = V === "a" ? "📖 Stories ▶" : "📍 Map ▶";
+if (Q.has("rec")) render(0);
+else document.fonts.ready.then(() => requestAnimationFrame(loop));
+</script>
+</body>
+</html>

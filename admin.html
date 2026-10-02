@@ -97,6 +97,7 @@
 </div>
 <div id="toast"></div>
 
+<script src="qrcode.js"></script>
 <script>
 const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
 const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";
@@ -716,6 +717,10 @@ async function set(){
     <div class="card">${STANDALONE ? `<p class="note" style="margin:0">Bu ayar tarayıcıya kaydedilir. Ana ekran uygulamasının hafızası tarayıcıdan ayrı olduğu için burada işe yaramaz. Haritayı hangi tarayıcıda açıyorsan (Safari, Chrome) orada laloo.org/admin.html'i aç ve giriş ekranındaki "Bu cihazı istatistiğe sayma" düğmesine bas.</p>` : `<div class="row"><span>${off ? "✅ Bu cihaz istatistiklere <b>sayılmıyor</b>." : "Bu cihaz şu an istatistiklere sayılıyor."}</span>
       <button class="b ${off ? "" : "p"}" id="nt">${off ? "Tekrar say" : "Bu cihazı sayma"}</button></div>
       <p class="hint">Senin ve çalışanların telefonlarında laloo.org/admin.html'i bir kez açıp bu düğmeye basın. Giriş yapmaya gerek yok, düğme giriş ekranının altında da var.</p>`}</div>
+    <h2>Şehir linki ve QR</h2>
+    <div class="card"><p class="hint" style="margin-top:0">Otel, hostel ve belediye maillerinde kullan. Tıklayan doğrudan o şehrin sayfasına düşer, kaynak (ref) ölçümde görünür.</p>
+      <div class="row"><select id="qc" style="max-width:260px"></select><input id="qr_ref" value="mail" style="max-width:160px" placeholder="kaynak, ör. hostel-mail"></div>
+      <div id="qout" style="margin-top:10px"></div></div>
     <h2>Test verileri</h2>
     <div class="card"><div class="row"><span>Tüm ölçüm kayıtlarını sil (gerçek sayıma başlamadan önce bir kez).</span><button class="b r" id="wipe">Hepsini sil</button></div></div>
     <h2>Şehirler</h2>
@@ -724,6 +729,7 @@ async function set(){
         <td><button class="b" data-ct="${c.id}">${c.active ? "Kapat" : "Aç"}</button></td></tr>`).join("")}
     </table></div>
     <p class="hint">Yeni şehir eklemek için bana şehir adını söylemen yeterli, sınırlarını ben hazırlarım.</p>`;
+  cityQr();
   if ($("#nt")) $("#nt").onclick = () => { try{ off ? localStorage.removeItem("laloo_notrack") : localStorage.setItem("laloo_notrack", "1"); }catch(e){} toast(off ? "Bu cihaz tekrar sayılıyor" : "Bu cihaz artık sayılmıyor"); set(); };
   $("#wipe").onclick = async () => {
     if (!confirm("Tüm ölçüm kayıtları kalıcı olarak silinsin mi?")) return;
@@ -733,6 +739,32 @@ async function set(){
     const c = cities.find(x => x.id === b.dataset.ct);
     await db(`cities?id=eq.${c.id}`, "PATCH", { active: !c.active }); await loadCities(); set();
   });
+}
+
+// ---------- ŞEHİR LİNKİ VE QR ----------
+async function cityQr(){
+  let list = [];
+  try{ list = await (await fetch("/cities.json?d=" + today())).json(); }catch(e){}
+  if (!list.length){ $("#qout").innerHTML = `<p class="hint">Liste henüz yok, gece koşusundan sonra gelir.</p>`; return; }
+  list.sort((a, b) => a.name.localeCompare(b.name));
+  $("#qc").innerHTML = list.map(c => `<option value="${esc(c.slug)}">${esc(c.name)}</option>`).join("");
+  const draw = () => {
+    const c = list.find(x => x.slug === $("#qc").value);
+    const ref = ($("#qr_ref").value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-") || "mail") + "-" + c.slug;
+    const page = `https://laloo.org/${c.slug}/?ref=${ref}`, mapu = `https://laloo.org/?at=${c.lat},${c.lng},13&ref=${ref}`;
+    const q = qrcode(0, "M"); q.addData(page); q.make();
+    const svg = q.createSvgTag({ cellSize:6, margin:2, scalable:true });
+    $("#qout").innerHTML = `<div class="row" style="align-items:flex-start;gap:14px">
+      <div style="width:150px;background:#fff;padding:6px;border-radius:8px">${svg}</div>
+      <div style="flex:1;min-width:220px"><label>Şehir sayfası<input readonly value="${esc(page)}"></label>
+        <label style="margin-top:8px">Harita (şehir merkezinde açılır)<input readonly value="${esc(mapu)}"></label>
+        <div class="row" style="margin-top:8px"><button class="b p" id="qcp">Sayfa linkini kopyala</button><button class="b" id="qdl">QR indir (SVG)</button></div></div></div>`;
+    $("#qcp").onclick = () => { try{ navigator.clipboard.writeText(page); toast("Kopyalandı"); }catch(e){ prompt("Link:", page); } };
+    $("#qdl").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([svg], { type:"image/svg+xml" })); a.download = `laloo-${c.slug}-qr.svg`; a.click(); };
+  };
+  $("#qc").onchange = draw; $("#qr_ref").oninput = draw;
+  const la = list.find(c => c.slug === "los-angeles"); if (la) $("#qc").value = la.slug;
+  draw();
 }
 
 // Giriş ekranında da "bu cihazı sayma"

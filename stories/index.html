@@ -473,6 +473,13 @@ async function openStory(id){
   const loc = (s.i18n && s.i18n[LANG]) || null;
   const title = (loc && loc.title) || s.title, body = (loc && loc.body) || s.body;
   document.title = title + " · Laloo Stories";
+  // Google için asıl adres: her gece üretilen sade sayfa (/stories/<slug>/)
+  try{
+    const sl = String(s.title || "").replace(/ı/g, "i").replace(/İ/g, "I").normalize("NFKD").replace(/[^\x00-\x7f]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60).replace(/^-+|-+$/g, "") || "story";
+    const can = document.querySelector('link[rel="canonical"]');
+    if (can) can.href = `https://laloo.org/stories/${sl}-${String(s.id).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 6)}/`;
+  }catch(e){}
   const cs = (s.cities || []).map(c => `<span class="chip">${esc(cityLabel(c))}</span>`).join("");
   const places = (s.places || []).filter(p => p && p.name);
   const pinned = places.filter(p => typeof p.lat === "number" && typeof p.lng === "number");
