@@ -13,14 +13,8 @@ const REMOTE_SHELL = [
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(V);
-    // A third-party CDN outage should not prevent the local app shell installing.
+    // Third-party files are cached on first use, so installation depends only on local files.
     await cache.addAll(LOCAL_SHELL);
-    await Promise.all(REMOTE_SHELL.map(async url => {
-      try {
-        const response = await fetch(url);
-        if (response.ok) await cache.put(url, response);
-      } catch (_) {}
-    }));
     await self.skipWaiting();
   })());
 });
