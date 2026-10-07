@@ -15,6 +15,8 @@ def get(path, extra=None):
 
 spec = get("", {"Accept": "application/openapi+json"})
 tables = sorted(p.strip("/") for p in spec.get("paths", {}) if p.count("/") == 1 and p != "/" and not p.startswith("/rpc/"))
+if not tables:
+  sys.exit("Backup incomplete: Supabase exposed no REST tables")
 day = datetime.date.today().isoformat()
 os.makedirs("backup", exist_ok=True)
 total = 0
