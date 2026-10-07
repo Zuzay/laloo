@@ -45,7 +45,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   #map{flex:1;min-height:0}
   #msg{
     position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 200px);transform:translateX(-50%);
-    background:#fff;color:#10223d;padding:8px 14px;border-radius:20px;font-size:14px;cursor:pointer;
+    background:#fff;color:#10223d;padding:8px 14px;border:0;border-radius:20px;font:inherit;font-size:14px;line-height:1.2;cursor:pointer;
     box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:1000;white-space:nowrap;display:none;
   }
   #contact{
@@ -138,7 +138,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   #locate,.bar button{transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
   #locate:disabled{opacity:.65;cursor:wait}
   #locate:active,.bar button:active{transform:scale(.97)}
-  #locate:focus-visible,.bar button:focus-visible,#qres button:focus-visible,#contact:focus-visible,#install button:focus-visible{outline:3px solid #f29b35;outline-offset:2px}
+  #locate:focus-visible,.bar button:focus-visible,#qres button:focus-visible,#contact:focus-visible,#install button:focus-visible,#msg:focus-visible{outline:3px solid #f29b35;outline-offset:2px}
   @media(hover:hover) and (pointer:fine){#locate:hover{background:#153e80}.bar button:not(.on):hover{background:#e6edf7;border-color:#9eafc5}}
   @media(prefers-reduced-motion:reduce){#locate,.bar button{transition:none}}
 </style>
@@ -156,7 +156,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   <button data-f="tip" aria-pressed="false" data-i="tips">⭐ Tips</button>
 </div>
 <div id="map" role="region"></div>
-<div id="msg" role="status" aria-live="polite" aria-atomic="true"></div>
+<button id="msg" type="button" aria-live="polite" aria-atomic="true"></button>
 <div id="install"><img src="icon-192.png" alt=""><div><b data-i="inst_t">Add Laloo to your home screen</b><span id="insttxt" data-i="inst_s">One tap to the nearest bathroom. No app store.</span></div><button class="add" id="instbtn" data-i="inst_add">Add</button><button class="x" id="instx" aria-label="Close">✕</button></div>
 <a id="contact" href="#" data-i="contact">➕ Add a bathroom</a>
 <div class="sheet" id="addsheet"><div class="card">
