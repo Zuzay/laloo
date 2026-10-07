@@ -34,7 +34,7 @@ NAMES = {
 SLUGS = {"la": "los-angeles", "bay": "san-francisco-bay-area", "nyc": "new-york"}
 
 T = {
- "en": {"title": "Public bathrooms in {c}: free toilets and where to go",
+ "en": {"title": "Public bathrooms in {c}: free toilets and where to go", "language": "Language",
         "desc": "{n} public restrooms, free toilets and hand-picked spots in {c}. See fees and opening hours, then open the live map to find the nearest one. No app needed.",
         "h1": "Public bathrooms in {c}",
         "intro": "Laloo lists {n} places to use the bathroom in {c}: public restrooms, hand-picked spots and cafés. Open the live map to see the nearest one and walk there.",
@@ -42,12 +42,13 @@ T = {
         "muni_note": "Public toilets operated by the city or a public body. Information compiled by Laloo from open data.",
         "tips": "Hand-picked spots", "tips_note": "Checked and described by the Laloo team.",
         "pub": "Public restrooms by neighborhood", "more": "…and {k} more on the map.",
+        "unlisted": "Some public locations have no name in the source data. They remain visible on the live map.",
         "other": "Other areas", "free": "Free", "paid": "Paid", "cust": "Customers only", "ticket": "With ticket",
         "ask": "Ask inside, usually for customers", "upd": "Updated {d}.", "all": "All cities",
         "home": "Find a bathroom anywhere", "cities_t": "Public bathrooms by city", "cities_h1": "Find a bathroom in these cities",
         "cities_d": "Public restrooms, free toilets and hand-picked spots in {n} cities. Pick a city or open the live map.",
         "stat": "{p} public restrooms · {t} hand-picked spots", "src": "Map data © OpenStreetMap contributors.", "routes": "Loo Routes", "routes_city": "Walking routes in {c}", "routes_h1": "Loo Routes: walks with bathroom stops", "routes_d": "Walking routes through the world's busiest tourist spots, with every bathroom stop on the way.", "partner": "Laloo partner", "stops": "Bathroom stops", "open_route": "Open this area on the map", "pub_d": "Published {d}"},
- "es": {"title": "Baños públicos en {c}: aseos gratis y el más cercano",
+ "es": {"title": "Baños públicos en {c}: aseos gratis y el más cercano", "language": "Idioma",
         "desc": "{n} baños públicos, aseos gratuitos y lugares recomendados en {c}. Mira precios y horarios y abre el mapa en vivo para encontrar el más cercano. Sin descargar ninguna app.",
         "h1": "Baños públicos en {c}",
         "intro": "Laloo muestra {n} lugares para ir al baño en {c}: baños públicos, lugares recomendados y cafés. Abre el mapa en vivo para ver el más cercano y llegar caminando.",
@@ -55,12 +56,13 @@ T = {
         "muni_note": "Aseos públicos gestionados por el ayuntamiento o un organismo público. Información recopilada por Laloo a partir de datos abiertos.",
         "tips": "Lugares recomendados", "tips_note": "Revisados y descritos por el equipo de Laloo.",
         "pub": "Baños públicos por barrio", "more": "…y {k} más en el mapa.",
+        "unlisted": "Algunos lugares públicos no tienen nombre en los datos de origen. Siguen apareciendo en el mapa en vivo.",
         "other": "Otras zonas", "free": "Gratis", "paid": "De pago", "cust": "Solo clientes", "ticket": "Con entrada",
         "ask": "Pregunta dentro, suele ser para clientes", "upd": "Actualizado: {d}.", "all": "Todas las ciudades",
         "home": "Encuentra un baño en cualquier lugar", "cities_t": "Baños públicos por ciudad", "cities_h1": "Encuentra un baño en estas ciudades",
         "cities_d": "Baños públicos, aseos gratuitos y lugares recomendados en {n} ciudades. Elige una ciudad o abre el mapa.",
         "stat": "{p} baños públicos · {t} lugares recomendados", "src": "Datos del mapa © colaboradores de OpenStreetMap.", "routes": "Loo Routes", "routes_city": "Rutas a pie en {c}", "routes_h1": "Loo Routes: paseos con paradas para ir al baño", "routes_d": "Rutas a pie por los rincones más turísticos del mundo, con todos los baños que encontrarás por el camino.", "partner": "Socio de Laloo", "stops": "Paradas para ir al baño", "open_route": "Abrir esta zona en el mapa", "pub_d": "Publicado: {d}"},
- "de": {"title": "Öffentliche Toiletten in {c}: kostenlose WCs und die nächste in deiner Nähe",
+ "de": {"title": "Öffentliche Toiletten in {c}: kostenlose WCs und die nächste in deiner Nähe", "language": "Sprache",
         "desc": "{n} öffentliche Toiletten, kostenlose WCs und ausgewählte Orte in {c}. Preise und Öffnungszeiten ansehen und auf der Live-Karte die nächste finden. Ohne App.",
         "h1": "Öffentliche Toiletten in {c}",
         "intro": "Laloo zeigt {n} Orte in {c}, an denen du auf die Toilette kannst: öffentliche Toiletten, ausgewählte Orte und Cafés. Öffne die Live-Karte, um die nächste zu finden.",
@@ -68,12 +70,13 @@ T = {
         "muni_note": "Öffentliche Toiletten der Stadt oder einer öffentlichen Stelle. Von Laloo aus offenen Daten zusammengestellt.",
         "tips": "Ausgewählte Orte", "tips_note": "Vom Laloo-Team geprüft und beschrieben.",
         "pub": "Öffentliche Toiletten nach Stadtteil", "more": "…und {k} weitere auf der Karte.",
+        "unlisted": "Einige öffentliche Orte haben in den Quelldaten keinen Namen. Sie bleiben auf der Live-Karte sichtbar.",
         "other": "Weitere Gegenden", "free": "Kostenlos", "paid": "Kostenpflichtig", "cust": "Nur für Gäste", "ticket": "Mit Eintritt",
         "ask": "Drinnen fragen, meist nur für Gäste", "upd": "Aktualisiert: {d}.", "all": "Alle Städte",
         "home": "Finde überall eine Toilette", "cities_t": "Öffentliche Toiletten nach Stadt", "cities_h1": "Finde eine Toilette in diesen Städten",
         "cities_d": "Öffentliche Toiletten, kostenlose WCs und ausgewählte Orte in {n} Städten. Wähle eine Stadt oder öffne die Karte.",
         "stat": "{p} öffentliche Toiletten · {t} ausgewählte Orte", "src": "Kartendaten © OpenStreetMap-Mitwirkende.", "routes": "Loo Routes", "routes_city": "Spaziergänge in {c}", "routes_h1": "Loo Routes: Spaziergänge mit Toilettenstopps", "routes_d": "Spaziergänge durch die beliebtesten Touristenorte der Welt, mit allen Toiletten auf dem Weg.", "partner": "Laloo-Partner", "stops": "Toilettenstopps", "open_route": "Diese Gegend auf der Karte öffnen", "pub_d": "Veröffentlicht: {d}"},
- "fr": {"title": "Toilettes publiques à {c} : WC gratuits et les plus proches",
+ "fr": {"title": "Toilettes publiques à {c} : WC gratuits et les plus proches", "language": "Langue",
         "desc": "{n} toilettes publiques, WC gratuits et bonnes adresses à {c}. Tarifs et horaires, puis la carte en direct pour trouver les plus proches. Sans application.",
         "h1": "Toilettes publiques à {c}",
         "intro": "Laloo recense {n} endroits où aller aux toilettes à {c} : toilettes publiques, bonnes adresses et cafés. Ouvrez la carte en direct pour trouver les plus proches.",
@@ -81,12 +84,13 @@ T = {
         "muni_note": "Toilettes publiques gérées par la ville ou un organisme public. Informations compilées par Laloo à partir de données ouvertes.",
         "tips": "Bonnes adresses", "tips_note": "Vérifiées et décrites par l'équipe Laloo.",
         "pub": "Toilettes publiques par quartier", "more": "…et {k} de plus sur la carte.",
+        "unlisted": "Certains lieux publics n’ont pas de nom dans les données sources. Ils restent visibles sur la carte en direct.",
         "other": "Autres quartiers", "free": "Gratuit", "paid": "Payant", "cust": "Réservé aux clients", "ticket": "Avec billet",
         "ask": "Demandez à l'intérieur, souvent réservé aux clients", "upd": "Mis à jour : {d}.", "all": "Toutes les villes",
         "home": "Trouvez des toilettes partout", "cities_t": "Toilettes publiques par ville", "cities_h1": "Trouvez des toilettes dans ces villes",
         "cities_d": "Toilettes publiques, WC gratuits et bonnes adresses dans {n} villes. Choisissez une ville ou ouvrez la carte.",
         "stat": "{p} toilettes publiques · {t} bonnes adresses", "src": "Données cartographiques © contributeurs OpenStreetMap.", "routes": "Loo Routes", "routes_city": "Balades à {c}", "routes_h1": "Loo Routes : balades avec pauses toilettes", "routes_d": "Des balades dans les lieux les plus touristiques du monde, avec toutes les toilettes sur le chemin.", "partner": "Partenaire Laloo", "stops": "Pauses toilettes", "open_route": "Ouvrir ce quartier sur la carte", "pub_d": "Publié : {d}"},
- "tr": {"title": "{c} umumi tuvaletleri: ücretsiz tuvaletler ve en yakını nerede",
+ "tr": {"title": "{c} umumi tuvaletleri: ücretsiz tuvaletler ve en yakını nerede", "language": "Dil",
         "desc": "{c} için {n} umumi tuvalet, ücretsiz WC ve bizzat seçtiğimiz yer. Ücret ve saatleri gör, en yakınını canlı haritada bul. Uygulama indirmene gerek yok.",
         "h1": "{c} umumi tuvaletleri",
         "intro": "Laloo, {c} genelinde tuvalete girebileceğin {n} yeri gösteriyor: umumi tuvaletler, bizim seçtiğimiz yerler ve kafeler. En yakınını görmek için canlı haritayı aç.",
@@ -94,6 +98,7 @@ T = {
         "muni_note": "Belediyenin ya da bir kamu kurumunun işlettiği tuvaletler. Bilgileri açık veriden Laloo derledi.",
         "tips": "Bizim seçtiklerimiz", "tips_note": "Laloo ekibinin tek tek baktığı ve anlattığı yerler.",
         "pub": "Semt semt umumi tuvaletler", "more": "…haritada {k} yer daha var.",
+        "unlisted": "Bazı umumi yerlerin kaynak veride adı yok. Bu kayıtlar canlı haritada görünmeye devam eder.",
         "other": "Diğer semtler", "free": "Ücretsiz", "paid": "Ücretli", "cust": "Sadece müşteriye", "ticket": "Biletle girilir",
         "ask": "İçeride sor, genelde müşteriye açık", "upd": "Son güncelleme: {d}.", "all": "Tüm şehirler",
         "home": "Her yerde tuvalet bul", "cities_t": "Şehir şehir umumi tuvaletler", "cities_h1": "Bu şehirlerde tuvalet bul",
@@ -188,7 +193,10 @@ def tag_html(tags, lang):
 def page(lang, title, desc, canon, alts, body, slug_for_lang):
   links = "".join(f'<link rel="alternate" hreflang="{l}" href="{esc(u)}">' for l, u in alts)
   links += f'<link rel="alternate" hreflang="x-default" href="{esc(dict(alts)["en"])}">'
-  langs = "".join(f'<a href="{esc(slug_for_lang(l))}" class="{"on" if l == lang else ""}" lang="{l}">{l.upper()}</a>' for l in LANGS)
+  langs = "".join(
+    f'<a href="{esc(slug_for_lang(l))}" class="{"on" if l == lang else ""}" lang="{l}"'
+    + (' aria-current="page"' if l == lang else "") + f'>{l.upper()}</a>'
+    for l in LANGS)
   return f"""<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -208,7 +216,7 @@ def page(lang, title, desc, canon, alts, body, slug_for_lang):
 <style>{CSS}</style>
 </head>
 <body>
-<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs">{langs}</nav></header>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs" aria-label="{esc(T[lang]["language"])}">{langs}</nav></header>
 <main>
 {body}
 </main>
@@ -221,6 +229,13 @@ def page(lang, title, desc, canon, alts, body, slug_for_lang):
 # OSM'den gelen genel isimler her dilde çevrilsin
 GENERIC = {"Public restroom": {"es": "Baño público", "de": "Öffentliche Toilette", "fr": "Toilettes publiques", "tr": "Umumi tuvalet"},
            "Restroom": {"es": "Baño", "de": "Toilette", "fr": "Toilettes", "tr": "Tuvalet"}}
+GENERIC_NAMES = {name.casefold() for name in GENERIC}
+
+def public_name(place):
+  name = (place.get("name") or "").strip()
+  if name.casefold() in GENERIC_NAMES and place.get("operator"):
+    return place["operator"]
+  return name or "Public restroom"
 def li(name, tags, hours, info, lang):
   name = GENERIC.get(name, {}).get(lang, name)
   s = f'<li><b>{esc(name)}</b>{tag_html(tags, lang)}'
@@ -241,10 +256,10 @@ def city_body(c, lang, tips, pubs, areas, now):
   muni = [p for p in pubs if p.get("operator") and MUNI_RE.search(p["operator"])]
   if muni:
     b.append(f'<h2>{esc(t["muni"])}</h2><p class="note">{esc(t["muni_note"])}</p><ul class="pl">')
-    for p in sorted(muni, key=lambda p: (nearest_area(p["lat"], p["lng"], areas) or "~", p["name"], p["lat"]))[:MAX_MUNI]:
+    for p in sorted(muni, key=lambda p: (nearest_area(p["lat"], p["lng"], areas) or "~", public_name(p), p["lat"]))[:MAX_MUNI]:
       tags, hours = fee_tags(p.get("info"), lang)
       where = nearest_area(p["lat"], p["lng"], areas)
-      b.append(li(p["name"], tags, hours, " · ".join(x for x in (where, p.get("operator")) if x), lang))
+      b.append(li(public_name(p), tags, hours, " · ".join(x for x in (where, p.get("operator") if public_name(p) == p.get("name") else None) if x), lang))
     b.append("</ul>")
     if len(muni) > MAX_MUNI: b.append(f'<p class="note">{esc(t["more"].format(k=len(muni) - MAX_MUNI))}</p>')
   if tips:
@@ -260,7 +275,10 @@ def city_body(c, lang, tips, pubs, areas, now):
         b.append(li(x["name"], tags, hours, info, lang))
       b.append("</ul>")
   mids = {id(p) for p in muni}
-  rest = [p for p in pubs if id(p) not in mids]
+  all_rest = [p for p in pubs if id(p) not in mids]
+  rest = [p for p in all_rest if (p.get("name") or "").strip().casefold() not in GENERIC_NAMES]
+  if len(rest) < len(all_rest):
+    b.append(f'<p class="note">{esc(t["unlisted"])}</p>')
   if rest:
     b.append(f'<h2>{esc(t["pub"])}</h2>')
     groups = {}
@@ -269,11 +287,11 @@ def city_body(c, lang, tips, pubs, areas, now):
     shown = 0
     for area in order:
       if shown >= MAX_PUBLIC: break
-      items = sorted(groups[area], key=lambda p: (p["name"] in ("Public restroom", "Restroom"), p["name"], p["lat"]))
+      items = sorted(groups[area], key=lambda p: (public_name(p).casefold(), p["lat"]))
       b.append(f'<h3>{esc(area)} · {len(items)}</h3><ul class="pl sm">')
       for p in items[:PER_AREA]:
         tags, hours = fee_tags(p.get("info"), lang)
-        b.append(li(p["name"], tags, hours, "", lang)); shown += 1
+        b.append(li(public_name(p), tags, hours, "", lang)); shown += 1
       b.append("</ul>")
       if len(items) > PER_AREA: b.append(f'<p class="note">{esc(t["more"].format(k=len(items) - PER_AREA))}</p>')
   b.append(cta)
