@@ -135,6 +135,11 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
     width:16px;height:16px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;
     box-shadow:0 0 0 6px rgba(28,124,240,.25),0 1px 4px rgba(0,0,0,.4);
   }
+  #locate,.bar button{transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
+  #locate:active,.bar button:active{transform:scale(.97)}
+  #locate:focus-visible,.bar button:focus-visible,#qres button:focus-visible,#contact:focus-visible,#install button:focus-visible{outline:3px solid #f29b35;outline-offset:2px}
+  @media(hover:hover) and (pointer:fine){#locate:hover{background:#153e80}.bar button:not(.on):hover{background:#e6edf7;border-color:#9eafc5}}
+  @media(prefers-reduced-motion:reduce){#locate,.bar button{transition:none}}
 </style>
 </head>
 <body>
@@ -142,15 +147,15 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   <h1><img src="logo-header.png" alt="LALOO"><span data-i="tag">Find a bathroom anywhere</span></h1>
   <button id="locate" data-i="near">📍 Near me</button>
 </header>
-<div class="search"><input id="q" type="search" enterkeyhint="search" autocomplete="off" data-ph="search_ph"><div id="qres" hidden></div></div>
+<div class="search"><input id="q" type="search" enterkeyhint="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="qres" data-ph="search_ph"><div id="qres" role="listbox" hidden></div></div>
 <div class="bar">
-  <button data-f="all" class="on" data-i="all">All</button>
-  <button data-f="public" data-i="pub">🚻 Public</button>
-  <button data-f="cafe" data-i="cafe">☕ Cafés</button>
-  <button data-f="tip" data-i="tips">⭐ Tips</button>
+  <button data-f="all" class="on" aria-pressed="true" data-i="all">All</button>
+  <button data-f="public" aria-pressed="false" data-i="pub">🚻 Public</button>
+  <button data-f="cafe" aria-pressed="false" data-i="cafe">☕ Cafés</button>
+  <button data-f="tip" aria-pressed="false" data-i="tips">⭐ Tips</button>
 </div>
-<div id="map"></div>
-<div id="msg"></div>
+<div id="map" role="region"></div>
+<div id="msg" role="status" aria-live="polite" aria-atomic="true"></div>
 <div id="install"><img src="icon-192.png" alt=""><div><b data-i="inst_t">Add Laloo to your home screen</b><span id="insttxt" data-i="inst_s">One tap to the nearest bathroom. No app store.</span></div><button class="add" id="instbtn" data-i="inst_add">Add</button><button class="x" id="instx" aria-label="Close">✕</button></div>
 <a id="contact" href="#" data-i="contact">➕ Add a bathroom</a>
 <div class="sheet" id="addsheet"><div class="card">
@@ -214,6 +219,7 @@ const LANG = ((navigator.languages && navigator.languages.length ? navigator.lan
   .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
 const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
 document.documentElement.lang = LANG;
+document.getElementById("map").setAttribute("aria-label", tx("tag"));
 document.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
 document.querySelectorAll("[data-ph]").forEach(el => el.placeholder = tx(el.dataset.ph));
 // OSM'den gelen İngilizce bilgi parçalarını çevir (saatler olduğu gibi kalır)
@@ -587,8 +593,8 @@ function locate(){
 }
 
 document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
-  document.querySelectorAll(".bar button").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on"); filter = btn.dataset.f; draw();
+  document.querySelectorAll(".bar button").forEach(b => { const active = b === btn; b.classList.toggle("on", active); b.setAttribute("aria-pressed", String(active)); });
+  filter = btn.dataset.f; draw();
 });
 document.getElementById("locate").onclick = () => { track("near_me"); locate(); };
 map.on("moveend", () => { draw(); loadArea(); });
@@ -597,9 +603,12 @@ msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) ini
 // ================= ARAMA =================
 const qi = document.getElementById("q"), qr = document.getElementById("qres");
 let qTimer = null, qAbort = null, qHits = [];
+qi.setAttribute("aria-label", tx("search_ph").replace(/^🔍\s*/, ""));
+function closeSearch(){ qr.hidden = true; qi.setAttribute("aria-expanded", "false"); qHits = []; }
 function pickPlace(f){
+  if (!f) return;
   const p = f.properties, [lng, lat] = f.geometry.coordinates;
-  qr.hidden = true; qi.value = p.name || ""; qi.blur(); centered = true;
+  closeSearch(); qi.value = p.name || ""; qi.blur(); centered = true;
   if (p.extent){ map.fitBounds([[p.extent[1], p.extent[0]], [p.extent[3], p.extent[2]]]); if (map.getZoom() < 13) map.setZoom(13); }
   else map.setView([lat, lng], ["city", "town", "village", "district"].includes(p.type) ? 13 : 16);
   track("search", { target:(p.city || p.name || "").slice(0, 100) });
@@ -607,26 +616,41 @@ function pickPlace(f){
 async function searchPlaces(v){
   try{
     if (qAbort) qAbort.abort();
-    qAbort = new AbortController();
+    const controller = new AbortController(); qAbort = controller;
     const lang = ["en", "de", "fr", "it"].includes(LANG) ? LANG : "en", c = map.getCenter();
-    const r = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(v)}&limit=6&lang=${lang}&lat=${c.lat.toFixed(3)}&lon=${c.lng.toFixed(3)}`, { signal:qAbort.signal });
-    qHits = (await r.json()).features || [];
+    const r = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(v)}&limit=6&lang=${lang}&lat=${c.lat.toFixed(3)}&lon=${c.lng.toFixed(3)}`, { signal:controller.signal });
+    if (!r.ok) throw new Error("search_unavailable");
+    const data = await r.json();
+    if (controller.signal.aborted || qi.value.trim() !== v) return;
+    qHits = Array.isArray(data.features) ? data.features : [];
     qr.innerHTML = qHits.length ? qHits.map((f, i) => {
       const p = f.properties, sub = [p.city && p.city !== p.name ? p.city : "", p.state, p.country].filter(Boolean).join(", ");
-      return `<button type="button" data-k="${i}"><b>${esc(p.name || p.street || "")}</b><small>${esc(sub)}</small></button>`;
+      return `<button type="button" role="option" aria-selected="false" data-k="${i}"><b>${esc(p.name || p.street || "")}</b><small>${esc(sub)}</small></button>`;
     }).join("") : `<div class="none">${esc(tx("noResults"))}</div>`;
-    qr.hidden = false;
+    qr.hidden = false; qi.setAttribute("aria-expanded", "true");
     qr.querySelectorAll("button").forEach(b => b.onclick = () => pickPlace(qHits[+b.dataset.k]));
   }catch(e){}
 }
 qi.oninput = () => {
   clearTimeout(qTimer);
+  if (qAbort) qAbort.abort();
+  closeSearch();
   const v = qi.value.trim();
-  if (v.length < 3){ qr.hidden = true; return; }
+  if (v.length < 3) return;
   qTimer = setTimeout(() => searchPlaces(v), 350);
 };
-qi.onkeydown = e => { if (e.key === "Enter" && qHits.length){ e.preventDefault(); pickPlace(qHits[0]); } };
-map.on("click", () => { qr.hidden = true; });
+qi.onkeydown = e => {
+  if (e.key === "Escape"){ closeSearch(); return; }
+  if (e.key === "ArrowDown" && !qr.hidden){ const first=qr.querySelector("[role=option]"); if(first){e.preventDefault();first.focus()} return; }
+  if (e.key === "Enter" && qHits.length){ e.preventDefault(); pickPlace(qHits[0]); }
+};
+qr.onkeydown = e => {
+  const options=[...qr.querySelectorAll("[role=option]")],index=options.indexOf(document.activeElement);
+  if(e.key==="Escape"){closeSearch();qi.focus();return}
+  if(e.key==="ArrowDown"&&index<options.length-1){e.preventDefault();options[index+1].focus()}
+  if(e.key==="ArrowUp"){e.preventDefault();if(index>0)options[index-1].focus();else qi.focus()}
+};
+map.on("click", closeSearch);
 
 // ================= ÖNERİ FORMU VE GİZLİLİK =================
 const addSheet = document.getElementById("addsheet"), privSheet = document.getElementById("privsheet"), sf = document.getElementById("sf");
