@@ -136,6 +136,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
     box-shadow:0 0 0 6px rgba(28,124,240,.25),0 1px 4px rgba(0,0,0,.4);
   }
   #locate,.bar button{transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
+  #locate:disabled{opacity:.65;cursor:wait}
   #locate:active,.bar button:active{transform:scale(.97)}
   #locate:focus-visible,.bar button:focus-visible,#qres button:focus-visible,#contact:focus-visible,#install button:focus-visible{outline:3px solid #f29b35;outline-offset:2px}
   @media(hover:hover) and (pointer:fine){#locate:hover{background:#153e80}.bar button:not(.on):hover{background:#e6edf7;border-color:#9eafc5}}
@@ -254,7 +255,7 @@ if (window.maplibregl && L.maplibreGL && hasWebGL()){
 const layer = L.layerGroup().addTo(map);
 
 let cities = [], tips = [], shops = [], toilets = [], storyPins = [];
-let filter = "all", me = null, myLL = null, centered = false;
+let filter = "all", me = null, myLL = null, centered = false, locating = false;
 let mode = "sb";               // "sb" = Supabase, "json" = yedek toilets.json
 const tiles = new Set(), seenShops = new Set();
 
@@ -587,8 +588,10 @@ function showMe(p){
 function locate(){
   if (!navigator.geolocation){ say(tx("noLoc")); return; }
   if (myLL){ map.setView(myLL, 16); return; }
-  navigator.geolocation.watchPosition(showMe,
-    () => say(tx("allowLoc")),
+  if (locating) return;
+  const button=document.getElementById("locate");locating=true;button.disabled=true;
+  navigator.geolocation.getCurrentPosition(p=>{locating=false;button.disabled=false;showMe(p)},
+    () => {locating=false;button.disabled=false;say(tx("allowLoc"))},
     { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
 }
 
