@@ -44,7 +44,7 @@ article p{margin:0 0 14px}.box{background:var(--tag);border-radius:12px;padding:
 footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}</style>
 </head>
 <body>
-<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs"><a href="/salzburg/" class="" lang="en">EN</a><a href="/es/salzburg/" class="" lang="es">ES</a><a href="/de/salzburg/" class="on" lang="de">DE</a><a href="/fr/salzburg/" class="" lang="fr">FR</a><a href="/tr/salzburg/" class="" lang="tr">TR</a></nav></header>
+<header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a><nav class="langs" aria-label="Sprache"><a href="/salzburg/" class="" lang="en">EN</a><a href="/es/salzburg/" class="" lang="es">ES</a><a href="/de/salzburg/" class="on" lang="de" aria-current="page">DE</a><a href="/fr/salzburg/" class="" lang="fr">FR</a><a href="/tr/salzburg/" class="" lang="tr">TR</a></nav></header>
 <main>
 <h1>Öffentliche Toiletten in Salzburg</h1>
 <p class="lead">Laloo zeigt 160 Orte in Salzburg, an denen du auf die Toilette kannst: öffentliche Toiletten, ausgewählte Orte und Cafés. Öffne die Live-Karte, um die nächste zu finden.</p>
@@ -55,211 +55,40 @@ footer{max-width:760px;margin:0 auto;padding:18px 16px 40px;border-top:1px solid
 <li><b>WC-Anlage Fußballwiese (Itzling)</b><span class="t f">Kostenlos</span><div class="h">24/7</div><p>Itzling · Stadt Salzburg</p></li>
 <li><b>WC-Anlage Rauchenbichl</b><span class="t f">Kostenlos</span><div class="h">Apr-Oct: 07:00-19:00</div><p>Itzling · Stadt Salzburg</p></li>
 <li><b>WC-Anlage Badesee-Liefering (Umkleide)</b><span class="t f">Kostenlos</span><p>Liefering · Stadt Salzburg</p></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><div class="h">Mo-Su, PH 00:00-00:00</div><p>Parsch · Stadt Salzburg</p></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><p>Riedenburg · Stadt Salzburg</p></li>
+<li><b>Stadt Salzburg</b><span class="t f">Kostenlos</span><div class="h">Mo-Su, PH 00:00-00:00</div><p>Parsch</p></li>
+<li><b>Stadt Salzburg</b><span class="t f">Kostenlos</span><p>Riedenburg</p></li>
 </ul>
+<p class="note">Einige öffentliche Orte haben in den Quelldaten keinen Namen. Sie bleiben auf der Live-Karte sichtbar.</p>
 <h2>Öffentliche Toiletten nach Stadtteil</h2>
-<h3>Morzg · 13</h3><ul class="pl sm">
+<h3>Morzg · 3</h3><ul class="pl sm">
 <li><b>Behinderten WC neue Löwenanlage</b><span class="t f">Kostenlos</span></li>
 <li><b>Toiletten</b><span class="t f">Kostenlos</span><div class="h">24/7</div></li>
 <li><b>Toiletten</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 </ul>
-<h3>Nonntal · 13</h3><ul class="pl sm">
-<li><b>öffentliches WC</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-</ul>
-<h3>Mülln · 10</h3><ul class="pl sm">
-<li><b>Öffentliches WC</b><span class="t ">Kostenpflichtig</span></li>
+<h3>Mülln · 2</h3><ul class="pl sm">
 <li><b>öffentliches WC</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span><div class="h">Su, PH, Apr-Oct 07:00-20:00, Nov-Mar 07:00-19:00</div></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
+<li><b>Öffentliches WC</b><span class="t ">Kostenpflichtig</span></li>
 </ul>
-<h3>Neuhofham · 7</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span><div class="h">24/7</div></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><div class="h">Mo-Su 07:30-20:00</div></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Elisabeth-Vorstadt · 6</h3><ul class="pl sm">
-<li><b>WC-Anlage Lehener Park</b><span class="t f">Kostenlos</span><div class="h">Nov-Mar: 07:00-19:00; Apr-Oct: 07:00-20:00</div></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span><div class="h">Mo-Fr 08:00-19:00; Sa 08:00-18:00</div></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><span class="t c">Nur für Gäste</span><div class="h">Mo-Fr 08:00-19:00; Sa 08:00-18:00</div></li>
-</ul>
-<h3>Rehhof · 6</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><div class="h">Mo-Su 07:00-20:00</div></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Liefering · 5</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-</ul>
-<h3>Schallmoos · 5</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-</ul>
-<h3>Taxham · 5</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-</ul>
-<h3>Kasern · 4</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Mauthausen · 4</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Riedenburg · 4</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-</ul>
-<h3>Salzburg-Süd · 4</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Froschham · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span></li>
-</ul>
-<h3>Gneis · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-</ul>
-<h3>Leopoldskroner Moos · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Maxglan · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Pidingerau · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Rif · 3</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Aigen · 2</h3><ul class="pl sm">
+<h3>Aigen · 1</h3><ul class="pl sm">
 <li><b>Behinderten WC neu hinter Gaisberg Hütte</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 </ul>
-<h3>Glas · 2</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Gnigl · 2</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Hofham · 2</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Itzling · 1</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b></li>
-</ul>
-<h3>Langwied · 1</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span><div class="h">24/7</div></li>
+<h3>Elisabeth-Vorstadt · 1</h3><ul class="pl sm">
+<li><b>WC-Anlage Lehener Park</b><span class="t f">Kostenlos</span><div class="h">Nov-Mar: 07:00-19:00; Apr-Oct: 07:00-20:00</div></li>
 </ul>
 <h3>Lehen · 1</h3><ul class="pl sm">
 <li><b>WC-Anlage Glanspitz</b><span class="t f">Kostenlos</span><div class="h">24/7</div></li>
 </ul>
-<h3>Seidenauer Siedlung · 1</h3><ul class="pl sm">
+<h3>Mauthausen · 1</h3><ul class="pl sm">
 <li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
 </ul>
-<h3>Unterhöller · 1</h3><ul class="pl sm">
-<li><b>Öffentliche Toilette</b><span class="t c">Nur für Gäste</span></li>
+<h3>Nonntal · 1</h3><ul class="pl sm">
+<li><b>öffentliches WC</b><span class="t ">Kostenpflichtig</span></li>
 </ul>
-<h3>Weitere Gegenden · 37</h3><ul class="pl sm">
+<h3>Weitere Gegenden · 3</h3><ul class="pl sm">
 <li><b>Bahnhof Seekirchen</b><span class="t f">Kostenlos</span></li>
 <li><b>Öffentliches WC</b><span class="t ">Kostenpflichtig</span></li>
 <li><b>Öffentliches WC</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t ">Kostenpflichtig</span><div class="h">06:00-21:00</div></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b><span class="t f">Kostenlos</span></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
-<li><b>Öffentliche Toilette</b></li>
 </ul>
-<p class="note">…und 12 weitere auf der Karte.</p>
 <a class="cta" href="/?at=47.8095,13.0550,14&amp;ref=city-salzburg">📍 Karte für Salzburg öffnen</a>
 </main>
 <footer><a href="/">laloo.org · Finde überall eine Toilette</a> · <a href="/de/cities/">Alle Städte</a> · <a href="/de/about/">Über uns</a> · <a href="https://www.trustpilot.com/review/laloo.org" rel="noopener">Trustpilot</a><br>Kartendaten © OpenStreetMap-Mitwirkende.</footer>
