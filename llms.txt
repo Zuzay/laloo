@@ -20,7 +20,7 @@ Key facts:
 - [San Francisco Bay Area](https://laloo.org/san-francisco-bay-area/): 2078 public restrooms, 96 hand-picked spots
 - [Tokyo](https://laloo.org/tokyo/): 2462 public restrooms, 0 hand-picked spots
 - [Nairobi](https://laloo.org/nairobi/): 2211 public restrooms, 0 hand-picked spots
-- [Los Angeles](https://laloo.org/los-angeles/): 1164 public restrooms, 118 hand-picked spots
+- [Los Angeles](https://laloo.org/los-angeles/): 1176 public restrooms, 118 hand-picked spots
 - [Paris](https://laloo.org/paris/): 1212 public restrooms, 96 hand-picked spots
 - [Moscow](https://laloo.org/moscow/): 1382 public restrooms, 0 hand-picked spots
 - [New York City](https://laloo.org/new-york/): 772 public restrooms, 96 hand-picked spots
@@ -30,14 +30,14 @@ Key facts:
 - [Warsaw](https://laloo.org/warsaw/): 440 public restrooms, 102 hand-picked spots
 - [Osaka](https://laloo.org/osaka/): 929 public restrooms, 0 hand-picked spots
 - [Berlin](https://laloo.org/berlin/): 894 public restrooms, 0 hand-picked spots
-- [Delhi](https://laloo.org/delhi/): 864 public restrooms, 0 hand-picked spots
+- [Delhi](https://laloo.org/delhi/): 872 public restrooms, 0 hand-picked spots
 - [Lyon](https://laloo.org/lyon/): 791 public restrooms, 0 hand-picked spots
 - [Vienna](https://laloo.org/vienna/): 787 public restrooms, 0 hand-picked spots
 - [Istanbul](https://laloo.org/istanbul/): 285 public restrooms, 99 hand-picked spots
 - [London](https://laloo.org/london/): 775 public restrooms, 0 hand-picked spots
 - [Seoul](https://laloo.org/seoul/): 757 public restrooms, 0 hand-picked spots
 - [Kyoto](https://laloo.org/kyoto/): 751 public restrooms, 0 hand-picked spots
-- [Amsterdam](https://laloo.org/amsterdam/): 204 public restrooms, 107 hand-picked spots
+- [Amsterdam](https://laloo.org/amsterdam/): 206 public restrooms, 107 hand-picked spots
 - [Beijing](https://laloo.org/beijing/): 718 public restrooms, 0 hand-picked spots
 - [Shenzhen](https://laloo.org/shenzhen/): 716 public restrooms, 0 hand-picked spots
 - [Singapore](https://laloo.org/singapore/): 702 public restrooms, 0 hand-picked spots
@@ -51,7 +51,7 @@ Key facts:
 - [Perth](https://laloo.org/perth/): 560 public restrooms, 0 hand-picked spots
 - [Shanghai](https://laloo.org/shanghai/): 539 public restrooms, 0 hand-picked spots
 - [Munich](https://laloo.org/munich/): 520 public restrooms, 0 hand-picked spots
-- [Manila](https://laloo.org/manila/): 515 public restrooms, 0 hand-picked spots
+- [Manila](https://laloo.org/manila/): 507 public restrooms, 0 hand-picked spots
 - [Vancouver](https://laloo.org/vancouver/): 482 public restrooms, 0 hand-picked spots
 - [Sapporo](https://laloo.org/sapporo/): 479 public restrooms, 0 hand-picked spots
 - [Denver](https://laloo.org/denver/): 476 public restrooms, 0 hand-picked spots
@@ -63,7 +63,7 @@ Key facts:
 - [Bangkok](https://laloo.org/bangkok/): 447 public restrooms, 0 hand-picked spots
 - [Auckland](https://laloo.org/auckland/): 438 public restrooms, 0 hand-picked spots
 - [Toronto](https://laloo.org/toronto/): 428 public restrooms, 0 hand-picked spots
-- [Prague](https://laloo.org/prague/): 416 public restrooms, 0 hand-picked spots
+- [Prague](https://laloo.org/prague/): 417 public restrooms, 0 hand-picked spots
 - [Milan](https://laloo.org/milan/): 405 public restrooms, 0 hand-picked spots
 - [Copenhagen](https://laloo.org/copenhagen/): 401 public restrooms, 0 hand-picked spots
 - [Helsinki](https://laloo.org/helsinki/): 396 public restrooms, 0 hand-picked spots
@@ -73,10 +73,10 @@ Key facts:
 - [Frankfurt](https://laloo.org/frankfurt/): 355 public restrooms, 0 hand-picked spots
 - [Stockholm](https://laloo.org/stockholm/): 337 public restrooms, 0 hand-picked spots
 - [Montreal](https://laloo.org/montreal/): 334 public restrooms, 0 hand-picked spots
+- [Lima](https://laloo.org/lima/): 331 public restrooms, 0 hand-picked spots
 - [Riga](https://laloo.org/riga/): 327 public restrooms, 0 hand-picked spots
 - [Seattle](https://laloo.org/seattle/): 324 public restrooms, 0 hand-picked spots
 - [Portland](https://laloo.org/portland/): 318 public restrooms, 0 hand-picked spots
-- [Lima](https://laloo.org/lima/): 315 public restrooms, 0 hand-picked spots
 
 ## Loo Routes (walks with bathroom stops)
 - [Santa Monica to Venice Beach: every bathroom stop on the walk](https://laloo.org/routes/santa-monica-to-venice-beach-bathrooms/)
