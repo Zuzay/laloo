@@ -49,3 +49,5 @@ Her oturumda önce bu dosya okunur, sonra sadece ilgili dosyanın ilgili kısmı
 - 10-07: Tüm harita işaretleri resmî Phosphor SVG simgeleriyle yenilendi; ortak işaret sistemi, 44px dokunma alanı, seçili/odak/kapalı durumları, işletmeler ve konum noktası; yakın işaretlerde seçilebilir sayılı gruplar, bağımsız detay kutuları; simgeler ana dosyada, lisans dâhil.
 
 - 10-07: Uzay bu oturumda onaylı tasarımın canlıya yüklenmesini istedi; bu yayın için GitHub ana dalının güncellenmesine açık izin verdi.
+
+- 10-07: Mobil panel üçte bir yükseklikte başlar; gerçek tutamaçla sürükleme, kısa panjur geçişi, aramada açılma, klavye/iptal ve ekran değişimine uyum eklendi. Mobil harita merkez etiketi kaldırıldı; masaüstü paneli korunur.

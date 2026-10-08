@@ -127,7 +127,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   .sheet .phadd input{display:none}
   .sheet .hint{display:block;font-weight:400;color:#6b7688;font-size:12px;margin-top:2px}
 </style>
-<link rel="stylesheet" href="explore.css?v=7">
+<link rel="stylesheet" href="explore.css?v=8">
 </head>
 <body>
 <a class="skip-link" href="#place-list" data-i="skip_results">Skip to places</a>
@@ -137,7 +137,8 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   <a class="account-link" href="/account.html" data-i="my_laloo">My Laloo</a>
 </header>
 <main class="workspace">
-  <aside class="explorer" aria-label="Places">
+  <aside class="explorer is-collapsed" aria-label="Places">
+    <button id="panel-handle" class="panel-handle" type="button" aria-expanded="false" aria-controls="place-list" aria-label="Expand places"><span class="handle-grip" aria-hidden="true"></span><span class="handle-label">Drag up</span><span class="handle-chevron" aria-hidden="true">⌃</span></button>
     <div class="explorer-top">
       <div class="search"><span class="search-symbol" aria-hidden="true">⌕</span><input id="q" type="search" enterkeyhint="search" autocomplete="off" data-ph="search_ph" aria-label="Search a city or place"><div id="qres" hidden></div></div>
       <button id="locate"><span class="locate-symbol" aria-hidden="true">◎</span><span class="locate-long" data-i="find_near">Find a bathroom near me</span><span class="locate-short" data-i="find_near_short">Near me</span></button>
@@ -228,8 +229,8 @@ const EXPLORE_TEXT = {
  en:{map_label:"Your everyday travel companion",map_title:"A good stop, wherever you are.",map_intro:"Bathrooms, water and local tips. Keep your day moving.",find_near:"Find a bathroom near me",find_near_short:"Near me",view_nearby:"Nearby",view_discover:"Explore",view_saved:"Saved",water_short:"Water",stops_title:"Stops around you",discover_title:"A little detour?",saved_title:"Your good stops",nav_cities:"Cities",nav_routes:"Loo Routes",nav_stories:"Stories",nav_about:"About",my_laloo:"My Laloo",share_short:"Share a story",map_area:"Around the map center",map_hint:"Move the map. Find your next stop.",near_area:"Around your location",legend_bath:"Bathrooms",legend_tips:"Tips & stories",more_places:"Show more places",surprise:"Surprise me",save_place:"Save place",unsave_place:"Remove from saved",show_place:"On the map",walk_place:"Directions",from_you:"from you · direct distance",from_center:"from map center · direct distance",places_count:"{n} places in this area",saved_count_text:"{n} saved on this device",empty_saved:"Your next good stop starts here.",empty_saved_body:"Save a useful place with the bookmark button. Find it here next time, on this device.",empty_near:"No stops on this part of the map.",empty_near_body:"Try moving the map or choosing another type of place.",empty_discover:"A little adventure starts with a good stop.",empty_discover_body:"Browse walking guides, or share a place you love. Local stories will appear here when available.",browse_routes:"Find a walking guide",all_places:"Show all places",access_unknown:"Access details unknown",hours_unknown:"Hours not listed",check_access:"Check access and hours before you go.",no_surprise:"No discoveries in this area yet. Try another area or our walking guides.",saved_local:"Saved on this device",saved_session:"Browser storage unavailable. Saved for this visit only.",collapsed_label:"Expand places",expanded_label:"Collapse places",skip_results:"Skip to places",choose_city:"Choose a city",guide_label:"A walk with good stops",story_label:"Traveler story",place_label:"Place",search_ph:"Search a city or place"},
  tr:{map_label:"Günün küçük yol arkadaşı",map_title:"Nerede olursan ol, iyi bir mola.",map_intro:"Tuvaletler, su noktaları ve yerel ipuçları. Gününe rahatça devam et.",find_near:"Yakınımda tuvalet bul",find_near_short:"Yakınımda",view_nearby:"Yakınımda",view_discover:"Keşfet",view_saved:"Kaydedilen",water_short:"Su",stops_title:"Çevrendeki molalar",discover_title:"Küçük bir keşfe ne dersin?",saved_title:"Senin mola yerlerin",nav_cities:"Şehirler",nav_routes:"Mola rotaları",nav_stories:"Hikâyeler",nav_about:"Hakkında",my_laloo:"Benim Laloo'm",share_short:"Hikâyeni paylaş",map_area:"Haritanın çevresinde",map_hint:"Haritayı gezdir. Yeni bir mola bul.",near_area:"Konumunun çevresinde",legend_bath:"Tuvaletler",legend_tips:"Öneri ve hikâyeler",more_places:"Daha fazla yer göster",surprise:"Beni şaşırt",save_place:"Yeri kaydet",unsave_place:"Kaydı kaldır",show_place:"Haritada gör",walk_place:"Yol tarifi",from_you:"konumundan · kuş uçuşu",from_center:"harita merkezinden · kuş uçuşu",places_count:"Bu bölgede {n} yer",saved_count_text:"Bu cihazda {n} kayıt",empty_saved:"Bir sonraki iyi molan burada başlıyor.",empty_saved_body:"İşine yarayan yeri kayıt düğmesiyle sakla. Bu cihazda tekrar geldiğinde burada bul.",empty_near:"Haritanın bu kısmında mola yeri yok.",empty_near_body:"Haritayı gezdir veya başka bir yer türünü seç.",empty_discover:"Küçük bir macera, iyi bir molayla başlar.",empty_discover_body:"Yürüyüş rehberlerine göz at veya sevdiğin bir yeri paylaş. Yerel hikâyeler hazır olduğunda burada görünür.",browse_routes:"Bir yürüyüş rotası bul",all_places:"Tüm yerleri göster",access_unknown:"Erişim bilgisi bilinmiyor",hours_unknown:"Saat bilgisi yok",check_access:"Gitmeden önce erişimi ve saatleri kontrol et.",no_surprise:"Burada henüz keşif yok. Başka bir bölgeyi veya yürüyüş rehberlerini dene.",saved_local:"Bu cihazda kaydedildi",saved_session:"Tarayıcı depolaması kullanılamıyor. Yalnızca bu ziyaret için kaydedildi.",collapsed_label:"Yerleri aç",expanded_label:"Yerleri daralt",skip_results:"Yerlere geç",choose_city:"Bir şehir seç",guide_label:"Molalı bir yürüyüş",story_label:"Gezgin hikâyesi",place_label:"Yer",search_ph:"Şehir ya da yer ara"}
 };
-Object.assign(EXPLORE_TEXT.en,{group_places:"{n} nearby places",open_group:"Choose a place"});
-Object.assign(EXPLORE_TEXT.tr,{group_places:"{n} yakın yer",open_group:"Bir yer seç"});
+Object.assign(EXPLORE_TEXT.en,{sheet_up:"Drag up",sheet_down:"Drag down",group_places:"{n} nearby places",open_group:"Choose a place"});
+Object.assign(EXPLORE_TEXT.tr,{sheet_up:"Yukarı çek",sheet_down:"Aşağı çek",group_places:"{n} yakın yer",open_group:"Bir yer seç"});
 Object.entries(EXPLORE_TEXT).forEach(([lang, words]) => Object.assign(TXT[lang], words));
 const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
   .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
@@ -297,10 +298,7 @@ if (window.maplibregl && L.maplibreGL && hasWebGL()){
 } else rasterBase();
 const layer = L.layerGroup().addTo(map);
 L.control.zoom({ position:"bottomright" }).addTo(map);
-// Keep map attribution visible above the mobile panel, including its collapsed state.
-if (window.ResizeObserver){
-  new ResizeObserver(() => document.querySelector(".map-stage").style.setProperty("--sheet-height", `${Math.ceil(document.querySelector(".explorer").getBoundingClientRect().height)}px`)).observe(document.querySelector(".explorer"));
-}
+// The mobile sheet controller keeps attribution above the visible part of the panel.
 
 let cities = [], tips = [], shops = [], toilets = [], storyPins = [];
 let filter = "all", me = null, myLL = null, centered = false;
@@ -372,8 +370,9 @@ function popupFor(p){
   return `<div class="tip"><b>${esc(trName(p.name))}</b>${stateTags(p)}<p>${esc(trInfo(p.info))}</p>${rvHtml(p)}${actsHtml(p.lat,p.lng,p.id,null,rateBtn(p))}</div>`;
 }
 function mapPadding(){
-  const bottom=matchMedia("(max-width: 767px)").matches ? Math.ceil(document.querySelector(".explorer").getBoundingClientRect().height)+18 : 24;
-  return {paddingTopLeft:[24,88],paddingBottomRight:[24,bottom]};
+  const mobile=matchMedia("(max-width: 767px)").matches;
+  const bottom=mobile ? Math.ceil(targetPanelHeight())+18 : 24;
+  return {paddingTopLeft:mobile ? [16,16] : [24,88],paddingBottomRight:[mobile ? 16 : 24,bottom]};
 }
 function popupOptions(maxWidth=300){
   const padding=mapPadding();
@@ -863,7 +862,7 @@ function locate(){
     { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
 }
 
-document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => setFilter(btn.dataset.f));
+document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {if(sheetMobile.matches)setPanelCollapsed(false);setFilter(btn.dataset.f);});
 document.querySelectorAll("[data-view]").forEach(btn => btn.onclick = () => setViewMode(btn.dataset.view));
 document.querySelector(".view-tabs").onkeydown = e => {
   if (!["ArrowLeft","ArrowRight","Home","End"].includes(e.key)) return;
@@ -872,18 +871,141 @@ document.querySelector(".view-tabs").onkeydown = e => {
   setViewMode(tabs[next].dataset.view); tabs[next].focus();
 };
 document.getElementById("locate").setAttribute("aria-label",tx("find_near"));
-document.getElementById("locate").onclick = document.getElementById("map-locate").onclick = () => { setViewMode("nearby"); track("near_me"); locate(); };
+document.getElementById("locate").onclick = document.getElementById("map-locate").onclick = () => { setViewMode("nearby");if(sheetMobile.matches)setPanelCollapsed(true);track("near_me");locate(); };
 document.getElementById("surprise").onclick = e => {
   const candidates=activePlaces.filter(p=>p.status!=="closed" && placeKey(p)!==lastSurprise);
   if (!candidates.length) { say(tx("no_surprise")); return; }
   const p=candidates[Math.floor(Math.random()*candidates.length)];lastSurprise=placeKey(p);focusPlace(p,e.detail===0);
 };
-function setPanelCollapsed(collapsed){
-  const panel=document.querySelector(".explorer"),btn=document.getElementById("panel-toggle");
-  panel.classList.toggle("is-collapsed",collapsed);
-  btn.setAttribute("aria-expanded",!collapsed);btn.setAttribute("aria-label",tx(collapsed ? "collapsed_label" : "expanded_label"));btn.textContent=collapsed ? "⌃" : "⌄";map.invalidateSize();
+// A fixed-size sheet moves with transforms; its list keeps native scrolling.
+const sheetPanel=document.querySelector(".explorer"),sheetHandle=document.getElementById("panel-handle"),sheetWorkspace=document.querySelector(".workspace");
+const sheetMobile=matchMedia("(max-width: 767px)"),sheetReduced=matchMedia("(prefers-reduced-motion: reduce)");
+let sheetSnap=0,sheetGeometry={peek:0,full:0,bottom:0},sheetDrag=null,sheetSuppressClickUntil=0,sheetFrame=0,sheetTrackUntil=0,sheetLayoutFrame=0;
+function visiblePanelHeight(){
+  if(!sheetMobile.matches)return 0;
+  const area=sheetWorkspace.getBoundingClientRect(),panel=sheetPanel.getBoundingClientRect();
+  return Math.max(0,Math.min(area.height,area.bottom-panel.top));
 }
-document.getElementById("panel-toggle").onclick = () => setPanelCollapsed(!document.querySelector(".explorer").classList.contains("is-collapsed"));
+function targetPanelHeight(){
+  if(sheetDrag)return visiblePanelHeight();
+  const rect=sheetWorkspace.getBoundingClientRect();
+  return Math.max(0,rect.bottom-sheetGeometry.bottom)+(sheetSnap ? sheetGeometry.full : sheetGeometry.peek);
+}
+function syncSheetMetrics(){
+  const corner=document.querySelector(".map-stage .leaflet-bottom.leaflet-right");
+  if(corner)corner.style.bottom=sheetMobile.matches ? `${Math.ceil(visiblePanelHeight())}px` : "";
+}
+function settleSheetPopup(){
+  if(!activeMapPopup?.isOpen())return;
+  Object.assign(activeMapPopup.options,popupOptions(activeMapPopup.options.lalooMaxWidth || activeMapPopup.options.maxWidth));
+  activeMapPopup.update();
+}
+function trackSheetMotion(){
+  syncSheetMetrics();
+  if(performance.now()<sheetTrackUntil)sheetFrame=requestAnimationFrame(trackSheetMotion);
+  else {sheetFrame=0;settleSheetPopup();}
+}
+function followSheetMotion(animate){
+  sheetTrackUntil=performance.now()+(animate && !sheetReduced.matches ? 250 : 0);
+  if(!sheetFrame)sheetFrame=requestAnimationFrame(trackSheetMotion);
+}
+function syncSheetControls(){
+  const collapsed=sheetMobile.matches && sheetSnap===0;
+  const hiddenFocus=collapsed && document.activeElement?.closest(".place-list,.explorer-footer");
+  sheetPanel.classList.toggle("is-collapsed",collapsed);
+  sheetPanel.classList.toggle("is-tight",sheetGeometry.peek<220);
+  sheetPanel.classList.toggle("is-minimal",sheetGeometry.peek<150);
+  sheetPanel.classList.toggle("is-short",sheetMobile.matches && sheetGeometry.full<430);
+  sheetPanel.dataset.sheetState=collapsed ? "peek" : "open";
+  [sheetHandle,document.getElementById("panel-toggle")].forEach(button=>{
+    button.setAttribute("aria-expanded",String(!collapsed));
+    button.setAttribute("aria-label",tx(collapsed ? "collapsed_label" : "expanded_label"));
+  });
+  document.getElementById("panel-toggle").textContent=collapsed ? "⌃" : "⌄";
+  sheetHandle.querySelector(".handle-label").textContent=tx(collapsed ? "sheet_up" : "sheet_down");
+  sheetHandle.querySelector(".handle-chevron").textContent=collapsed ? "⌃" : "⌄";
+  document.querySelector(".place-list").inert=collapsed;
+  document.querySelector(".explorer-footer").inert=collapsed;
+  if(hiddenFocus)sheetHandle.focus({preventScroll:true});
+}
+function moveSheet(height){
+  sheetPanel.style.setProperty("--sheet-offset",`${Math.max(0,sheetGeometry.full-height)}px`);
+  syncSheetMetrics();
+}
+function setSheetSnap(index,animate=true){
+  sheetSnap=index ? 1 : 0;
+  if(!sheetMobile.matches){syncSheetControls();return;}
+  if(sheetSnap && activeMapPopup?.isOpen())map.closePopup();
+  if(!sheetSnap)sheetPanel.scrollTop=0;
+  if(!animate)sheetPanel.style.transition="none";
+  syncSheetControls();
+  moveSheet(sheetSnap ? sheetGeometry.full : sheetGeometry.peek);
+  if(!animate){sheetPanel.getBoundingClientRect();requestAnimationFrame(()=>sheetPanel.style.removeProperty("transition"));}
+  followSheetMotion(animate);
+}
+function setPanelCollapsed(collapsed){setSheetSnap(collapsed ? 0 : 1);}
+function refreshSheetLayout(){
+  sheetLayoutFrame=0;
+  if(sheetDrag)finishSheetDrag(true);
+  if(!sheetMobile.matches){
+    ["--sheet-full-height","--sheet-offset","--sheet-bottom"].forEach(name=>sheetPanel.style.removeProperty(name));
+    syncSheetControls();syncSheetMetrics();return;
+  }
+  const rect=sheetWorkspace.getBoundingClientRect(),viewport=window.visualViewport;
+  const bottom=Math.min(rect.bottom,viewport ? viewport.offsetTop+viewport.height : innerHeight);
+  const available=Math.max(120,bottom-rect.top);
+  sheetGeometry={peek:available/3,full:available*.9,bottom};
+  sheetPanel.style.setProperty("--sheet-full-height",`${sheetGeometry.full}px`);
+  sheetPanel.style.setProperty("--sheet-bottom",`${Math.max(0,rect.bottom-bottom)}px`);
+  setSheetSnap(sheetSnap,false);
+}
+function scheduleSheetLayout(){if(!sheetLayoutFrame)sheetLayoutFrame=requestAnimationFrame(refreshSheetLayout);}
+function finishSheetDrag(cancelled=false,event=null){
+  const drag=sheetDrag;if(!drag || event && event.pointerId!==drag.id)return;
+  sheetDrag=null;sheetPanel.classList.remove("is-dragging");
+  if(sheetHandle.hasPointerCapture(drag.id))sheetHandle.releasePointerCapture(drag.id);
+  if(!drag.moved){setSheetSnap(sheetSnap,false);return;}
+  sheetSuppressClickUntil=performance.now()+400;
+  const midpoint=(sheetGeometry.peek+sheetGeometry.full)/2;
+  const fast=!cancelled && performance.now()-drag.lastAt<140 && Math.abs(drag.velocity)>.4;
+  setSheetSnap(fast ? drag.velocity>0 ? 1 : 0 : drag.height>midpoint ? 1 : 0);
+}
+sheetHandle.addEventListener("pointerdown",event=>{
+  if(!sheetMobile.matches || !event.isPrimary || event.button!==0 || sheetDrag)return;
+  event.preventDefault();sheetHandle.focus({preventScroll:true});
+  if(sheetFrame){cancelAnimationFrame(sheetFrame);sheetFrame=0;}sheetTrackUntil=0;
+  const height=sheetGeometry.bottom-sheetPanel.getBoundingClientRect().top;
+  sheetDrag={id:event.pointerId,startY:event.clientY,startHeight:height,height,lastY:event.clientY,lastAt:performance.now(),velocity:0,moved:false};
+  sheetPanel.classList.add("is-dragging");moveSheet(height);sheetHandle.setPointerCapture(event.pointerId);
+});
+sheetHandle.addEventListener("pointermove",event=>{
+  const drag=sheetDrag;if(!drag || drag.id!==event.pointerId)return;
+  event.preventDefault();
+  const now=performance.now(),elapsed=now-drag.lastAt;
+  if(elapsed>0)drag.velocity=(drag.lastY-event.clientY)/elapsed;
+  drag.lastY=event.clientY;drag.lastAt=now;
+  drag.moved=drag.moved || Math.abs(event.clientY-drag.startY)>6;
+  drag.height=Math.max(sheetGeometry.peek,Math.min(sheetGeometry.full,drag.startHeight+drag.startY-event.clientY));
+  if(drag.moved)sheetPanel.classList.remove("is-collapsed");
+  moveSheet(drag.height);
+});
+sheetHandle.addEventListener("pointerup",event=>finishSheetDrag(false,event));
+sheetHandle.addEventListener("pointercancel",event=>finishSheetDrag(true,event));
+sheetHandle.addEventListener("lostpointercapture",event=>finishSheetDrag(true,event));
+sheetHandle.onclick=event=>{if(performance.now()<sheetSuppressClickUntil){event.preventDefault();return;}setSheetSnap(sheetSnap ? 0 : 1,event.detail!==0);};
+sheetHandle.onkeydown=event=>{
+  if(!["ArrowUp","ArrowDown","Home","End"].includes(event.key))return;
+  event.preventDefault();setSheetSnap(event.key === "ArrowUp" || event.key === "End" ? 1 : 0,false);
+};
+document.getElementById("panel-toggle").onclick=event=>setSheetSnap(sheetSnap ? 0 : 1,event.detail!==0);
+sheetPanel.addEventListener("transitionend",event=>{if(event.target===sheetPanel && event.propertyName === "transform"){syncSheetMetrics();settleSheetPopup();}});
+sheetPanel.addEventListener("focusin",event=>{if(sheetMobile.matches && event.target.closest(".place-list,.explorer-footer"))setSheetSnap(1,false);});
+document.querySelector(".skip-link").onclick=event=>{event.preventDefault();setSheetSnap(1,false);document.getElementById("place-list").focus({preventScroll:true});};
+window.addEventListener("resize",scheduleSheetLayout);
+sheetMobile.addEventListener("change",scheduleSheetLayout);
+if(window.visualViewport){visualViewport.addEventListener("resize",scheduleSheetLayout);visualViewport.addEventListener("scroll",scheduleSheetLayout);}
+if(window.ResizeObserver)new ResizeObserver(scheduleSheetLayout).observe(sheetWorkspace);
+sheetPanel.style.transition="none";refreshSheetLayout();requestAnimationFrame(()=>sheetPanel.style.removeProperty("transition"));
 map.on("moveend", () => { loadArea();draw(); });
 msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) init(); };
 
@@ -893,6 +1015,7 @@ let qTimer = null, qAbort = null, qHits = [];
 function pickPlace(f){
   const p = f.properties, [lng, lat] = f.geometry.coordinates;
   qr.hidden = true; qi.value = p.name || ""; qi.blur(); centered = true;
+  map.closePopup();if(sheetMobile.matches)setPanelCollapsed(true);
   if (p.extent){ map.fitBounds([[p.extent[1], p.extent[0]], [p.extent[3], p.extent[2]]]); if (map.getZoom() < 13) map.setZoom(13); }
   else map.setView([lat, lng], ["city", "town", "village", "district"].includes(p.type) ? 13 : 16);
   track("search", { target:(p.city || p.name || "").slice(0, 100) });
@@ -912,7 +1035,9 @@ async function searchPlaces(v){
     qr.querySelectorAll("button").forEach(b => b.onclick = () => pickPlace(qHits[+b.dataset.k]));
   }catch(e){}
 }
+qi.addEventListener("focus",()=>{if(sheetMobile.matches)setPanelCollapsed(false);});
 qi.oninput = () => {
+  if(sheetMobile.matches)setPanelCollapsed(false);
   clearTimeout(qTimer);
   const v = qi.value.trim();
   if (v.length < 3){ qr.hidden = true; return; }
