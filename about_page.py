@@ -346,7 +346,7 @@ def build(listed, routes, n_pages, names, city_url, now, site, lang="en", month=
 <header><a href="/"><img src="/logo-header.png" alt="LALOO" width="120" height="34"></a>
 <nav><span class="langs">{langs}</span><a class="pill p" href="/?ref=about">{_("Open the map")}</a></nav></header>
 {body}
-<footer>laloo.org · {_("Made on the Venice Beach boardwalk")} · <a href="/terms.html">{_("Terms")}</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a><br>{_("Numbers updated automatically every night.")} {_("Map data © OpenStreetMap contributors.")}</footer>
+<footer><a href="https://mrspace.online/#laloo-project" target="_blank" rel="noopener">{_("A Mr. Space product")}</a> · laloo.org · {_("Made on the Venice Beach boardwalk")} · <a href="/terms.html">{_("Terms")}</a> · <a href="mailto:hello@laloo.org">hello@laloo.org</a><br>{_("Numbers updated automatically every night.")} {_("Map data © OpenStreetMap contributors.")}</footer>
 </body>
 </html>
 """

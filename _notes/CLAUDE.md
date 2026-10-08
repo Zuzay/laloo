@@ -51,3 +51,5 @@ Her oturumda önce bu dosya okunur, sonra sadece ilgili dosyanın ilgili kısmı
 - 10-07: Uzay bu oturumda onaylı tasarımın canlıya yüklenmesini istedi; bu yayın için GitHub ana dalının güncellenmesine açık izin verdi.
 
 - 10-07: Mobil panel üçte bir yükseklikte başlar; gerçek tutamaçla sürükleme, kısa panjur geçişi, aramada açılma, klavye/iptal ve ekran değişimine uyum eklendi. Mobil harita merkez etiketi kaldırıldı; masaüstü paneli korunur.
+
+- 10-08: Mr. Space ürün kredisi harita alt alanına 12 dilde ve Hakkında sayfalarına 5 dilde hazırlandı. about_page.py/sözlük de güncellendi. Ayrı inceleme dalı; bu çalışma yayın onayı vermiyor.
