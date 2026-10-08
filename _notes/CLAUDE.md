@@ -41,3 +41,11 @@ Her oturumda önce bu dosya okunur, sonra sadece ilgili dosyanın ilgili kısmı
 - 09-29: Blok 1 (rate, join, hikaye ses/önizleme/pin, foto zorunlu öneri, belediye silme, şikayet/küfür). laloo_fix2.sql: sayaç bekleyenleri sayar. account.html /join/ yönlendirmesi.
 - 10-02: Blok 2a yüklendi (pages.py hikaye sayfaları + llms.txt + cities.json, build.py, admin şehir linki/QR, stories canonical, tour/). Koşu doğrulandı: llms.txt ve cities.json oluştu.
 - 10-02: index_16.html ve laloo_blok1.sql repodan silindi. Bu not dosyası eklendi.
+
+- 10-07: Harita yenilendi: yakın yer kartları, Keşfet/Kaydedilen sekmeleri, cihazda kayıt, su filtresi, mobil alt panel ve klavye erişimi; index.html, explore.css, sw.js.
+
+- 10-07: Sol panelde üst alan sadeleştirildi, panel genişletildi, filtreler görünür satırlara alındı; liste alanı büyütüldü ve kısa ekranda tek kaydırma kullanıldı.
+
+- 10-07: Tüm harita işaretleri resmî Phosphor SVG simgeleriyle yenilendi; ortak işaret sistemi, 44px dokunma alanı, seçili/odak/kapalı durumları, işletmeler ve konum noktası; yakın işaretlerde seçilebilir sayılı gruplar, bağımsız detay kutuları; simgeler ana dosyada, lisans dâhil.
+
+- 10-07: Uzay bu oturumda onaylı tasarımın canlıya yüklenmesini istedi; bu yayın için GitHub ana dalının güncellenmesine açık izin verdi.

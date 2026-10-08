@@ -97,11 +97,6 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   .shutnote{margin:2px 0 6px;font-size:12px;color:#b3261e}
   .loo.shut{opacity:.45;filter:grayscale(1)}
   .tip p{margin:4px 0 6px}
-  .shop{
-    width:34px;height:34px;border-radius:50%;background:#e02424;border:3px solid #fff;
-    display:flex;align-items:center;justify-content:center;font-size:18px;
-    box-shadow:0 2px 6px rgba(0,0,0,.4);
-  }
   .ad b{display:block;margin-bottom:2px}
   .ad .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;margin:2px 4px 4px 0;background:#fde8e8;color:#b01c1c}
   .ad p{margin:4px 0 6px}
@@ -131,28 +126,47 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
   .sheet .phadd{display:inline-block;font-size:13px;font-weight:700;border:1px dashed #1c4fa0;color:#1c4fa0;border-radius:10px;padding:8px 12px;cursor:pointer;margin-top:4px}
   .sheet .phadd input{display:none}
   .sheet .hint{display:block;font-weight:400;color:#6b7688;font-size:12px;margin-top:2px}
-  .me{
-    width:16px;height:16px;border-radius:50%;background:#1c7cf0;border:3px solid #fff;
-    box-shadow:0 0 0 6px rgba(28,124,240,.25),0 1px 4px rgba(0,0,0,.4);
-  }
 </style>
+<link rel="stylesheet" href="explore.css?v=7">
 </head>
 <body>
-<header>
+<a class="skip-link" href="#place-list" data-i="skip_results">Skip to places</a>
+<header class="app-header">
   <h1><img src="logo-header.png" alt="LALOO"><span data-i="tag">Find a bathroom anywhere</span></h1>
-  <button id="locate" data-i="near">📍 Near me</button>
+  <nav class="header-nav" aria-label="Laloo"><a href="/cities/" data-i="nav_cities">Cities</a><a href="/routes/" data-i="nav_routes">Loo Routes</a><a href="/stories/" data-i="nav_stories">Stories</a><a href="/about/" data-i="nav_about">About</a></nav>
+  <a class="account-link" href="/account.html" data-i="my_laloo">My Laloo</a>
 </header>
-<div class="search"><input id="q" type="search" enterkeyhint="search" autocomplete="off" data-ph="search_ph"><div id="qres" hidden></div></div>
-<div class="bar">
-  <button data-f="all" class="on" data-i="all">All</button>
-  <button data-f="public" data-i="pub">🚻 Public</button>
-  <button data-f="cafe" data-i="cafe">☕ Cafés</button>
-  <button data-f="tip" data-i="tips">⭐ Tips</button>
-</div>
-<div id="map"></div>
-<div id="msg"></div>
+<main class="workspace">
+  <aside class="explorer" aria-label="Places">
+    <div class="explorer-top">
+      <div class="search"><span class="search-symbol" aria-hidden="true">⌕</span><input id="q" type="search" enterkeyhint="search" autocomplete="off" data-ph="search_ph" aria-label="Search a city or place"><div id="qres" hidden></div></div>
+      <button id="locate"><span class="locate-symbol" aria-hidden="true">◎</span><span class="locate-long" data-i="find_near">Find a bathroom near me</span><span class="locate-short" data-i="find_near_short">Near me</span></button>
+    </div>
+    <div class="view-tabs" role="tablist" aria-label="Places">
+      <button id="tab-nearby" type="button" role="tab" aria-selected="true" aria-controls="place-list" data-view="nearby" class="active" data-i="view_nearby">Nearby</button>
+      <button id="tab-discover" type="button" role="tab" aria-selected="false" aria-controls="place-list" tabindex="-1" data-view="discover" data-i="view_discover">Explore</button>
+      <button id="tab-saved" type="button" role="tab" aria-selected="false" aria-controls="place-list" tabindex="-1" data-view="saved"><span data-i="view_saved">Saved</span><span id="saved-count">0</span></button>
+    </div>
+    <div class="bar" aria-label="Place types">
+      <button type="button" data-f="all" class="on" aria-pressed="true" data-i="all">All</button>
+      <button type="button" data-f="public" aria-pressed="false" data-i="pub">Public</button>
+      <button type="button" data-f="cafe" aria-pressed="false" data-i="cafe">Cafés</button>
+      <button type="button" data-f="tip" aria-pressed="false" data-i="tips">Tips</button>
+      <button type="button" data-f="water" aria-pressed="false" data-i="water_short">Water</button>
+    </div>
+    <div class="list-heading"><div><h3 id="list-title" data-i="stops_title">Stops around you</h3><p id="list-caption"></p></div><button id="panel-toggle" type="button" aria-expanded="true" aria-controls="place-list" aria-label="Collapse places">⌄</button></div>
+    <div id="place-list" class="place-list" role="tabpanel" aria-labelledby="tab-nearby" tabindex="0"><div class="list-loading" data-i="loading">Loading…</div></div>
+    <div class="explorer-footer"><a id="contact" href="#" data-i="contact">Add a bathroom</a><a href="/stories/" data-i="share_short">Share a story</a></div>
+  </aside>
+  <section class="map-stage" aria-label="Map">
+    <div id="map"></div>
+    <div class="map-context"><span class="context-symbol" aria-hidden="true">◎</span><div><strong id="area-label" data-i="map_area">Around the map center</strong><span id="area-caption" data-i="map_hint">Move the map. Find your next stop.</span></div></div>
+    <div class="map-actions"><button id="surprise" type="button" hidden><span aria-hidden="true">✦</span> <span data-i="surprise">Surprise me</span></button><button id="map-locate" type="button" aria-label="Go to my location">◎</button></div>
+    <div id="msg" role="status" aria-live="polite"></div>
+    <div class="map-legend"><span><i class="legend-dot" data-map-icon="toilet" aria-hidden="true"></i><span data-i="legend_bath">Bathrooms</span></span><span><i class="legend-dot water" data-map-icon="drop" aria-hidden="true"></i><span data-i="water_short">Water</span></span><span><i class="legend-dot story" data-map-icon="sparkle" aria-hidden="true"></i><span data-i="legend_tips">Tips & stories</span></span></div>
+  </section>
+</main>
 <div id="install"><img src="icon-192.png" alt=""><div><b data-i="inst_t">Add Laloo to your home screen</b><span id="insttxt" data-i="inst_s">One tap to the nearest bathroom. No app store.</span></div><button class="add" id="instbtn" data-i="inst_add">Add</button><button class="x" id="instx" aria-label="Close">✕</button></div>
-<a id="contact" href="#" data-i="contact">➕ Add a bathroom</a>
 <div class="sheet" id="addsheet"><div class="card">
   <h3 data-i="add_t">Add a bathroom</h3>
   <form id="sf">
@@ -210,12 +224,20 @@ ru:{rate:"⭐ Оценить",report:"Пожаловаться",reportQ:"Пож�
 zh:{rate:"⭐ 评分",report:"举报",reportQ:"确定举报？",reported:"谢谢，我们会核查",storyFrom:"来自一位旅行者的故事",readStory:"阅读故事",photo_l:"门口或招牌的照片",photo_h:"方便别人认出入口。请只拍外面。",photo_need:"请添加一张门口或招牌的照片。",photo_add:"📷 添加照片",uploading:"上传中…",early:"🏅 前 {t} 名会员：还剩 {n} 个名额",water:"饮用水",refill:"可灌装水瓶",seasonal:"季节性开放",tag:"随时随地找厕所",near:"📍 我附近",all:"全部",pub:"🚻 公共厕所",cafe:"☕ 咖啡馆",tips:"⭐ 我们推荐",contact:"➕ 添加厕所",inst_t:"把 Laloo 添加到主屏幕",inst_s:"一点就能找到最近的厕所，不用去应用商店。",inst_add:"添加",inst_ios:"点击“分享”，再选择 \"添加到主屏幕\"。",loading:"加载中…",loadingB:"正在加载厕所…",loadFail:"厕所加载失败，点击重试",zoom:"放大地图查看厕所",noTips:"这附近还没有推荐，缩小地图看看",noBath:"这片区域没有厕所",allowRoute:"开启定位以显示路线",allowLoc:"开启定位查看附近的厕所",noLoc:"无法获取位置",finding:"正在规划路线…",copied:"优惠码已复制，结账时出示即可",min:"分钟",route:"🚶 显示路线",gmaps:"谷歌地图",web:"网站",local:"本地小店",code:"🎟️ 点击复制优惠码：",Free:"免费",Paid:"收费",Customers:"限顾客",Ticket:"凭票进入",askInside:"进去问问，一般限顾客使用",custOnly:"仅限顾客",pubRest:"公共厕所",rest:"厕所",story:"📖 知道一个别人都不知道的地方？分享你的故事",add_t:"添加厕所",name_l:"地点名称",where_l:"在哪里？",where_ph:"地址或简单描述",note_l:"给别人的提示（可选）",note_ph:"干净吗？免费吗？需要密码吗？",useloc:"使用我当前的位置",send:"发送",thanks:"谢谢！我们核实后会加到地图上。",fail:"发送失败，再试一次？",ad:"附近有店？来 Laloo 让游客看到你",privacy:"隐私",rev:"评价",closed:"暂时关闭",verif:"✓ 市政府认证",priv_t:"隐私",priv_b:"Laloo 免费使用，无需注册。我们用保存在你手机上的随机编号匿名统计访问量，以了解哪些功能真正有用。我们从不保存你的姓名、邮箱或位置。你的位置只留在浏览器里；当你查询路线时，只有起点和终点会发送到 OpenStreetMap 的路线服务。有问题请联系：hello@laloo.org",close:"关闭",toomany:"你今天已经提交了很多，谢谢！明天再试吧。",search_ph:"🔍 搜索城市或地点",noResults:"没有结果"},
 ja:{rate:"⭐ 評価する",report:"報告",reportQ:"報告しますか？",reported:"ありがとうございます。確認します",storyFrom:"旅行者のストーリーより",readStory:"ストーリーを読む",photo_l:"入口のドアか看板の写真",photo_h:"ほかの人が入口を見つけやすくなります。外側だけ撮ってください。",photo_need:"入口のドアか看板の写真を追加してください。",photo_add:"📷 写真を追加",uploading:"アップロード中…",early:"🏅 先着{t}名の会員：残り{n}枠",water:"飲料水",refill:"ボトルに給水できます",seasonal:"季節限定",tag:"どこでもトイレが見つかる",near:"📍 現在地周辺",all:"すべて",pub:"🚻 公衆トイレ",cafe:"☕ カフェ",tips:"⭐ おすすめ",contact:"➕ トイレを追加",inst_t:"Laloo をホーム画面に追加",inst_s:"最寄りのトイレまでワンタップ。アプリのダウンロードは不要です。",inst_add:"追加",inst_ios:"共有ボタンをタップして、\"ホーム画面に追加\" を選んでください。",loading:"読み込み中…",loadingB:"トイレを読み込み中…",loadFail:"トイレを読み込めませんでした。タップして再試行",zoom:"地図を拡大するとトイレが表示されます",noTips:"このあたりにはまだおすすめがありません。地図を縮小してください",noBath:"このエリアにトイレはありません",allowRoute:"ルート表示には位置情報を許可してください",allowLoc:"近くのトイレを見るには位置情報を許可してください",noLoc:"位置情報を取得できません",finding:"ルートを検索中…",copied:"コードをコピーしました。レジで見せてください",min:"分",route:"🚶 ルートを表示",gmaps:"Google マップ",web:"ウェブサイト",local:"地元のお店",code:"🎟️ タップしてコードをコピー：",Free:"無料",Paid:"有料",Customers:"利用客のみ",Ticket:"チケットが必要",askInside:"店内で聞いてください。通常は利用客向けです",custOnly:"利用客のみ",pubRest:"公衆トイレ",rest:"トイレ",story:"📖 誰も知らない場所を知っていますか？あなたのストーリーを教えてください",add_t:"トイレを追加",name_l:"場所の名前",where_l:"どこにありますか？",where_ph:"住所または簡単な説明",note_l:"ほかの人へのひとこと（任意）",note_ph:"きれい？無料？暗証番号は必要？",useloc:"現在地を使う",send:"送信",thanks:"ありがとうございます！確認して地図に追加します。",fail:"送信できませんでした。もう一度お試しください。",ad:"近くにお店がありますか？Laloo で旅行者に見つけてもらいましょう",privacy:"プライバシー",rev:"レビュー",closed:"一時閉鎖中",verif:"✓ 市が確認済み",priv_t:"プライバシー",priv_b:"Laloo は無料で、アカウントも不要です。どの機能が役立っているかを知るため、端末に保存されたランダムな番号で訪問数を匿名で数えています。名前、メールアドレス、位置情報を保存することはありません。位置情報はブラウザの中だけにとどまり、ルートを調べるときは出発地と目的地だけが OpenStreetMap のルートサービスに送られます。お問い合わせ：hello@laloo.org",close:"閉じる",toomany:"今日はたくさん送っていただきました。ありがとうございます！また明日お試しください。",search_ph:"🔍 都市や場所を検索",noResults:"見つかりませんでした"},
 };
+const EXPLORE_TEXT = {
+ en:{map_label:"Your everyday travel companion",map_title:"A good stop, wherever you are.",map_intro:"Bathrooms, water and local tips. Keep your day moving.",find_near:"Find a bathroom near me",find_near_short:"Near me",view_nearby:"Nearby",view_discover:"Explore",view_saved:"Saved",water_short:"Water",stops_title:"Stops around you",discover_title:"A little detour?",saved_title:"Your good stops",nav_cities:"Cities",nav_routes:"Loo Routes",nav_stories:"Stories",nav_about:"About",my_laloo:"My Laloo",share_short:"Share a story",map_area:"Around the map center",map_hint:"Move the map. Find your next stop.",near_area:"Around your location",legend_bath:"Bathrooms",legend_tips:"Tips & stories",more_places:"Show more places",surprise:"Surprise me",save_place:"Save place",unsave_place:"Remove from saved",show_place:"On the map",walk_place:"Directions",from_you:"from you · direct distance",from_center:"from map center · direct distance",places_count:"{n} places in this area",saved_count_text:"{n} saved on this device",empty_saved:"Your next good stop starts here.",empty_saved_body:"Save a useful place with the bookmark button. Find it here next time, on this device.",empty_near:"No stops on this part of the map.",empty_near_body:"Try moving the map or choosing another type of place.",empty_discover:"A little adventure starts with a good stop.",empty_discover_body:"Browse walking guides, or share a place you love. Local stories will appear here when available.",browse_routes:"Find a walking guide",all_places:"Show all places",access_unknown:"Access details unknown",hours_unknown:"Hours not listed",check_access:"Check access and hours before you go.",no_surprise:"No discoveries in this area yet. Try another area or our walking guides.",saved_local:"Saved on this device",saved_session:"Browser storage unavailable. Saved for this visit only.",collapsed_label:"Expand places",expanded_label:"Collapse places",skip_results:"Skip to places",choose_city:"Choose a city",guide_label:"A walk with good stops",story_label:"Traveler story",place_label:"Place",search_ph:"Search a city or place"},
+ tr:{map_label:"Günün küçük yol arkadaşı",map_title:"Nerede olursan ol, iyi bir mola.",map_intro:"Tuvaletler, su noktaları ve yerel ipuçları. Gününe rahatça devam et.",find_near:"Yakınımda tuvalet bul",find_near_short:"Yakınımda",view_nearby:"Yakınımda",view_discover:"Keşfet",view_saved:"Kaydedilen",water_short:"Su",stops_title:"Çevrendeki molalar",discover_title:"Küçük bir keşfe ne dersin?",saved_title:"Senin mola yerlerin",nav_cities:"Şehirler",nav_routes:"Mola rotaları",nav_stories:"Hikâyeler",nav_about:"Hakkında",my_laloo:"Benim Laloo'm",share_short:"Hikâyeni paylaş",map_area:"Haritanın çevresinde",map_hint:"Haritayı gezdir. Yeni bir mola bul.",near_area:"Konumunun çevresinde",legend_bath:"Tuvaletler",legend_tips:"Öneri ve hikâyeler",more_places:"Daha fazla yer göster",surprise:"Beni şaşırt",save_place:"Yeri kaydet",unsave_place:"Kaydı kaldır",show_place:"Haritada gör",walk_place:"Yol tarifi",from_you:"konumundan · kuş uçuşu",from_center:"harita merkezinden · kuş uçuşu",places_count:"Bu bölgede {n} yer",saved_count_text:"Bu cihazda {n} kayıt",empty_saved:"Bir sonraki iyi molan burada başlıyor.",empty_saved_body:"İşine yarayan yeri kayıt düğmesiyle sakla. Bu cihazda tekrar geldiğinde burada bul.",empty_near:"Haritanın bu kısmında mola yeri yok.",empty_near_body:"Haritayı gezdir veya başka bir yer türünü seç.",empty_discover:"Küçük bir macera, iyi bir molayla başlar.",empty_discover_body:"Yürüyüş rehberlerine göz at veya sevdiğin bir yeri paylaş. Yerel hikâyeler hazır olduğunda burada görünür.",browse_routes:"Bir yürüyüş rotası bul",all_places:"Tüm yerleri göster",access_unknown:"Erişim bilgisi bilinmiyor",hours_unknown:"Saat bilgisi yok",check_access:"Gitmeden önce erişimi ve saatleri kontrol et.",no_surprise:"Burada henüz keşif yok. Başka bir bölgeyi veya yürüyüş rehberlerini dene.",saved_local:"Bu cihazda kaydedildi",saved_session:"Tarayıcı depolaması kullanılamıyor. Yalnızca bu ziyaret için kaydedildi.",collapsed_label:"Yerleri aç",expanded_label:"Yerleri daralt",skip_results:"Yerlere geç",choose_city:"Bir şehir seç",guide_label:"Molalı bir yürüyüş",story_label:"Gezgin hikâyesi",place_label:"Yer",search_ph:"Şehir ya da yer ara"}
+};
+Object.assign(EXPLORE_TEXT.en,{group_places:"{n} nearby places",open_group:"Choose a place"});
+Object.assign(EXPLORE_TEXT.tr,{group_places:"{n} yakın yer",open_group:"Bir yer seç"});
+Object.entries(EXPLORE_TEXT).forEach(([lang, words]) => Object.assign(TXT[lang], words));
 const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
   .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
 const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
 document.documentElement.lang = LANG;
 document.querySelectorAll("[data-i]").forEach(el => el.textContent = tx(el.dataset.i));
 document.querySelectorAll("[data-ph]").forEach(el => el.placeholder = tx(el.dataset.ph));
+document.querySelectorAll(".bar button").forEach(el => el.textContent = el.textContent.replace(/^(?:🚻|☕|⭐)\s*/u,""));
 // OSM'den gelen İngilizce bilgi parçalarını çevir (saatler olduğu gibi kalır)
 const trInfo = s => String(s || "").split(", ").map(p =>
   p === "Free" ? tx("Free") : p === "Paid" ? tx("Paid") : p === "Customers only" ? tx("custOnly") : p === "Bottle refill" ? tx("refill") : p === "Seasonal" ? tx("seasonal") : p).join(", ")
@@ -225,13 +247,41 @@ const trName = n => n === "Public restroom" ? tx("pubRest") : n === "Restroom" ?
 // ================= AYARLAR =================
 const SB_URL = "https://tizfdnsjhhepxnqqrzuk.supabase.co";
 const SB_KEY = "sb_publishable_DcfxBTRo0n2m1go5_yYjkw_qNzD6ie6";   // herkese açık anahtar, burada durması normal
-const SHOP_ICONS = { vintage:"👗", clothing:"👕", tailor:"🧵", market:"🧺", fruit:"🍎", cafe:"☕", food:"🍽️", beauty:"💈", art:"🎨" };
+/* Official Phosphor Icons SVG assets (bold, plus filled bookmark).
+Source: https://github.com/phosphor-icons/core
+MIT License
+
+Copyright (c) 2023 Phosphor Icons
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+const MAP_ICONS = {"toilet":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M128,68a12,12,0,0,1-12,12H100a12,12,0,0,1,0-24h16A12,12,0,0,1,128,68Zm48.15,127.62,3.65,25.55A20,20,0,0,1,160,244H96a20,20,0,0,1-19.8-22.83l3.65-25.55A100.08,100.08,0,0,1,28,108,12,12,0,0,1,40,96H52V40A20,20,0,0,1,72,20H184a20,20,0,0,1,20,20V96h12a12,12,0,0,1,12,12A100.08,100.08,0,0,1,176.15,195.62ZM76,96H180V44H76Zm77.21,108.78a100.3,100.3,0,0,1-50.42,0L100.61,220h54.78ZM203.05,120H53a76,76,0,0,0,150.1,0Z\"/></svg>","coffee":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M212,76H32A12,12,0,0,0,20,88v48a100.24,100.24,0,0,0,26.73,68H32a12,12,0,0,0,0,24H208a12,12,0,0,0,0-24H193.27a100.75,100.75,0,0,0,20-32A44,44,0,0,0,256,128v-8A44.05,44.05,0,0,0,212,76Zm-16,60a76.27,76.27,0,0,1-42,68H86a76.27,76.27,0,0,1-42-68V100H196Zm36-8a20,20,0,0,1-12.57,18.55A97.17,97.17,0,0,0,220,136V101.68A20,20,0,0,1,232,120ZM68,48V24a12,12,0,0,1,24,0V48a12,12,0,0,1-24,0Zm40,0V24a12,12,0,0,1,24,0V48a12,12,0,0,1-24,0Zm40,0V24a12,12,0,0,1,24,0V48a12,12,0,0,1-24,0Z\"/></svg>","drop":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M134.88,6.17a12,12,0,0,0-13.76,0,259,259,0,0,0-42.18,39C50.85,77.43,36,111.62,36,144a92,92,0,0,0,184,0C220,66.64,138.36,8.6,134.88,6.17ZM128,212a68.07,68.07,0,0,1-68-68c0-33.31,20-63.37,36.7-82.71A249.35,249.35,0,0,1,128,31.11a249.35,249.35,0,0,1,31.3,30.18C176,80.63,196,110.69,196,144A68.07,68.07,0,0,1,128,212Zm49.62-52.4a52,52,0,0,1-34,34,12.2,12.2,0,0,1-3.6.55,12,12,0,0,1-3.6-23.45,28,28,0,0,0,18.32-18.32,12,12,0,0,1,22.9,7.2Z\"/></svg>","sparkle":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M199,125.31l-49.88-18.39L130.69,57a19.92,19.92,0,0,0-37.38,0L74.92,106.92,25,125.31a19.92,19.92,0,0,0,0,37.38l49.88,18.39L93.31,231a19.92,19.92,0,0,0,37.38,0l18.39-49.88L199,162.69a19.92,19.92,0,0,0,0-37.38Zm-63.38,35.16a12,12,0,0,0-7.11,7.11L112,212.28l-16.47-44.7a12,12,0,0,0-7.11-7.11L43.72,144l44.7-16.47a12,12,0,0,0,7.11-7.11L112,75.72l16.47,44.7a12,12,0,0,0,7.11,7.11L180.28,144ZM140,40a12,12,0,0,1,12-12h12V16a12,12,0,0,1,24,0V28h12a12,12,0,0,1,0,24H188V64a12,12,0,0,1-24,0V52H152A12,12,0,0,1,140,40ZM252,88a12,12,0,0,1-12,12h-4v4a12,12,0,0,1-24,0v-4h-4a12,12,0,0,1,0-24h4V72a12,12,0,0,1,24,0v4h4A12,12,0,0,1,252,88Z\"/></svg>","book-open":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M232,44H160a43.86,43.86,0,0,0-32,13.85A43.86,43.86,0,0,0,96,44H24A12,12,0,0,0,12,56V200a12,12,0,0,0,12,12H96a20,20,0,0,1,20,20,12,12,0,0,0,24,0,20,20,0,0,1,20-20h72a12,12,0,0,0,12-12V56A12,12,0,0,0,232,44ZM96,188H36V68H96a20,20,0,0,1,20,20V192.81A43.79,43.79,0,0,0,96,188Zm124,0H160a43.71,43.71,0,0,0-20,4.83V88a20,20,0,0,1,20-20h60Z\"/></svg>","storefront":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M236,96a12,12,0,0,0-.44-3.3L221.2,42.51A20.08,20.08,0,0,0,202,28H54A20.08,20.08,0,0,0,34.8,42.51L20.46,92.7A12,12,0,0,0,20,96h0v16a43.94,43.94,0,0,0,16,33.92V216a12,12,0,0,0,12,12H208a12,12,0,0,0,12-12V145.92A43.94,43.94,0,0,0,236,112V96ZM57.05,52H199l9.14,32H47.91Zm91,56v4a20,20,0,0,1-40,0v-4ZM53,128.71A20,20,0,0,1,44,112v-4H84v4a20,20,0,0,1-20,20,19.76,19.76,0,0,1-9.07-2.2A11.54,11.54,0,0,0,53,128.71ZM196,204H60V155.81c1.32.12,2.65.19,4,.19a43.86,43.86,0,0,0,32-13.85,43.89,43.89,0,0,0,64,0A43.86,43.86,0,0,0,192,156c1.35,0,2.68-.07,4-.19Zm16-92a20,20,0,0,1-9,16.71,11.66,11.66,0,0,0-1.88,1.09A20,20,0,0,1,172,112v-4h40Z\"/></svg>","dress":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M218.38,208.12c-.06-.12-.11-.25-.17-.37l-44.54-94.87L193,82.56c.06-.09.12-.18.17-.27a20,20,0,0,0,0-20.58c-.14-.24-.3-.48-.46-.71L172,31.44V12a12,12,0,0,0-24,0V31l-4.38,5.47a20,20,0,0,1-31.24,0L108,31V12a12,12,0,0,0-24,0V31.44L63.31,61c-.16.23-.32.47-.46.71a20,20,0,0,0,0,20.58c0,.09.11.18.17.27l19.31,30.32L37.79,207.75c-.06.12-.11.25-.17.37A20,20,0,0,0,56,236H200a20,20,0,0,0,18.39-27.88ZM128,68a43.75,43.75,0,0,0,31.21-13l12,17.1L153.42,100H102.58L84.82,72.12l12-17.1A43.75,43.75,0,0,0,128,68ZM62.31,212l41.31-88h48.76l41.31,88Z\"/></svg>","t-shirt":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M246.17,57.9,198.09,29.65h0A11.9,11.9,0,0,0,192,28H160a12,12,0,0,0-12,12,20,20,0,0,1-40,0A12,12,0,0,0,96,28H64a11.9,11.9,0,0,0-6.07,1.66h0L9.83,57.9A20.18,20.18,0,0,0,2,84l17.9,36.8A19.62,19.62,0,0,0,37.67,132H52v76a20,20,0,0,0,20,20H184a20,20,0,0,0,20-20V132h14.32a19.64,19.64,0,0,0,17.75-11.17L254,84A20.18,20.18,0,0,0,246.17,57.9ZM40.37,108,25.16,76.73,52,61v47ZM180,204H76V52h9.67a44,44,0,0,0,84.68,0H180Zm35.62-96H204V61l26.83,15.76Z\"/></svg>","scissors":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M238.78,183.79,98.28,87.65A40.18,40.18,0,0,0,100,76a40,40,0,1,0-15.29,31.45l30,20.56-30,20.56a40,40,0,1,0,3.57,59.74h0A39.73,39.73,0,0,0,100,180a40.18,40.18,0,0,0-1.72-11.66L136,142.54l89.22,61.06a12,12,0,0,0,13.56-19.81ZM71.31,191.33h0A16,16,0,1,1,76,180,16,16,0,0,1,71.31,191.33ZM48.69,87.3a16,16,0,1,1,22.62,0h0A16,16,0,0,1,48.69,87.3Zm112.82,23.24a12,12,0,0,1,3.13-16.68L225.22,52.4a12,12,0,0,1,13.56,19.81l-60.59,41.46a12,12,0,0,1-16.68-3.13Z\"/></svg>","basket":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M140,128v40a12,12,0,0,1-24,0V128a12,12,0,0,1,24,0Zm28.06-1.19-4,40a12,12,0,0,0,10.75,13.13c.4,0,.81.06,1.2.06a12,12,0,0,0,11.93-10.81l4-40a12,12,0,0,0-23.88-2.38Zm-80.12,0a12,12,0,0,0-23.88,2.38l4,40A12,12,0,0,0,80,180c.39,0,.8,0,1.2-.06a12,12,0,0,0,10.75-13.13Zm156-37.22-15.07,113A20.06,20.06,0,0,1,209,220H47a20.06,20.06,0,0,1-19.82-17.36l-15.07-113A12,12,0,0,1,24,76H66.55L119,16.1a12,12,0,0,1,18.06,0L189.45,76H232a12,12,0,0,1,11.89,13.59ZM98.45,76h59.1L128,42.22Zm119.84,24H37.71l12.8,96h155Z\"/></svg>","carrot":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M232,60H213l19.51-19.51a12,12,0,1,0-17-17L196,43V24a12,12,0,0,0-24,0V50A68,68,0,0,0,96,63.87l0,0h0l0,0C55.45,103.68,25.18,197,21.78,207.77A20,20,0,0,0,40,236a20.12,20.12,0,0,0,8.24-1.78c7.64-2.42,56.79-18.34,98.91-41.82l.54-.3c17.1-9.57,33-20.39,44.44-32A68,68,0,0,0,206,84h26a12,12,0,0,0,0-24Zm-56.89,83.12-.09.09c-8.11,8.28-19.11,16.2-31.33,23.52l-23.21-23.21a12,12,0,1,0-17,17l18.22,18.22c-30.29,15.17-62.13,26.42-75.26,30.82,6.77-20.22,29.79-84.8,58.34-119.74l30.7,30.7a12,12,0,1,0,17-17L122.54,73.58a44,44,0,0,1,52.57,69.54Z\"/></svg>","fork-knife":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M68,88V40a12,12,0,0,1,24,0V88a12,12,0,0,1-24,0ZM220,40V224a12,12,0,0,1-24,0V180H152a12,12,0,0,1-12-12,273.23,273.23,0,0,1,7.33-57.82C157.42,68.42,176.76,40.33,203.27,29A12,12,0,0,1,220,40ZM196,62.92C182.6,77,175,98,170.77,115.38A254.41,254.41,0,0,0,164.55,156H196ZM128,39A12,12,0,0,0,104,41l4,47.46a28,28,0,0,1-56,0L56,41A12,12,0,1,0,32,39L28,87c0,.34,0,.67,0,1a52.1,52.1,0,0,0,40,50.59V224a12,12,0,0,0,24,0V138.59A52.1,52.1,0,0,0,132,88c0-.33,0-.66,0-1Z\"/></svg>","hair-dryer":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M200,88a32,32,0,1,0-32,32A32,32,0,0,0,200,88Zm-32,8a8,8,0,1,1,8-8A8,8,0,0,1,168,96Zm13.06,112.28,31.25-68.76A68,68,0,0,0,168,20a11.81,11.81,0,0,0-2,.16L28.71,43.05A19.94,19.94,0,0,0,12,62.78v50.44A19.94,19.94,0,0,0,28.71,133L124,148.83V200a20,20,0,0,0,16.69,19.7A44.06,44.06,0,0,0,184,256h16a12,12,0,0,0,0-24H184a20,20,0,0,1-18.41-12.19A20.09,20.09,0,0,0,181.06,208.28ZM36,66.17,168.93,44a44,44,0,0,1,0,88L36,109.83Zm130,89.67a11.81,11.81,0,0,0,2,.16,68.08,68.08,0,0,0,10.85-.88L160.27,196H148V152.83Z\"/></svg>","palette":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M203.57,51A107.9,107.9,0,0,0,20,128c0,44.72,27.6,82.25,72,97.94A36,36,0,0,0,140,192a12,12,0,0,1,12-12h46.21a35.79,35.79,0,0,0,35.1-28A108.6,108.6,0,0,0,236,127.09,107.23,107.23,0,0,0,203.57,51Zm6.34,95.67a11.91,11.91,0,0,1-11.7,9.3H152a36,36,0,0,0-36,36,12,12,0,0,1-16,11.3c-16.65-5.88-30.65-15.76-40.48-28.56A76,76,0,0,1,44,128a84,84,0,0,1,83.13-84H128a84.35,84.35,0,0,1,84,83.29A84.72,84.72,0,0,1,209.91,146.71ZM144,76a16,16,0,1,1-16-16A16,16,0,0,1,144,76Zm-44,24A16,16,0,1,1,84,84,16,16,0,0,1,100,100Zm0,56a16,16,0,1,1-16-16A16,16,0,0,1,100,156Zm88-56a16,16,0,1,1-16-16A16,16,0,0,1,188,100Z\"/></svg>","bookmark-simple":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z\"/></svg>","prohibit":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm84,108a83.6,83.6,0,0,1-16.75,50.28L77.72,60.75A84,84,0,0,1,212,128ZM44,128A83.6,83.6,0,0,1,60.75,77.72L178.28,195.25A84,84,0,0,1,44,128Z\"/></svg>","bookmark-simple-fill":"<svg class=\"laloo-symbol\" aria-hidden=\"true\" focusable=\"false\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\" fill=\"currentColor\"><path d=\"M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z\"/></svg>"};
+const iconSvg = name => MAP_ICONS[name] || MAP_ICONS.storefront;
+const SHOP_ICONS = { vintage:"dress", clothing:"t-shirt", tailor:"scissors", market:"basket", fruit:"carrot", cafe:"coffee", food:"fork-knife", beauty:"hair-dryer", art:"palette" };
+const shopSymbol = shop => iconSvg(SHOP_ICONS[shop.category] || "storefront");
+document.querySelectorAll("[data-map-icon]").forEach(el => el.innerHTML = iconSvg(el.dataset.mapIcon));
 
 const msg = document.getElementById("msg");
 function say(t){ msg.textContent = t; msg.style.display = t ? "block" : "none"; }
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
-const map = L.map("map").setView([33.9850, -118.4695], 15);
+const map = L.map("map", { zoomControl:false }).setView([33.9850, -118.4695], 15);
 // Harita görünümü: OpenFreeMap vektör haritası (ücretsiz, anahtarsız). WebGL yoksa klasik OSM.
 const MAP_ATTR = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
 function hasWebGL(){ try{ const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); }catch(e){ return false; } }
@@ -246,11 +296,173 @@ if (window.maplibregl && L.maplibreGL && hasWebGL()){
   }catch(e){ rasterBase(); }
 } else rasterBase();
 const layer = L.layerGroup().addTo(map);
+L.control.zoom({ position:"bottomright" }).addTo(map);
+// Keep map attribution visible above the mobile panel, including its collapsed state.
+if (window.ResizeObserver){
+  new ResizeObserver(() => document.querySelector(".map-stage").style.setProperty("--sheet-height", `${Math.ceil(document.querySelector(".explorer").getBoundingClientRect().height)}px`)).observe(document.querySelector(".explorer"));
+}
 
 let cities = [], tips = [], shops = [], toilets = [], storyPins = [];
 let filter = "all", me = null, myLL = null, centered = false;
 let mode = "sb";               // "sb" = Supabase, "json" = yedek toilets.json
 const tiles = new Set(), seenShops = new Set();
+
+
+// Device-local collections and a shared card/pin model.
+let viewMode = "nearby", selectedKey = null, dataReady = false, listLimit = 40, areaLoading = 0, lastSurprise = null, walkingGuides = [], locationWatch = null, pendingRoute = null;
+let selectedShopId = null;
+let savedPlaces = [], storageAvailable = true, activePlaces = [], markerIndex = new Map();
+try { savedPlaces = JSON.parse(localStorage.getItem("laloo_saved_places") || "[]").filter(p => p && Number.isFinite(p.lat) && Number.isFinite(p.lng)).slice(0, 100); }
+catch (e) { savedPlaces = []; storageAvailable = false; }
+const placeKey = p => `${p.kind || "tip"}:${p.lat.toFixed(6)}:${p.lng.toFixed(6)}:${p.sid || ""}`;
+const isSaved = p => savedPlaces.some(s => placeKey(s) === placeKey(p));
+const symbolFor = p => iconSvg(({public:"toilet", cafe:"coffee", water:"drop", story:"book-open", tip:"sparkle"})[p.kind] || "sparkle");
+// The Leaflet root owns geographic positioning; only the inner face changes size.
+function mapIcon(symbol, kind, {selected=false, closed=false, count=0}={}){
+  const clustered=count>1, width=clustered ? 56 : 44;
+  return L.divIcon({
+    html:`<span class="pin-stem" aria-hidden="true"></span><span class="pin-face"><span class="pin-symbol">${symbol}${clustered ? `<span class="pin-count">${count>99 ? "99+" : count}</span>` : ""}</span>${closed ? `<span class="pin-status">${iconSvg("prohibit")}</span>` : ""}</span><span class="pin-foot" aria-hidden="true"></span>`,
+    className:`laloo-pin ${kind}${clustered ? " cluster" : ""}${selected ? " selected" : ""}${closed ? " is-closed" : ""}`,
+    iconSize:[width,48], iconAnchor:[width/2,43], popupAnchor:[0,-38], tooltipAnchor:[0,-38]
+  });
+}
+function labelMarker(marker, label, selected=false){
+  const el=marker.getElement();
+  if (el){
+    el.setAttribute("aria-label",label);el.setAttribute("aria-pressed",String(selected));
+    el.addEventListener("keydown",e=>{
+      if(e.key !== "Enter" && e.key !== " ")return;
+      e.preventDefault();e.stopPropagation();
+      if(!e.repeat)marker.fire("click",{originalEvent:e});
+    });
+  }
+  marker.bindTooltip(esc(label),{direction:"top",className:"pin-tooltip",opacity:1});
+  return marker;
+}
+const kindLabel = p => p.kind === "public" ? tx("pubRest") : p.kind === "cafe" ? tx("cafe").replace(/^☕\s*/, "") : p.kind === "water" ? tx("water") : p.kind === "story" ? tx("story_label") : tx("tips").replace(/^⭐\s*/, "");
+function allKnownPlaces(){
+  const byKey = new Map();
+  [...savedPlaces, ...toilets, ...tips.map(p => ({...p, kind:"tip"})), ...storyPins.map(p => ({...p, kind:"story"}))].forEach(p => {
+    if (Number.isFinite(p.lat) && Number.isFinite(p.lng)) byKey.set(placeKey(p), p);
+  });
+  return [...byKey.values()];
+}
+function placesInView(){
+  const bounds = map.getBounds(), origin = myLL || map.getCenter();
+  return allKnownPlaces().filter(p => {
+    if (viewMode === "saved") { if (!isSaved(p)) return false; }
+    else if (!bounds.contains([p.lat, p.lng])) return false;
+    if (viewMode === "nearby" && p.kind === "story") return false;
+    if (viewMode === "discover" && !["story","tip","water","cafe"].includes(p.kind)) return false;
+    if (filter !== "all" && p.kind !== filter) return false;
+    return true;
+  }).sort((a,b) => (a.status === "closed") - (b.status === "closed") || (viewMode === "nearby" && filter === "all" ? (a.kind === "water") - (b.kind === "water") : 0) || map.distance(origin,[a.lat,a.lng]) - map.distance(origin,[b.lat,b.lng]));
+}
+function accessTag(p){
+  if (p.fee) return tx(p.fee);
+  const info = p.info || "";
+  if (/Customers only|Ask inside/i.test(info)) return tx("custOnly");
+  if (/(?:^|, )Free(?:,|$)/.test(info)) return tx("Free");
+  if (/(?:^|, )Paid(?:,|$)/.test(info)) return tx("Paid");
+  return p.kind === "story" ? "" : tx("access_unknown");
+}
+function popupFor(p){
+  if (p.kind === "tip") return tipPopup(p);
+  if (p.kind === "story") return storyPopup(p);
+  return `<div class="tip"><b>${esc(trName(p.name))}</b>${stateTags(p)}<p>${esc(trInfo(p.info))}</p>${rvHtml(p)}${actsHtml(p.lat,p.lng,p.id,null,rateBtn(p))}</div>`;
+}
+function mapPadding(){
+  const bottom=matchMedia("(max-width: 767px)").matches ? Math.ceil(document.querySelector(".explorer").getBoundingClientRect().height)+18 : 24;
+  return {paddingTopLeft:[24,88],paddingBottomRight:[24,bottom]};
+}
+function popupOptions(maxWidth=300){
+  const padding=mapPadding();
+  return {maxWidth:Math.max(200,Math.min(maxWidth,map.getSize().x-88)),lalooMaxWidth:maxWidth,offset:[0,-38],maxHeight:Math.min(360,Math.max(90,map.getSize().y-padding.paddingTopLeft[1]-padding.paddingBottomRight[1]-70)),autoPanPaddingTopLeft:padding.paddingTopLeft,autoPanPaddingBottomRight:padding.paddingBottomRight};
+}
+let activeMapPopup=null;
+map.on("popupopen",e=>{activeMapPopup=e.popup;});
+map.on("popupclose",e=>{if(activeMapPopup === e.popup)activeMapPopup=null;});
+map.on("resize",()=>requestAnimationFrame(()=>{
+  if(!activeMapPopup?.isOpen())return;
+  Object.assign(activeMapPopup.options,popupOptions(activeMapPopup.options.lalooMaxWidth || activeMapPopup.options.maxWidth));
+  activeMapPopup.update();
+}));
+function focusPlace(p, keyboard = false){
+  if (matchMedia("(max-width: 767px)").matches) setPanelCollapsed(true);
+  selectedShopId = null;
+  selectedKey = placeKey(p);
+  const index=activePlaces.findIndex(x=>placeKey(x)===selectedKey);if(index>=listLimit)listLimit=Math.ceil((index+1)/40)*40;
+  if (!map.getBounds().contains([p.lat,p.lng]) || map.getZoom() < 14) map.setView([p.lat,p.lng], Math.max(15,map.getZoom()), { animate:!keyboard && !matchMedia("(prefers-reduced-motion: reduce)").matches });
+  draw();
+  placeClick(p);
+  const popup=L.popup(popupOptions()).setLatLng([p.lat,p.lng]).setContent(popupFor(p)).openOn(map);
+  if (keyboard) popup.getElement()?.querySelector(".leaflet-popup-close-button")?.focus();
+  document.querySelectorAll(".place-card").forEach(c => c.classList.toggle("selected", c.dataset.key === selectedKey));
+}
+function savePlace(p){
+  if (isSaved(p)) savedPlaces = savedPlaces.filter(s => placeKey(s) !== placeKey(p));
+  else if (savedPlaces.length < 100) savedPlaces.push({...p});
+  try { localStorage.setItem("laloo_saved_places", JSON.stringify(savedPlaces)); storageAvailable = true; }
+  catch(e) { storageAvailable = false; }
+  renderPlaces();
+  if (viewMode === "saved") draw();
+}
+function renderPlaces(){
+  activePlaces = placesInView();
+  document.getElementById("saved-count").textContent = savedPlaces.length;
+  const panel = document.getElementById("place-list");
+  const oldFocus = panel.contains(document.activeElement) ? document.activeElement : null;
+  const focusedKey = oldFocus && oldFocus.closest(".place-card")?.dataset.key;
+  const focusedAction = oldFocus && ["data-save","data-open","data-walk"].find(a=>oldFocus.hasAttribute(a));
+  const oldScroll = panel.scrollTop;
+  panel.setAttribute("aria-labelledby", `tab-${viewMode}`);
+  document.getElementById("list-title").textContent = tx(viewMode === "saved" ? "saved_title" : viewMode === "discover" ? "discover_title" : "stops_title");
+  document.getElementById("list-caption").textContent = tx(viewMode === "saved" ? "saved_count_text" : "places_count").replace("{n}", viewMode === "saved" ? savedPlaces.length : activePlaces.length);
+  document.getElementById("area-label").textContent = tx(myLL ? "near_area" : "map_area");
+  document.getElementById("area-caption").textContent = tx(myLL ? "from_you" : "from_center");
+  document.getElementById("surprise").hidden = viewMode !== "discover";
+  if ((!dataReady || areaLoading > 0) && viewMode !== "saved" && !activePlaces.length) { panel.innerHTML = `<div class="list-loading">${esc(tx("loadingB"))}</div>`; return; }
+  let content = "";
+  if (!activePlaces.length){
+    const k = viewMode === "saved" ? "empty_saved" : viewMode === "discover" ? "empty_discover" : "empty_near";
+    content = `<div class="empty-state"><span class="empty-symbol" aria-hidden="true">${viewMode === "saved" ? "♡" : "◎"}</span><strong>${esc(tx(k))}</strong><p>${esc(tx(k+"_body"))}</p>${viewMode === "discover" ? `<a href="/routes/">${esc(tx("browse_routes"))}</a>` : `<button type="button" data-reset>${esc(tx("all_places"))}</button>`}</div>`;
+  } else content = activePlaces.slice(0,viewMode === "saved" ? 100 : listLimit).map((p,i) => {
+    const meters = map.distance(myLL || map.getCenter(),[p.lat,p.lng]), distance = meters < 1000 ? `${Math.round(meters/10)*10} m` : `${(meters/1000).toFixed(1)} km`;
+    const loc = (p.i18n && p.i18n[LANG]) || {}, note = p.kind === "story" ? p.title : /^(Free|Paid)$/.test(p.info || "") ? "" : trInfo(loc.info || p.info), access = accessTag(p);
+    return `<article class="place-card${placeKey(p) === selectedKey ? " selected" : ""}" data-key="${esc(placeKey(p))}"><div class="place-card-top"><span class="place-kind-icon ${esc(p.kind)}" aria-hidden="true">${symbolFor(p)}</span><div class="place-card-heading"><button class="place-open" type="button" data-open="${i}"><h4>${esc(trName(p.name))}</h4></button><div class="place-meta">${esc(kindLabel(p))} <span aria-hidden="true">·</span> <span class="place-distance" title="${esc(tx(myLL ? "from_you" : "from_center"))}">${distance}</span></div></div><button class="save-place" type="button" data-save="${i}" aria-pressed="${isSaved(p)}" aria-label="${esc(tx(isSaved(p) ? "unsave_place" : "save_place"))}" title="${esc(tx(isSaved(p) ? "unsave_place" : "save_place"))}">${iconSvg(isSaved(p) ? "bookmark-simple-fill" : "bookmark-simple")}</button></div><div class="place-tags">${p.status === "closed" ? `<span class="closed">${esc(tx("closed"))}</span>` : ""}${access ? `<span class="tag">${esc(access)}</span>` : ""}${p.verified ? `<span class="tag">${esc(tx("verif"))}</span>` : ""}${p.hours ? `<span class="tag">${esc(p.hours)}</span>` : ""}</div>${note ? `<p class="place-note">${esc(note)}</p>` : ""}<div class="place-card-actions"><button class="show-place" type="button" data-open="${i}">${esc(tx("show_place"))}</button>${p.kind === "story" ? `<a class="walk-place" href="/stories/?s=${encodeURIComponent(p.sid)}&ref=map">${esc(tx("readStory"))}</a>` : `<button class="walk-place" type="button" data-walk="${i}">${esc(tx("walk_place"))}</button>`}</div></article>`;
+  }).join("");
+  let guide = "";
+  if (viewMode === "discover" && walkingGuides.length){
+    const origin=myLL || map.getCenter(), nearest=[...walkingGuides].sort((a,b)=>map.distance(origin,[a.lat,a.lng])-map.distance(origin,[b.lat,b.lng]))[0];
+    if (map.distance(origin,[nearest.lat,nearest.lng]) < 80000){
+      const text=nearest.i18n[LANG] || nearest.i18n.en;
+      guide=`<article class="guide-card"><span class="guide-label">${esc(tx("guide_label"))}</span><h4>${esc(text.title)}</h4><p>${esc(text.desc)}</p><a href="/routes/${encodeURIComponent(nearest.slug)}/">${esc(tx("browse_routes"))}</a></article>`;
+    }
+  }
+  panel.innerHTML = guide + content + (viewMode !== "saved" && activePlaces.length > listLimit ? `<button class="load-more" type="button" data-more>${esc(tx("more_places"))}</button>` : "") + (viewMode === "saved" ? `<p class="collection-note">${esc(tx(storageAvailable ? "saved_local" : "saved_session"))}</p>` : `<p class="collection-note">${esc(tx("check_access"))}<br>${esc(tx(myLL ? "from_you" : "from_center"))}</p>`);
+  panel.scrollTop = oldScroll;
+  if (oldFocus && focusedAction){
+    const card=[...panel.querySelectorAll(".place-card")].find(c=>c.dataset.key===focusedKey);
+    const target=card?.querySelector(`[${focusedAction}]`) || panel.querySelector(`[${focusedAction}]`) || panel;
+    target.focus({preventScroll:true});
+  }
+  panel.querySelectorAll("[data-open]").forEach(b => b.onclick = e => focusPlace(activePlaces[+b.dataset.open],e.detail === 0));
+  panel.querySelectorAll("[data-save]").forEach(b => b.onclick = () => savePlace(activePlaces[+b.dataset.save]));
+  panel.querySelectorAll("[data-walk]").forEach(b => b.onclick = () => { const p=activePlaces[+b.dataset.walk]; if(matchMedia("(max-width: 767px)").matches)setPanelCollapsed(true);route(p.lat,p.lng,p.id,null); });
+  panel.querySelectorAll("[data-more]").forEach(b => b.onclick = () => {listLimit+=40;renderPlaces();panel.querySelector("[data-more]")?.focus({preventScroll:true});});
+  panel.querySelectorAll("[data-reset]").forEach(b => b.onclick = () => { setViewMode("nearby"); setFilter("all"); });
+}
+function setFilter(next){
+  filter = next;listLimit=40;
+  document.querySelectorAll(".bar [data-f]").forEach(b => { b.classList.toggle("on",b.dataset.f === next); b.setAttribute("aria-pressed",b.dataset.f === next); });
+  draw();
+}
+function setViewMode(next){
+  if(matchMedia("(max-width: 767px)").matches)setPanelCollapsed(false);
+  viewMode = next; filter = "all";document.getElementById("place-list").scrollTop=0;
+  document.querySelectorAll("[data-view]").forEach(b => { const on=b.dataset.view === next; b.classList.toggle("active",on); b.setAttribute("aria-selected",on); b.tabIndex=on ? 0 : -1; });
+  setFilter("all");
+}
 
 const dirLink = (lat,lng) => `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
 
@@ -309,7 +521,7 @@ let routeLine = null;
 function clearRoute(){ if (routeLine){ map.removeLayer(routeLine); routeLine = null; } say(""); }
 window.route = async (lat, lng, target, biz) => {
   track("route", { target, biz }); setTimeout(nudge, 8000);
-  if (!myLL){ say(tx("allowRoute")); locate(); return; }
+  if (!myLL){ pendingRoute = [lat,lng,target,biz]; say(tx("allowRoute")); locate(); return; }
   map.closePopup(); say(tx("finding"));
   try{
     const u = `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${myLL[1]},${myLL[0]};${lng},${lat}?overview=full&geometries=geojson`;
@@ -317,7 +529,7 @@ window.route = async (lat, lng, target, biz) => {
     const r = d.routes[0];
     clearRoute();
     routeLine = L.geoJSON(r.geometry, { style:{ color:"#1c4fa0", weight:6, opacity:.85, dashArray:"1 10", lineCap:"round" } }).addTo(map);
-    map.fitBounds(routeLine.getBounds(), { padding:[40,40] });
+    map.fitBounds(routeLine.getBounds(), mapPadding());
     const min = Math.max(1, Math.round(r.duration/60)), m = Math.round(r.distance);
     say(`🚶 ${min} ${tx("min")} · ${m < 1000 ? m+" m" : (m/1000).toFixed(1)+" km"}  ✕`);
   }catch(e){ say(""); window.open(dirLink(lat,lng), "_blank"); }
@@ -369,13 +581,13 @@ map.on("popupopen", e => {
 function tipPopup(t){
   const loc = (t.i18n && t.i18n[LANG]) || {}, info = loc.info || t.info, hours = loc.hours || t.hours;
   const cls = t.fee === "Free" ? "free" : t.fee === "Customers" ? "cust" : "";
-  return `<div class="tip"><b>⭐ ${esc(t.name)}</b>${stateTags(t)}
+  return `<div class="tip"><b class="popup-title">${iconSvg("sparkle")} ${esc(t.name)}</b>${stateTags(t)}
     ${t.fee ? `<span class="tag ${cls}">${esc(tx(t.fee))}</span>` : ""}${hours ? `<span class="tag">${esc(hours)}</span>` : ""}${t.area ? `<span class="tag">${esc(t.area)}</span>` : ""}
     <p>${esc(info)}</p>${rvHtml(t)}${actsHtml(t.lat, t.lng, t.id, null, rateBtn(t))}</div>`;
 }
 function shopPopup(s, i){
   const web = /^https?:\/\//.test(s.website || "") ? s.website : "";
-  return `<div class="ad"><b>${SHOP_ICONS[s.category] || "🛍️"} ${esc(s.name)}</b>
+  return `<div class="ad"><b class="popup-title">${shopSymbol(s)} ${esc(s.name)}</b>
     <span class="tag">${tx("local")}</span>${s.hours ? `<span class="tag">${esc(s.hours)}</span>` : ""}
     <p>${esc(s.blurb)}${s.address ? "<br><small>" + esc(s.address) + "</small>" : ""}</p>
     ${s.promo_code ? `<button class="code" onclick="copyCode(${i})">${tx("code")} ${esc(s.promo_code)}</button>` : ""}
@@ -384,7 +596,7 @@ function shopPopup(s, i){
 }
 
 function storyPopup(sp){
-  return `<div class="tip st"><b>📖 ${esc(sp.name)}</b><small>${esc(tx("storyFrom"))}</small><i>${esc(sp.title)}</i>
+  return `<div class="tip st"><b class="popup-title">${iconSvg("book-open")} ${esc(sp.name)}</b><small>${esc(tx("storyFrom"))}</small><i>${esc(sp.title)}</i>
     <div class="acts"><a class="go" href="/stories/?s=${encodeURIComponent(sp.sid)}&ref=map">${esc(tx("readStory"))}</a>
     <button onclick="route(${sp.lat},${sp.lng},null,null)">${tx("route")}</button></div></div>`;
 }
@@ -400,53 +612,112 @@ map.on("popupopen", e => {
 map.on("popupclose", () => { if (storyLine){ map.removeLayer(storyLine); storyLine = null; } });
 
 // ================= ÇİZİM =================
+// Group by screen distance, so neighboring controls never hide one another.
+// A selected member highlights its group; all members stay reachable at identical coordinates.
+function groupMapPlaces(records){
+  const cellSize=64,bins=new Map(),groups=new Set(),order=new Map();
+  const cell=point=>[Math.floor(point.x/cellSize),Math.floor(point.y/cellSize)];
+  const key=(x,y)=>x+":"+y;
+  const remove=group=>{
+    const [x,y]=cell(group.point),id=key(x,y),bucket=bins.get(id);
+    bucket.delete(group);if(!bucket.size)bins.delete(id);groups.delete(group);
+  };
+  records.forEach((record,index)=>{
+    order.set(record,index);
+    const group={point:map.latLngToContainerPoint([record.p.lat,record.p.lng]),selected:record.shop ? record.p.id===selectedShopId : placeKey(record.p)===selectedKey,records:[record]};
+    // Existing groups are disjoint. Recheck only the moved group's neighboring cells
+    // after every merge; their 64px cells exceed the largest 60px collision reach.
+    while(true){
+      const [x,y]=cell(group.point),width=group.records.length>1 ? 56 : 44;
+      let neighbor=null;
+      search:for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+        const bucket=bins.get(key(x+dx,y+dy));if(!bucket)continue;
+        for(const candidate of bucket){
+          const candidateWidth=candidate.records.length>1 ? 56 : 44;
+          if(Math.abs(group.point.x-candidate.point.x)<(width+candidateWidth)/2+4 && Math.abs(group.point.y-candidate.point.y)<52){neighbor=candidate;break search;}
+        }
+      }
+      if(!neighbor)break;
+      remove(neighbor);
+      const n=group.records.length,m=neighbor.records.length;
+      group.point=L.point((group.point.x*n+neighbor.point.x*m)/(n+m),(group.point.y*n+neighbor.point.y*m)/(n+m));
+      group.selected=group.selected || neighbor.selected;
+      // Append the smaller collection to avoid repeatedly copying a large dense group.
+      if(n<m){const smaller=group.records;group.records=neighbor.records;for(const member of smaller)group.records.push(member);}
+      else for(const member of neighbor.records)group.records.push(member);
+    }
+    const [x,y]=cell(group.point),id=key(x,y);
+    if(!bins.has(id))bins.set(id,new Set());bins.get(id).add(group);groups.add(group);
+  });
+  const result=[...groups];
+  result.forEach(group=>group.records.sort((a,b)=>order.get(a)-order.get(b)));
+  return result.sort((a,b)=>order.get(a.records[0])-order.get(b.records[0]));
+}
+function openShop(sp,index,keyboard=false){
+  if (matchMedia("(max-width: 767px)").matches) setPanelCollapsed(true);
+  selectedKey=null;selectedShopId=sp.id;draw();
+  track("pin_click",{biz:sp.id});
+  const popup=L.popup(popupOptions())
+    .setLatLng([sp.lat,sp.lng]).setContent(shopPopup(sp,index)).openOn(map);
+  if (keyboard) popup.getElement()?.querySelector(".leaflet-popup-close-button")?.focus();
+}
+function openMapGroup(records,ll,keyboard=false){
+  if (matchMedia("(max-width: 767px)").matches) setPanelCollapsed(true);
+  const options=popupOptions(310);
+  const content=`<div class="pin-group"><b>${esc(tx("open_group"))}</b><div class="pin-group-list">${records.map((record,i)=>`<button type="button" data-group-place="${i}"><span class="place-kind-icon ${record.shop ? "business" : esc(record.p.kind)}" aria-hidden="true">${record.shop ? shopSymbol(record.p) : symbolFor(record.p)}</span><span><strong>${esc(trName(record.p.name))}</strong><small>${esc(record.shop ? tx("local") : kindLabel(record.p))}${record.p.status === "closed" ? " · " + esc(tx("closed")) : ""}</small></span></button>`).join("")}</div></div>`;
+  const popup=L.popup({...options,minWidth:220,maxHeight:Math.min(260,options.maxHeight)}).setLatLng(ll).setContent(content);
+  popup.on("add",()=>{
+    popup.getElement().querySelectorAll("[data-group-place]").forEach(button=>button.onclick=e=>{
+      const record=records[+button.dataset.groupPlace];
+      if(record.shop) openShop(record.p,record.index,e.detail===0);
+      else {focusPlace(record.p,e.detail===0);if(record.p.kind === "story")track("story_pin",{target:record.p.sid});}
+    });
+    if (keyboard) popup.getElement().querySelector("[data-group-place]")?.focus();
+  });
+  popup.openOn(map);
+}
 function draw(){
-  layer.clearLayers();
-  const b = map.getBounds().pad(0.2), view = map.getBounds();
-  let n = 0;
-  if (filter === "all" || filter === "tip"){
-    tips.forEach(t => {
-      if (!b.contains([t.lat, t.lng])) return;
-      n++;
-      L.marker([t.lat, t.lng], { icon: L.divIcon({ html:"⭐", className: t.status === "closed" ? "loo shut" : "loo", iconSize:[28,28] }), zIndexOffset:500 })
-        .addTo(layer).bindPopup(() => { placeClick(t); return tipPopup(t); });
+  layer.clearLayers(); markerIndex.clear();
+  renderPlaces();
+  const b=map.getBounds().pad(0.2),visible=new Set(activePlaces.map(placeKey));
+  const records=allKnownPlaces().filter(p=>{
+    if(!b.contains([p.lat,p.lng]))return false;
+    if(viewMode === "saved" ? !isSaved(p) : !visible.has(placeKey(p)))return false;
+    if(filter !== "all" && p.kind !== filter)return false;
+    return map.getZoom()>=13 || ["tip","story"].includes(p.kind);
+  }).map(p=>({p,shop:false}));
+  if(viewMode === "nearby" && filter === "all")shops.forEach((sp,index)=>{
+    if(!b.contains([sp.lat,sp.lng]))return;
+    if(map.getBounds().contains([sp.lat,sp.lng]) && !seenShops.has(sp.id)){seenShops.add(sp.id);track("pin_view",{biz:sp.id});}
+    records.push({p:sp,shop:true,index});
+  });
+  groupMapPlaces(records).forEach(group=>{
+    if(group.records.length>1){
+      const primary=group.records.find(r=>r.shop ? r.p.id===selectedShopId : placeKey(r.p)===selectedKey) || group.records.find(r=>!r.shop && r.p.kind === "public") || group.records[0];
+      const count=group.records.length,label=tx("group_places").replace("{n}",count);
+      const ll=map.containerPointToLatLng(group.point);
+      const marker=labelMarker(L.marker(ll,{icon:mapIcon(primary.shop ? shopSymbol(primary.p) : symbolFor(primary.p),primary.shop ? "business" : primary.p.kind,{count,selected:group.selected}),autoPanOnFocus:false,zIndexOffset:group.selected ? 900 : 550,title:label,alt:label}).addTo(layer),label,group.selected);
+      marker.on("click",e=>openMapGroup(group.records,ll,["keydown","keypress"].includes(e.originalEvent?.type)));
+      return;
+    }
+    const {p,shop,index}=group.records[0];
+    if(shop){
+      const label=`${p.name} · ${tx("local")}`;
+      const marker=labelMarker(L.marker([p.lat,p.lng],{icon:mapIcon(shopSymbol(p),"business",{selected:group.selected}),autoPanOnFocus:false,zIndexOffset:group.selected ? 900 : 200,title:label,alt:label}).addTo(layer),label,group.selected);
+      marker.on("click",e=>openShop(p,index,["keydown","keypress"].includes(e.originalEvent?.type)));
+      return;
+    }
+    const label=`${trName(p.name)} · ${kindLabel(p)}${p.status === "closed" ? " · " + tx("closed") : ""}`;
+    const marker=labelMarker(L.marker([p.lat,p.lng],{icon:mapIcon(symbolFor(p),p.kind,{selected:group.selected,closed:p.status === "closed"}),autoPanOnFocus:false,lalooZ:p.kind === "tip" ? 500 : 0,zIndexOffset:group.selected ? 900 : p.kind === "tip" ? 500 : 0,title:label,alt:label}).addTo(layer),label,group.selected);
+    marker.on("click",e=>{
+      focusPlace(p,["keydown","keypress"].includes(e.originalEvent?.type));
+      if(p.kind === "story")track("story_pin",{target:p.sid});
+      const card=[...document.querySelectorAll(".place-card")].find(c=>c.dataset.key===selectedKey);
+      card?.scrollIntoView({block:"nearest",behavior:"instant"});
     });
-  }
-  // İşletmeler her filtrede her zaman görünür
-  shops.forEach((sp, i) => {
-    if (!b.contains([sp.lat, sp.lng])) return;
-    if (view.contains([sp.lat, sp.lng]) && !seenShops.has(sp.id)){ seenShops.add(sp.id); track("pin_view", { biz:sp.id }); }
-    L.marker([sp.lat, sp.lng], { icon: L.divIcon({ html:`<div class="shop">${SHOP_ICONS[sp.category] || "🛍️"}</div>`, className:"", iconSize:[34,34], iconAnchor:[17,17] }), zIndexOffset:800 })
-      .addTo(layer).bindPopup(() => { track("pin_click", { biz:sp.id }); return shopPopup(sp, i); });
+    markerIndex.set(placeKey(p),marker);
   });
-  // Hikayelerdeki yerler (yayınlanmış, konumu bulunmuş)
-  if (filter !== "public" && filter !== "cafe" && map.getZoom() >= 11) storyPins.forEach(sp => {
-    if (!b.contains([sp.lat, sp.lng])) return;
-    L.marker([sp.lat, sp.lng], { icon: L.divIcon({ html:"📖", className:"loo", iconSize:[24,24] }), zIndexOffset:300 })
-      .addTo(layer).bindPopup(() => { track("story_pin", { target:sp.sid }); return storyPopup(sp); });
-  });
-  // İçme suyu her filtrede görünür, tuvalet sayısına katılmaz
-  if (map.getZoom() >= 13) toilets.forEach(p => {
-    if (p.kind !== "water" || !b.contains([p.lat, p.lng])) return;
-    L.marker([p.lat, p.lng], { icon: L.divIcon({ html:"💧", className:"loo water", iconSize:[20,20] }), zIndexOffset:-200 })
-      .addTo(layer)
-      .bindPopup(() => { placeClick(p); return `<b>💧 ${esc(trName(p.name))}</b>${p.info ? "<br>" + esc(trInfo(p.info)) : ""}${actsHtml(p.lat, p.lng, p.id)}`; });
-  });
-  if (filter !== "tip"){
-    if (map.getZoom() < 13){ if (!routeLine) say(tx("zoom")); return; }
-    toilets.forEach(p => {
-      if (p.kind === "water") return;
-      if (filter !== "all" && p.kind !== filter) return;
-      if (!b.contains([p.lat, p.lng])) return;
-      n++;
-      L.marker([p.lat, p.lng], { icon: L.divIcon({ html: p.kind === "public" ? "🚻" : "☕", className: p.status === "closed" ? "loo shut" : "loo", iconSize:[26,26] }) })
-        .addTo(layer)
-        .bindPopup(() => { placeClick(p); return `<b>${esc(trName(p.name))}</b>${stateTags(p)}${p.info ? "<br>" + esc(trInfo(p.info)) : ""}${rvHtml(p)}${actsHtml(p.lat, p.lng, p.id, null, rateBtn(p))}`; });
-    });
-  }
-  if (routeLine) return;
-  if (filter === "tip" && !n) say(tx("noTips"));
-  else say(n ? "" : tx("noBath"));
+  if(!routeLine)say(map.getZoom()<13 && viewMode !== "saved" ? tx("zoom") : "");
 }
 
 // ================= VERİ =================
@@ -461,18 +732,20 @@ async function loadArea(){
       if (!tiles.has(k)){ tiles.add(k); need.push([y, x]); }
     }
   if (!need.length) return;
+  areaLoading++;renderPlaces();
   if (!toilets.length) say(tx("loadingB"));
   try{
     const res = await Promise.all(need.map(([y, x]) => sb(
       `places?select=id,kind,name,info,lat,lng,status,status_note,verified&kind=neq.tip&active=not.is.false` +
       `&lat=gte.${(y*T).toFixed(2)}&lat=lt.${((y+1)*T).toFixed(2)}` +
       `&lng=gte.${(x*T).toFixed(2)}&lng=lt.${((x+1)*T).toFixed(2)}&limit=1000`)));
+    dataReady = true;
     res.forEach((r, i) => { if (r.length) toilets.push(...r); else liveTile(...need[i]); });
     draw();
   }catch(e){
     need.forEach(([y, x]) => tiles.delete(y + ":" + x));
     say(tx("loadFail"));
-  }
+  }finally{areaLoading--;dataReady=true;renderPlaces();}
 }
 
 // Listede olmayan bir yer: o karenin tuvaletlerini anında OpenStreetMap'ten çek (dünyanın her yeri)
@@ -543,9 +816,10 @@ async function loadJson(){
   try{
     const res = await fetch("toilets.json?d=" + new Date().toISOString().slice(0,10));
     if (!res.ok) throw new Error(res.status);
+    dataReady = true;
     toilets = (await res.json()).map(p => ({ lat:p.a, lng:p.o, kind:p.k === "place" ? "cafe" : p.k, name:p.n, info:p.i }));
     draw();
-  }catch(e){ say(tx("loadFail")); }
+  }catch(e){ dataReady = true; renderPlaces(); say(tx("loadFail")); }
 }
 
 async function init(){
@@ -573,25 +847,44 @@ async function init(){
 // ================= KONUM =================
 function showMe(p){
   myLL = [p.coords.latitude, p.coords.longitude];
-  if (!me) me = L.marker(myLL, { icon: L.divIcon({ className:"", html:'<div class="me"></div>', iconSize:[22,22], iconAnchor:[11,11] }), zIndexOffset:1000 }).addTo(map);
+  if (!me) me = L.marker(myLL, { icon:L.divIcon({className:"laloo-location",html:'<span class="location-halo" aria-hidden="true"></span><span class="location-core" aria-hidden="true"></span>',iconSize:[36,36],iconAnchor:[18,18]}),interactive:false,keyboard:false,zIndexOffset:1000 }).addTo(map);
   else me.setLatLng(myLL);
   if (window._visit){ window._visit(); window._visit = null; }
-  if (!centered){ centered = true; map.setView(myLL, 16); }
+  if (!centered){ centered = true; if (!pendingRoute) map.setView(myLL, 16); }
+  renderPlaces();
+  if (pendingRoute){ const destination=pendingRoute;pendingRoute=null;route(...destination); }
 }
 function locate(){
   if (!navigator.geolocation){ say(tx("noLoc")); return; }
   if (myLL){ map.setView(myLL, 16); return; }
-  navigator.geolocation.watchPosition(showMe,
-    () => say(tx("allowLoc")),
+  if (locationWatch !== null) return;
+  locationWatch = navigator.geolocation.watchPosition(showMe,
+    () => { pendingRoute=null;if(locationWatch !== null)navigator.geolocation.clearWatch(locationWatch);locationWatch=null;say(tx("allowLoc")); },
     { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
 }
 
-document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => {
-  document.querySelectorAll(".bar button").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on"); filter = btn.dataset.f; draw();
-});
-document.getElementById("locate").onclick = () => { track("near_me"); locate(); };
-map.on("moveend", () => { draw(); loadArea(); });
+document.querySelectorAll(".bar button").forEach(btn => btn.onclick = () => setFilter(btn.dataset.f));
+document.querySelectorAll("[data-view]").forEach(btn => btn.onclick = () => setViewMode(btn.dataset.view));
+document.querySelector(".view-tabs").onkeydown = e => {
+  if (!["ArrowLeft","ArrowRight","Home","End"].includes(e.key)) return;
+  e.preventDefault(); const tabs=[...document.querySelectorAll("[data-view]")],index=tabs.indexOf(document.activeElement);
+  const next=e.key === "Home" ? 0 : e.key === "End" ? tabs.length-1 : (index+(e.key === "ArrowRight" ? 1 : -1)+tabs.length)%tabs.length;
+  setViewMode(tabs[next].dataset.view); tabs[next].focus();
+};
+document.getElementById("locate").setAttribute("aria-label",tx("find_near"));
+document.getElementById("locate").onclick = document.getElementById("map-locate").onclick = () => { setViewMode("nearby"); track("near_me"); locate(); };
+document.getElementById("surprise").onclick = e => {
+  const candidates=activePlaces.filter(p=>p.status!=="closed" && placeKey(p)!==lastSurprise);
+  if (!candidates.length) { say(tx("no_surprise")); return; }
+  const p=candidates[Math.floor(Math.random()*candidates.length)];lastSurprise=placeKey(p);focusPlace(p,e.detail===0);
+};
+function setPanelCollapsed(collapsed){
+  const panel=document.querySelector(".explorer"),btn=document.getElementById("panel-toggle");
+  panel.classList.toggle("is-collapsed",collapsed);
+  btn.setAttribute("aria-expanded",!collapsed);btn.setAttribute("aria-label",tx(collapsed ? "collapsed_label" : "expanded_label"));btn.textContent=collapsed ? "⌃" : "⌄";map.invalidateSize();
+}
+document.getElementById("panel-toggle").onclick = () => setPanelCollapsed(!document.querySelector(".explorer").classList.contains("is-collapsed"));
+map.on("moveend", () => { loadArea();draw(); });
 msg.onclick = () => { if (routeLine) clearRoute(); else if (!toilets.length) init(); };
 
 // ================= ARAMA =================
@@ -625,14 +918,20 @@ qi.oninput = () => {
   if (v.length < 3){ qr.hidden = true; return; }
   qTimer = setTimeout(() => searchPlaces(v), 350);
 };
-qi.onkeydown = e => { if (e.key === "Enter" && qHits.length){ e.preventDefault(); pickPlace(qHits[0]); } };
+qi.setAttribute("aria-label", tx("search_ph"));
+qi.setAttribute("aria-controls", "qres");
+qi.onkeydown = e => { if(e.key === "Escape"){qr.hidden=true;return;}if (e.key === "Enter" && !qr.hidden && qHits.length){ e.preventDefault(); pickPlace(qHits[0]); }if(e.key === "ArrowDown" && !qr.hidden){e.preventDefault();qr.querySelector("button")?.focus();} };
+qr.onkeydown = e => {const items=[...qr.querySelectorAll("button")],i=items.indexOf(document.activeElement);if(e.key==="Escape"){qr.hidden=true;qi.focus();}if(e.key==="ArrowDown" || e.key==="ArrowUp"){e.preventDefault();const next=i+(e.key==="ArrowDown" ? 1 : -1);if(next<0)qi.focus();else items[Math.min(next,items.length-1)]?.focus();}};
 map.on("click", () => { qr.hidden = true; });
 
 // ================= ÖNERİ FORMU VE GİZLİLİK =================
 const addSheet = document.getElementById("addsheet"), privSheet = document.getElementById("privsheet"), sf = document.getElementById("sf");
-function openSheet(el){ el.classList.add("on"); }
+let sheetTrigger = null;
+function openSheet(el){ sheetTrigger=document.activeElement;el.classList.add("on");el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label",el.querySelector("h3").textContent);const focus=el.querySelector("input:not(.hp),button,a");if(focus)focus.focus(); }
+function closeSheet(el){ el.classList.remove("on");if(sheetTrigger)sheetTrigger.focus(); }
+document.addEventListener("keydown",e=>{const sh=document.querySelector(".sheet.on");if(!sh)return;if(e.key==="Escape"){closeSheet(sh);return;}if(e.key!=="Tab")return;const items=[...sh.querySelectorAll("input:not(.hp),textarea,button,a")].filter(el=>!el.disabled && el.getClientRects().length);const first=items[0],last=items[items.length-1];if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}});
 document.querySelectorAll(".sheet").forEach(sh => {
-  sh.addEventListener("click", e => { if (e.target === sh || e.target.hasAttribute("data-close")) sh.classList.remove("on"); });
+  sh.addEventListener("click", e => { if (e.target === sh || e.target.hasAttribute("data-close")) closeSheet(sh); });
 });
 document.getElementById("contact").onclick = e => {
   e.preventDefault();
@@ -744,7 +1043,9 @@ setTimeout(nudge, 25000);
     map.setView([at[0], at[1]], Math.min(Math.max(at[2] || 14, 3), 18)); centered = true;
   }
 })();
-if (!EMBED) locate();
+// Curated walking guides are existing, published content; discovery works without stories.
+fetch("routes.json").then(r=>r.ok ? r.json() : []).then(list=>{walkingGuides=list.filter(g=>g && Number.isFinite(g.lat) && Number.isFinite(g.lng) && g.i18n?.en);renderPlaces();}).catch(()=>{});
+// Location is requested by the visitor, after the useful search/map surface appears.
 init();
 </script>
 </body>
