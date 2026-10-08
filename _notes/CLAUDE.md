@@ -53,3 +53,5 @@ Her oturumda önce bu dosya okunur, sonra sadece ilgili dosyanın ilgili kısmı
 - 10-07: Mobil panel üçte bir yükseklikte başlar; gerçek tutamaçla sürükleme, kısa panjur geçişi, aramada açılma, klavye/iptal ve ekran değişimine uyum eklendi. Mobil harita merkez etiketi kaldırıldı; masaüstü paneli korunur.
 
 - 10-08: Mr. Space ürün kredisi harita alt alanına 12 dilde ve Hakkında sayfalarına 5 dilde hazırlandı. about_page.py/sözlük de güncellendi. Ayrı inceleme dalı; bu çalışma yayın onayı vermiyor.
+
+- 10-08: CDN bağımlılığı olmayan çevrimdışı Kaydedilen yerler ekranı, beş dil, özel veri ve harita önbelleği sınırları, sekme kapanışını bekleyen güvenli güncelleme ve gerçek tarayıcı testleri hazırlandı; PR 2 güncelleniyor.

@@ -1,33 +1,51 @@
-// Laloo service worker: uygulama kabuğunu saklar, veri ve harita her zaman canlı gelir
-const V = "laloo-v8-mobile-shutter";
-const SHELL = ["./", "index.html", "explore.css?v=8", "logo-header.png", "favicon-32.png", "icon-192.png", "icon-512.png",
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"];
+// Public static resources only. Private pages, APIs and map tiles stay network-only.
+const VERSION = "laloo-v9-saved-places";
+const PREFIX = "laloo-";
+const FALLBACK = ["/offline.html", "/offline.css", "/offline.js"];
+const PUBLIC_ASSETS = new Set([...FALLBACK, "/explore.css?v=8", "/logo-header.png", "/favicon-32.png", "/favicon-512.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png"]);
 
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).catch(() => {}));
-  self.skipWaiting();
+self.addEventListener("install", event => {
+  // No CDN dependency; an incomplete fallback must not replace a working worker.
+  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FALLBACK)));
+  // Updates wait for existing tabs to close, keeping each tab on one version.
 });
-self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))));
-  self.clients.claim();
+self.addEventListener("activate", event => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith(PREFIX) && name !== VERSION).map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
 });
-self.addEventListener("fetch", e => {
-  const r = e.request;
-  if (r.method !== "GET") return;
-  const u = new URL(r.url);
-  // Supabase, rota servisi, harita karoları, admin: hiç dokunma
-  if (u.hostname.endsWith("supabase.co") || u.hostname.includes("openstreetmap") || u.pathname.endsWith("admin.html")) return;
-  // Sayfanın kendisi: önce internet (güncel kalsın), yoksa kayıtlı kopya
-  if (r.mode === "navigate"){
-    // Sadece harita sayfası önbelleğe yazılır; şehir sayfaları ve diğerleri normal yüklenir
-    if (u.origin !== location.origin || !(u.pathname === "/" || u.pathname.endsWith("/index.html") && u.pathname.split("/").length === 2)) return;
-    e.respondWith(fetch(r).then(res => { const c = res.clone(); caches.open(V).then(x => x.put("index.html", c)); return res; })
-      .catch(() => caches.match("index.html")));
+self.addEventListener("fetch", event => {
+  const request = event.request, url = new URL(request.url);
+  if(request.method !== "GET" || url.origin !== self.location.origin) return;
+  if(request.mode === "navigate") {
+    if(!["/", "/index.html", "/offline.html"].includes(url.pathname)) return;
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request);
+        if(response.status < 500) return response;
+      } catch (_) {}
+      return await (await caches.open(VERSION)).match("/offline.html") || Response.error();
+    })());
     return;
   }
-  // Logo, ikon, Leaflet: önce kayıtlı kopya
-  if (SHELL.some(s => r.url.endsWith(s.replace("./", "")) && s !== "./")){
-    e.respondWith(caches.match(r).then(m => m || fetch(r)));
-  }
+  // Exact query matches prevent access-token URLs or unbounded variants entering cache.
+  if(!PUBLIC_ASSETS.has(url.pathname + url.search)) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(VERSION);
+    // The essential fallback is versioned with the worker. Other assets stay fresh online.
+    if(FALLBACK.includes(url.pathname)) {
+      const cached = await cache.match(request); if(cached) return cached;
+    }
+    try {
+      const response = await fetch(request);
+      if(response.ok && response.type !== "opaque") {
+        try { await cache.put(request, response.clone()); } catch (_) {}
+      }
+      return response;
+    } catch (_) {
+      return await cache.match(request) || Response.error();
+    }
+  })());
 });
