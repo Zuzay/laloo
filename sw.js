@@ -1,78 +1,51 @@
-// Laloo service worker: cache the app shell only; map data and tiles stay live.
-const V = "laloo-v4";
-const CACHE_PREFIX = "laloo-";
-const LOCAL_SHELL = [
-  "./", "index.html", "logo-header.png", "favicon-32.png", "favicon-512.png",
-  "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-maskable-512.png"
-];
-const REMOTE_SHELL = [
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
-];
+// Public static resources only. Private pages, APIs and map tiles stay network-only.
+const VERSION = "laloo-v9-saved-places";
+const PREFIX = "laloo-";
+const FALLBACK = ["/offline.html", "/offline.css", "/offline.js"];
+const PUBLIC_ASSETS = new Set([...FALLBACK, "/explore.css?v=8", "/logo-header.png", "/favicon-32.png", "/favicon-512.png", "/apple-touch-icon.png", "/icon-192.png", "/icon-512.png", "/icon-maskable-512.png"]);
 
 self.addEventListener("install", event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(V);
-    // Third-party files are cached on first use, so installation depends only on local files.
-    await cache.addAll(LOCAL_SHELL);
-    await self.skipWaiting();
-  })());
+  // No CDN dependency; an incomplete fallback must not replace a working worker.
+  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FALLBACK)));
+  // Updates wait for existing tabs to close, keeping each tab on one version.
 });
-
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys
-      .filter(key => key.startsWith(CACHE_PREFIX) && key !== V)
-      .map(key => caches.delete(key)));
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith(PREFIX) && name !== VERSION).map(name => caches.delete(name)));
     await self.clients.claim();
   })());
 });
-
 self.addEventListener("fetch", event => {
-  const request = event.request;
-  if (request.method !== "GET") return;
-
-  const url = new URL(request.url);
-  // Supabase, route services, map tiles and other sites always stay network-only.
-  if (url.hostname.endsWith("supabase.co") || url.hostname.includes("openstreetmap") || url.pathname.endsWith("admin.html")) return;
-
-  if (request.mode === "navigate") {
-    // Only the map app entry point is cached; city pages and other routes are untouched.
-    const isAppEntry = url.origin === self.location.origin &&
-      (url.pathname === "/" || url.pathname.endsWith("/index.html") && url.pathname.split("/").length === 2);
-    if (!isAppEntry) return;
-
+  const request = event.request, url = new URL(request.url);
+  if(request.method !== "GET" || url.origin !== self.location.origin) return;
+  if(request.mode === "navigate") {
+    if(!["/", "/index.html", "/offline.html"].includes(url.pathname)) return;
     event.respondWith((async () => {
-      const cache = await caches.open(V);
       try {
         const response = await fetch(request);
-        if (response.ok) {
-          try { await cache.put("index.html", response.clone()); } catch (_) {}
-        }
-        return response;
-      } catch (_) {
-        return await cache.match("index.html") || Response.error();
-      }
+        if(response.status < 500) return response;
+      } catch (_) {}
+      return await (await caches.open(VERSION)).match("/offline.html") || Response.error();
     })());
     return;
   }
-
-  const localShell = url.origin === self.location.origin && LOCAL_SHELL.some(path => {
-    const shellUrl = new URL(path, self.registration.scope);
-    return shellUrl.pathname === url.pathname;
-  });
-  const remoteShell = REMOTE_SHELL.includes(url.href);
-  if (!localShell && !remoteShell) return;
-
+  // Exact query matches prevent access-token URLs or unbounded variants entering cache.
+  if(!PUBLIC_ASSETS.has(url.pathname + url.search)) return;
   event.respondWith((async () => {
-    const cache = await caches.open(V);
-    const cached = await cache.match(request);
-    if (cached) return cached;
-    const response = await fetch(request);
-    if (response.ok) {
-      try { await cache.put(request, response.clone()); } catch (_) {}
+    const cache = await caches.open(VERSION);
+    // The essential fallback is versioned with the worker. Other assets stay fresh online.
+    if(FALLBACK.includes(url.pathname)) {
+      const cached = await cache.match(request); if(cached) return cached;
     }
-    return response;
+    try {
+      const response = await fetch(request);
+      if(response.ok && response.type !== "opaque") {
+        try { await cache.put(request, response.clone()); } catch (_) {}
+      }
+      return response;
+    } catch (_) {
+      return await cache.match(request) || Response.error();
+    }
   })());
 });
