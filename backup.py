@@ -15,9 +15,12 @@ def get(path, extra=None):
 
 spec = get("", {"Accept": "application/openapi+json"})
 tables = sorted(p.strip("/") for p in spec.get("paths", {}) if p.count("/") == 1 and p != "/" and not p.startswith("/rpc/"))
+if not tables:
+  sys.exit("Backup incomplete: Supabase exposed no REST tables")
 day = datetime.date.today().isoformat()
 os.makedirs("backup", exist_ok=True)
 total = 0
+failed = []
 for t in tables:
   rows, off = [], 0
   try:
@@ -27,8 +30,12 @@ for t in tables:
       if len(chunk) < 1000: break
       off += 1000
   except Exception as ex:
-    print("  atlandı", t, ex); continue
+    print("  FAILED", t, ex)
+    failed.append(t)
+    continue
   json.dump(rows, open(f"backup/{t}.json", "w"), ensure_ascii=False)
   print(f"  {t}: {len(rows)}"); total += len(rows)
+if failed:
+  sys.exit(f"Backup incomplete: could not export {len(failed)} table(s): {', '.join(failed)}")
 with tarfile.open("backup.tar.gz", "w:gz") as tar: tar.add("backup", arcname=f"laloo-{day}")
 print(f"Toplam {total} satır, {len(tables)} tablo")
