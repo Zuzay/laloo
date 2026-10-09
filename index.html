@@ -157,7 +157,7 @@ if (/access_token=|error_description=/.test(location.hash)) location.replace("/a
     </div>
     <div class="list-heading"><div><h3 id="list-title" data-i="stops_title">Stops around you</h3><p id="list-caption"></p></div><button id="panel-toggle" type="button" aria-expanded="true" aria-controls="place-list" aria-label="Collapse places">⌄</button></div>
     <div id="place-list" class="place-list" role="tabpanel" aria-labelledby="tab-nearby" tabindex="0"><div class="list-loading" data-i="loading">Loading…</div></div>
-    <div class="explorer-footer"><a id="contact" href="#" data-i="contact">Add a bathroom</a><a href="/stories/" data-i="share_short">Share a story</a></div>
+    <div class="explorer-footer"><a class="mrspace-credit" href="https://mrspace.online/#laloo-project" target="_blank" rel="noopener" data-i="mrspace_credit">This website is a Mr. Space product</a><a id="contact" href="#" data-i="contact">Add a bathroom</a><a href="/stories/" data-i="share_short">Share a story</a></div>
   </aside>
   <section class="map-stage" aria-label="Map">
     <div id="map"></div>
@@ -232,6 +232,7 @@ const EXPLORE_TEXT = {
 Object.assign(EXPLORE_TEXT.en,{sheet_up:"Drag up",sheet_down:"Drag down",group_places:"{n} nearby places",open_group:"Choose a place"});
 Object.assign(EXPLORE_TEXT.tr,{sheet_up:"Yukarı çek",sheet_down:"Aşağı çek",group_places:"{n} yakın yer",open_group:"Bir yer seç"});
 Object.entries(EXPLORE_TEXT).forEach(([lang, words]) => Object.assign(TXT[lang], words));
+Object.entries({"en":"This website is a Mr. Space product","tr":"Bu site bir Mr. Space ürünüdür","es":"Este sitio web es un producto de Mr. Space","de":"Diese Website ist ein Produkt von Mr. Space","fr":"Ce site est un produit Mr. Space"}).forEach(([lang,credit])=>{if(TXT[lang])TXT[lang].mrspace_credit=credit;});
 const LANG = ((navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"])
   .map(l => String(l).toLowerCase().split("-")[0]).find(l => TXT[l])) || "en";
 const tx = k => (TXT[LANG][k] ?? TXT.en[k] ?? k);
@@ -1173,5 +1174,6 @@ fetch("routes.json").then(r=>r.ok ? r.json() : []).then(list=>{walkingGuides=lis
 // Location is requested by the visitor, after the useful search/map surface appears.
 init();
 </script>
+<script src="https://mrspace.online/assets/ms-editor-bridge.js?v=1" defer></script>
 </body>
 </html>
