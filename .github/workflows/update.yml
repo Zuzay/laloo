@@ -29,12 +29,13 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OSM_MINUTES: ${{ github.event_name == 'schedule' && '100' || '35' }}
           CITIES_PER_RUN: ${{ github.event_name == 'schedule' && '60' || '30' }}
-      - if: always()
+      # Only publish generated files after a successful data build.
+      - if: success()
         run: |
           git config user.name "laloo-bot"
           git config user.email "actions@github.com"
           git add -A
           git diff --cached --quiet && exit 0
           git commit -m "Update bathrooms and city pages"
-          git pull --rebase -X theirs || true
+          git pull --rebase
           git push
